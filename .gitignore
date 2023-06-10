@@ -37,3 +37,6 @@
 # Xcode
 project.xcworkspace/
 xcuserdata/
+
+# Dependencies
+glm/

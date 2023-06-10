@@ -34,9 +34,13 @@
 # macOS
 .DS_Store
 
-# Xcode
+# IDE
 project.xcworkspace/
 xcuserdata/
+.idea
 
 # Dependencies
 glm/
+shaders/
+ShaderProgram
+stb_image

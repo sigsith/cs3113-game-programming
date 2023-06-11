@@ -15,6 +15,7 @@
 #endif
 
 #define GL_GLEXT_PROTOTYPES 1
+
 #include <SDL.h>
 #include <SDL_opengl.h>
 #include "glm/mat4x4.hpp"
@@ -22,8 +23,7 @@
 #include "ShaderProgram.h"
 #include "stb_image.h"
 
-enum Coordinate
-{
+enum Coordinate {
     x_coordinate,
     y_coordinate
 };
@@ -53,46 +53,49 @@ const int NUMBER_OF_TEXTURES = 1; // to be generated, that is
 const GLint LEVEL_OF_DETAIL = 0;  // base image level; Level n is the nth mipmap reduction image
 const GLint TEXTURE_BORDER = 0;   // this value MUST be zero
 
-const char PLAYER_SPRITE_FILEPATH[] = "soph.png";
+const char COW_SPRITE_FILEPATH[] = "cow.png";
+const char SAUCER_SPRITE_FILEPATH[] = "flying-saucer.png";
 
-SDL_Window* display_window;
+SDL_Window *display_window;
 bool game_is_running = true;
 bool is_growing = true;
 
 ShaderProgram program;
-glm::mat4 view_matrix, model_matrix, projection_matrix, trans_matrix;
+glm::mat4 view_matrix, cow_matrix, projection_matrix, trans_matrix, saucer_matrix;
 
 float previous_ticks = 0.0f;
 
-GLuint player_texture_id;
+GLuint cow_texture_id;
+GLuint saucer_texture_id;
 SDL_Joystick *player_one_controller;
 
 // overall position
-glm::vec3 player_position = glm::vec3(0.0f, 0.0f, 0.0f);
+glm::vec3 cow_position = glm::vec3(0.0f, 0.0f, 0.0f);
+glm::vec3 saucer_position = glm::vec3(0.0f, 2.0f, 0.0f);
 
 // movement tracker
-glm::vec3 player_movement = glm::vec3(0.0f, 0.0f, 0.0f);
+glm::vec3 cow_movement = glm::vec3(0.0f, 0.0f, 0.0f);
+glm::vec3 saucer_movement = glm::vec3(0.0f, 0.0f, 0.0f);
 
-float get_screen_to_ortho(float coordinate, Coordinate axis)
-{
+float get_screen_to_ortho(float coordinate, Coordinate axis) {
     switch (axis) {
         case x_coordinate:
-            return ((coordinate / WINDOW_WIDTH) * 10.0f ) - (10.0f / 2.0f);
+            return ((coordinate / WINDOW_WIDTH) * 10.0f) - (10.0f / 2.0f);
         case y_coordinate:
-            return (((WINDOW_HEIGHT - coordinate) / WINDOW_HEIGHT) * 7.5f) - (7.5f / 2.0);
+            return (((WINDOW_HEIGHT - coordinate) / WINDOW_HEIGHT) * 7.5f) -
+                   (7.5f / 2.0);
         default:
             return 0.0f;
     }
 }
 
-GLuint load_texture(const char* filepath)
-{
+GLuint load_texture(const char *filepath) {
     // STEP 1: Loading the image file
     int width, height, number_of_components;
-    unsigned char* image = stbi_load(filepath, &width, &height, &number_of_components, STBI_rgb_alpha);
+    unsigned char *image = stbi_load(filepath, &width, &height,
+                                     &number_of_components, STBI_rgb_alpha);
 
-    if (image == NULL)
-    {
+    if (image == NULL) {
         LOG("Unable to load image. Make sure the path is correct.");
         assert(false);
     }
@@ -101,7 +104,8 @@ GLuint load_texture(const char* filepath)
     GLuint textureID;
     glGenTextures(NUMBER_OF_TEXTURES, &textureID);
     glBindTexture(GL_TEXTURE_2D, textureID);
-    glTexImage2D(GL_TEXTURE_2D, LEVEL_OF_DETAIL, GL_RGBA, width, height, TEXTURE_BORDER, GL_RGBA, GL_UNSIGNED_BYTE, image);
+    glTexImage2D(GL_TEXTURE_2D, LEVEL_OF_DETAIL, GL_RGBA, width, height,
+                 TEXTURE_BORDER, GL_RGBA, GL_UNSIGNED_BYTE, image);
 
     // STEP 3: Setting our texture filter parameters
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -113,16 +117,16 @@ GLuint load_texture(const char* filepath)
     return textureID;
 }
 
-void initialise()
-{
+void initialise() {
     // Initialise video and joystick subsystems
     SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK);
 
     // Open the first controller found. Returns null on error
     player_one_controller = SDL_JoystickOpen(0);
 
-    display_window = SDL_CreateWindow("Hello, Textures!",
-                                      SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+    display_window = SDL_CreateWindow("Simple 2d scene",
+                                      SDL_WINDOWPOS_CENTERED,
+                                      SDL_WINDOWPOS_CENTERED,
                                       WINDOW_WIDTH, WINDOW_HEIGHT,
                                       SDL_WINDOW_OPENGL);
 
@@ -137,9 +141,11 @@ void initialise()
 
     program.Load(V_SHADER_PATH, F_SHADER_PATH);
 
-    model_matrix = glm::mat4(1.0f);
-    view_matrix = glm::mat4(1.0f);  // Defines the position (location and orientation) of the camera
-    projection_matrix = glm::ortho(-5.0f, 5.0f, -3.75f, 3.75f, -1.0f, 1.0f);  // Defines the characteristics of your camera, such as clip planes, field of view, projection method etc.
+    cow_matrix = glm::mat4(1.0f);
+    view_matrix = glm::mat4(
+            1.0f);  // Defines the position (location and orientation) of the camera
+    projection_matrix = glm::ortho(-5.0f, 5.0f, -3.75f, 3.75f, -1.0f,
+                                   1.0f);  // Defines the characteristics of your camera, such as clip planes, field of view, projection method etc.
 
     program.SetProjectionMatrix(projection_matrix);
     program.SetViewMatrix(view_matrix);
@@ -149,21 +155,20 @@ void initialise()
 
     glClearColor(BG_RED, BG_BLUE, BG_GREEN, BG_OPACITY);
 
-    player_texture_id = load_texture(PLAYER_SPRITE_FILEPATH);
+    cow_texture_id = load_texture(COW_SPRITE_FILEPATH);
+    saucer_texture_id = load_texture(SAUCER_SPRITE_FILEPATH);
 
     // enable blending
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
-void process_input()
-{
-    player_movement = glm::vec3(0.0f);
+void process_input() {
+    cow_movement = glm::vec3(0.0f);
 
     SDL_Event event;
 
-    while (SDL_PollEvent(&event))
-    {
+    while (SDL_PollEvent(&event)) {
         switch (event.type) {
             case SDL_WINDOWEVENT_CLOSE:
             case SDL_QUIT:
@@ -173,10 +178,10 @@ void process_input()
             case SDL_KEYDOWN:
                 switch (event.key.keysym.sym) {
                     case SDLK_RIGHT:
-                        player_movement.x = 1.0f;
+                        cow_movement.x = 1.0f;
                         break;
                     case SDLK_LEFT:
-                        player_movement.x = -1.0f;
+                        cow_movement.x = -1.0f;
                         break;
                     case SDLK_q:
                         game_is_running = false;
@@ -189,48 +194,49 @@ void process_input()
         }
     }
 
-    const Uint8 *key_states = SDL_GetKeyboardState(NULL); // array of key states [0, 0, 1, 0, 0, ...]
+    const Uint8 *key_states = SDL_GetKeyboardState(
+            NULL); // array of key states [0, 0, 1, 0, 0, ...]
 
-    if (key_states[SDL_SCANCODE_LEFT])
-    {
-        player_movement.x = -1.0f;
-    } else if (key_states[SDL_SCANCODE_RIGHT])
-    {
-        player_movement.x = 1.0f;
+    if (key_states[SDL_SCANCODE_LEFT]) {
+        cow_movement.x = -1.0f;
+    } else if (key_states[SDL_SCANCODE_RIGHT]) {
+        cow_movement.x = 1.0f;
     }
 
-    if (key_states[SDL_SCANCODE_UP])
-    {
-        player_movement.y = 1.0f;
-    } else if (key_states[SDL_SCANCODE_DOWN])
-    {
-        player_movement.y = -1.0f;
+    if (key_states[SDL_SCANCODE_UP]) {
+        cow_movement.y = 1.0f;
+    } else if (key_states[SDL_SCANCODE_DOWN]) {
+        cow_movement.y = -1.0f;
     }
 
-    if (glm::length(player_movement) > 1.0f)
-    {
-        player_movement = glm::normalize(player_movement);
+    if (glm::length(cow_movement) > 1.0f) {
+        cow_movement = glm::normalize(cow_movement);
     }
 }
 
-void update()
-{
-    float ticks = (float) SDL_GetTicks() / MILLISECONDS_IN_SECOND; // get the current number of ticks
-    float delta_time = ticks - previous_ticks; // the delta time is the difference from the last frame
+void update() {
+    float ticks = (float) SDL_GetTicks() /
+                  MILLISECONDS_IN_SECOND; // get the current number of ticks
+    float delta_time = ticks -
+                       previous_ticks; // the delta time is the difference from the last frame
     previous_ticks = ticks;
 
     // Add             direction       * elapsed time * units per second
-    player_position += player_movement * delta_time * 1.0f;
+    cow_position += cow_movement * delta_time * 1.0f;
+    saucer_position += saucer_movement * delta_time * 1.0f;
 
-    model_matrix = glm::mat4(1.0f);
-    model_matrix = glm::translate(model_matrix, player_position);
+    cow_matrix = glm::mat4(1.0f);
+    cow_matrix = glm::translate(cow_matrix, cow_position);
+
+    saucer_matrix = glm::mat4(1.0f);
+    saucer_matrix = glm::translate(saucer_matrix, saucer_position);
 }
 
-void draw_object(glm::mat4 &object_model_matrix, GLuint &object_texture_id)
-{
+void draw_object(glm::mat4 &object_model_matrix, GLuint &object_texture_id) {
     program.SetModelMatrix(object_model_matrix);
     glBindTexture(GL_TEXTURE_2D, object_texture_id);
-    glDrawArrays(GL_TRIANGLES, 0, 6); // we are now drawing 2 triangles, so we use 6 instead of 3
+    glDrawArrays(GL_TRIANGLES, 0,
+                 6); // we are now drawing 2 triangles, so we use 6 instead of 3
 }
 
 void render() {
@@ -248,14 +254,17 @@ void render() {
             0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f,     // triangle 2
     };
 
-    glVertexAttribPointer(program.positionAttribute, 2, GL_FLOAT, false, 0, vertices);
+    glVertexAttribPointer(program.positionAttribute, 2, GL_FLOAT, false, 0,
+                          vertices);
     glEnableVertexAttribArray(program.positionAttribute);
 
-    glVertexAttribPointer(program.texCoordAttribute, 2, GL_FLOAT, false, 0, texture_coordinates);
+    glVertexAttribPointer(program.texCoordAttribute, 2, GL_FLOAT, false, 0,
+                          texture_coordinates);
     glEnableVertexAttribArray(program.texCoordAttribute);
 
     // Bind texture
-    draw_object(model_matrix, player_texture_id);
+    draw_object(cow_matrix, cow_texture_id);
+    draw_object(saucer_matrix, saucer_texture_id);
 
     // We disable two attribute arrays now
     glDisableVertexAttribArray(program.positionAttribute);
@@ -264,8 +273,7 @@ void render() {
     SDL_GL_SwapWindow(display_window);
 }
 
-void shutdown()
-{
+void shutdown() {
     SDL_JoystickClose(player_one_controller);
     SDL_Quit();
 }
@@ -273,12 +281,10 @@ void shutdown()
 /**
  Start here—we can see the general structure of a game loop without worrying too much about the details yet.
  */
-int main(int argc, char* argv[])
-{
+int main(int argc, char *argv[]) {
     initialise();
 
-    while (game_is_running)
-    {
+    while (game_is_running) {
         process_input();
         update();
         render();

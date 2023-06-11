@@ -39,8 +39,12 @@ project.xcworkspace/
 xcuserdata/
 .idea
 
+# CMake
+/cmake-build-debug/
+
 # Dependencies
-glm/
-shaders/
-ShaderProgram
-stb_image
+*/glm/
+*/shaders/
+
+*.ShaderProgram
+*.stb_image

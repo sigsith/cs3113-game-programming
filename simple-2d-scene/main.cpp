@@ -55,13 +55,14 @@ const GLint TEXTURE_BORDER = 0;   // this value MUST be zero
 const char COW_SPRITE_FILEPATH[] = "cow.png";
 const char SAUCER_SPRITE_FILEPATH[] = "flying-saucer.png";
 
-const float LEFT_BORDER = -3.0f;
-const float RIGHT_BORDER = 3.0f;
+const float LEFT_BORDER = -4.0f;
+const float RIGHT_BORDER = 4.0f;
 float cow_angle = 0.0;
 SDL_Window *display_window;
 bool game_is_running = true;
 bool is_beaming = false;
 float cool_down = 0.0;
+double cool_down_small = 0.0;
 float turn_cool_down = 0.0;
 bool is_going_left = true;
 const float FLOOR = -1.0f;
@@ -198,12 +199,14 @@ void update() {
     }
     if (abs(cow_position[1] - saucer_position[1]) < 0.7) {
         is_beaming = false;
+        cow_velocity[1] = 0.0;
         is_going_left = !is_going_left;
         if (ticks > cool_down) {
             cool_down = ticks + 8.0;
+            cool_down_small = ticks + 2.0;
         }
     }
-    if (is_beaming) {
+    if (is_beaming || cool_down_small > ticks) {
         saucer_velocity = glm::vec3(0, 0, 0);
     } else {
         if (saucer_velocity[1] > 0) {
@@ -222,16 +225,25 @@ void update() {
     saucer_matrix = glm::mat4(1.0f);
     saucer_matrix = glm::translate(saucer_matrix, saucer_position);
 
-
+    cow_matrix = glm::mat4(1.0f);
     const float COW_ROT_ANGLE = glm::radians(0.1f);
+    bool was_going = is_going_left;
     if (is_beaming) {
         if (is_going_left) { cow_angle += COW_ROT_ANGLE; }
         else {
             cow_angle -= COW_ROT_ANGLE;
         }
         cow_velocity = glm::vec3(0.0f, 0.6f, 0.0f);
+    } else if (cool_down_small > ticks) {
+        cow_angle = 0;
+        cow_velocity = glm::vec3(0.0f, 0.0f, 0.0f);
+    } else if
+            (cow_position[1] > FLOOR) {
+        cow_angle = 0;
+        cow_velocity[1] -= 2.5 * delta_time;
     } else {
         cow_angle = 0;
+
         if (turn_cool_down < ticks) {
             if (cow_position[0] + 0.5 < saucer_position[0] &&
                 cow_position[0] > 0) {
@@ -258,12 +270,8 @@ void update() {
                 cow_velocity[0] = 0.8;
             }
         }
-        if (cow_position[1] > FLOOR) {
-            cow_velocity[1] -= 2.0 * delta_time;
-        }
+
     }
-
-
     cow_position +=
             cow_velocity * delta_time
             * 1.0f;
@@ -272,11 +280,18 @@ void update() {
                 FLOOR;
         cow_velocity[1] = 0;
     }
-    cow_matrix = glm::mat4(1.0f);
+
     cow_matrix = glm::translate(cow_matrix, cow_position);
     cow_matrix = glm::rotate(cow_matrix, cow_angle,
                              glm::vec3(0.0f, 0.0f, 1.0f));
-
+    if (cool_down_small > ticks) {
+        if (int(ticks * 1000) % 1000 == 0) {
+            is_going_left = !was_going;
+        }
+    }
+    if (!is_going_left) {
+        cow_matrix = glm::scale(cow_matrix, glm::vec3(-1.0f, 1.0f, 1.0f));
+    }
 }
 
 void draw_object(glm::mat4 &object_model_matrix, GLuint &object_texture_id) {

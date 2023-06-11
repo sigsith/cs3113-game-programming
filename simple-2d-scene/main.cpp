@@ -192,18 +192,23 @@ void update() {
     previous_ticks = ticks;
 
 
-    if (abs(cow_position[0] - saucer_position[0]) < 1 && ticks > cool_down) {
+    if (abs(cow_position[0] - saucer_position[0]) < 0.2 && ticks > cool_down &&
+        cow_velocity[0] * saucer_velocity[0] < 0) {
         is_beaming = true;
     }
-    if (abs(cow_position[1] - saucer_position[1]) < 1) {
+    if (abs(cow_position[1] - saucer_position[1]) < 0.7) {
         is_beaming = false;
+        is_going_left = !is_going_left;
         if (ticks > cool_down) {
-            cool_down = ticks + 5.0;
+            cool_down = ticks + 8.0;
         }
     }
     if (is_beaming) {
         saucer_velocity = glm::vec3(0, 0, 0);
     } else {
+        if (saucer_velocity[1] > 0) {
+            saucer_velocity[1] = 0;
+        }
         saucer_velocity = glm::vec3(cow_position[0] - saucer_position[0], 0, 0);
         if (saucer_velocity[0] > 0.6) {
             saucer_velocity[0] = 0.6;
@@ -220,8 +225,11 @@ void update() {
 
     const float COW_ROT_ANGLE = glm::radians(0.1f);
     if (is_beaming) {
-        cow_angle += COW_ROT_ANGLE;
-        cow_velocity = glm::vec3(0.0f, 0.4f, 0.0f);
+        if (is_going_left) { cow_angle += COW_ROT_ANGLE; }
+        else {
+            cow_angle -= COW_ROT_ANGLE;
+        }
+        cow_velocity = glm::vec3(0.0f, 0.6f, 0.0f);
     } else {
         cow_angle = 0;
         if (turn_cool_down < ticks) {
@@ -251,7 +259,7 @@ void update() {
             }
         }
         if (cow_position[1] > FLOOR) {
-            cow_velocity[1] -= 0.1;
+            cow_velocity[1] -= 2.0 * delta_time;
         }
     }
 

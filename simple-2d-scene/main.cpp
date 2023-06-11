@@ -223,6 +223,8 @@ void update() {
 
     // Add             direction       * elapsed time * units per second
     cow_position += cow_movement * delta_time * 1.0f;
+
+    saucer_movement = glm::vec3(cow_position[0] - saucer_position[0], 0, 0);
     saucer_position += saucer_movement * delta_time * 1.0f;
 
     cow_matrix = glm::mat4(1.0f);

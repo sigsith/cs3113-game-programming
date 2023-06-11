@@ -55,8 +55,9 @@ const GLint TEXTURE_BORDER = 0;   // this value MUST be zero
 const char COW_SPRITE_FILEPATH[] = "cow.png";
 const char SAUCER_SPRITE_FILEPATH[] = "flying-saucer.png";
 
-const float LEFT_BORDER = -4.0f;
-const float RIGHT_BORDER = 4.0f;
+const float LEFT_BORDER = -4.6f;
+int beam_count = 0;
+const float RIGHT_BORDER = 4.6f;
 float cow_angle = 0.0;
 SDL_Window *display_window;
 bool game_is_running = true;
@@ -83,18 +84,6 @@ glm::vec3 saucer_position = glm::vec3(0.0f, 2.0f, 0.0f);
 // movement tracker
 glm::vec3 cow_velocity = glm::vec3(0.0f, 0.0f, 0.0f);
 glm::vec3 saucer_velocity = glm::vec3(0.0f, 0.0f, 0.0f);
-
-float get_screen_to_ortho(float coordinate, Coordinate axis) {
-    switch (axis) {
-        case x_coordinate:
-            return ((coordinate / WINDOW_WIDTH) * 10.0f) - (10.0f / 2.0f);
-        case y_coordinate:
-            return (((WINDOW_HEIGHT - coordinate) / WINDOW_HEIGHT) * 7.5f) -
-                   (7.5f / 2.0);
-        default:
-            return 0.0f;
-    }
-}
 
 GLuint load_texture(const char *filepath) {
     // STEP 1: Loading the image file
@@ -193,11 +182,11 @@ void update() {
     previous_ticks = ticks;
 
 
-    if (abs(cow_position[0] - saucer_position[0]) < 0.2 && ticks > cool_down &&
-        cow_velocity[0] * saucer_velocity[0] < 0) {
+    if (abs(cow_position[0] - saucer_position[0]) < 0.2 && ticks > cool_down) {
         is_beaming = true;
+        beam_count += 1;
     }
-    if (abs(cow_position[1] - saucer_position[1]) < 0.7) {
+    if (abs(cow_position[1] - saucer_position[1]) < 0.5) {
         is_beaming = false;
         cow_velocity[1] = 0.0;
         is_going_left = !is_going_left;
@@ -213,10 +202,10 @@ void update() {
             saucer_velocity[1] = 0;
         }
         saucer_velocity = glm::vec3(cow_position[0] - saucer_position[0], 0, 0);
-        if (saucer_velocity[0] > 0.6) {
-            saucer_velocity[0] = 0.6;
-        } else if (saucer_velocity[0] < 0.6) {
-            saucer_velocity[0] = -0.6;
+        if (saucer_velocity[0] > 0.7) {
+            saucer_velocity[0] = 0.7;
+        } else if (saucer_velocity[0] < 0.7) {
+            saucer_velocity[0] = -0.7;
         }
         saucer_position +=
                 saucer_velocity * delta_time
@@ -228,25 +217,28 @@ void update() {
     cow_matrix = glm::mat4(1.0f);
     const float COW_ROT_ANGLE = glm::radians(0.1f);
     bool was_going = is_going_left;
+    float progress = (saucer_position[1] - cow_position[1] - 0.5) / 2.0;
     if (is_beaming) {
         if (is_going_left) { cow_angle += COW_ROT_ANGLE; }
         else {
             cow_angle -= COW_ROT_ANGLE;
         }
         cow_velocity = glm::vec3(0.0f, 0.6f, 0.0f);
+
+
     } else if (cool_down_small > ticks) {
         cow_angle = 0;
         cow_velocity = glm::vec3(0.0f, 0.0f, 0.0f);
     } else if
             (cow_position[1] > FLOOR) {
         cow_angle = 0;
-        cow_velocity[1] -= 2.5 * delta_time;
+        cow_velocity[0] = beam_count % 2 == 0 ? 0.9 : -0.9;
+        cow_velocity[1] -= 3.0 * delta_time;
     } else {
         cow_angle = 0;
 
         if (turn_cool_down < ticks) {
-            if (cow_position[0] + 0.5 < saucer_position[0] &&
-                cow_position[0] > 0) {
+            if (cow_position[0] < saucer_position[0]) {
                 is_going_left = true;
             } else
                 is_going_left = false;
@@ -261,13 +253,13 @@ void update() {
         }
         if (is_going_left) {
             cow_velocity[0] -= 0.01;
-            if (cow_velocity[0] < -0.8) {
-                cow_velocity[0] = -0.8;
+            if (cow_velocity[0] < -0.9) {
+                cow_velocity[0] = -0.9;
             }
         } else {
             cow_velocity[0] += 0.01;
-            if (cow_velocity[0] > 0.8) {
-                cow_velocity[0] = 0.8;
+            if (cow_velocity[0] > 0.9) {
+                cow_velocity[0] = 0.9;
             }
         }
 
@@ -291,6 +283,11 @@ void update() {
     }
     if (!is_going_left) {
         cow_matrix = glm::scale(cow_matrix, glm::vec3(-1.0f, 1.0f, 1.0f));
+    }
+    if (is_beaming) {
+        cow_matrix = glm::scale(cow_matrix,
+                                glm::vec3(1.0f * progress, 1.0f * progress,
+                                          1.0f * progress));
     }
 }
 

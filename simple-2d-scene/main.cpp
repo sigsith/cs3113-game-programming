@@ -142,6 +142,7 @@ void initialise() {
     program.Load(V_SHADER_PATH, F_SHADER_PATH);
 
     cow_matrix = glm::mat4(1.0f);
+    saucer_matrix = glm::mat4(1.0f);
     view_matrix = glm::mat4(
             1.0f);  // Defines the position (location and orientation) of the camera
     projection_matrix = glm::ortho(-5.0f, 5.0f, -3.75f, 3.75f, -1.0f,
@@ -224,15 +225,29 @@ void update() {
     // Add             direction       * elapsed time * units per second
     cow_position += cow_movement * delta_time * 1.0f;
 
+    const float SAUCER_ROT_ANGLE = glm::radians(0.1f);
+    saucer_matrix = glm::rotate(saucer_matrix, SAUCER_ROT_ANGLE,
+                                glm::vec3(0.9f, 1.0f, 0.0f));
     saucer_movement = glm::vec3(cow_position[0] - saucer_position[0], 0, 0);
     saucer_position += saucer_movement * delta_time * 1.0f;
 
-    cow_matrix = glm::mat4(1.0f);
+
+    const float COW_ROT_ANGLE = glm::radians(0.1f);
+    cow_matrix = glm::rotate(cow_matrix, COW_ROT_ANGLE,
+                             glm::vec3(0.0f, 0.0f, 1.0f));
     cow_matrix = glm::translate(cow_matrix, cow_position);
+
 
     saucer_matrix = glm::mat4(1.0f);
     saucer_matrix = glm::translate(saucer_matrix, saucer_position);
 }
+
+void update_cow(float delta_time) {
+
+}
+
+void update_saucer() {}
+
 
 void draw_object(glm::mat4 &object_model_matrix, GLuint &object_texture_id) {
     program.SetModelMatrix(object_model_matrix);

@@ -165,53 +165,16 @@ void initialise() {
 }
 
 void process_input() {
-    cow_movement = glm::vec3(0.0f);
-
     SDL_Event event;
-
     while (SDL_PollEvent(&event)) {
         switch (event.type) {
             case SDL_WINDOWEVENT_CLOSE:
             case SDL_QUIT:
                 game_is_running = false;
                 break;
-
-            case SDL_KEYDOWN:
-                switch (event.key.keysym.sym) {
-                    case SDLK_RIGHT:
-                        cow_movement.x = 1.0f;
-                        break;
-                    case SDLK_LEFT:
-                        cow_movement.x = -1.0f;
-                        break;
-                    case SDLK_q:
-                        game_is_running = false;
-                        break;
-                    default:
-                        break;
-                }
             default:
                 break;
         }
-    }
-
-    const Uint8 *key_states = SDL_GetKeyboardState(
-            NULL); // array of key states [0, 0, 1, 0, 0, ...]
-
-    if (key_states[SDL_SCANCODE_LEFT]) {
-        cow_movement.x = -1.0f;
-    } else if (key_states[SDL_SCANCODE_RIGHT]) {
-        cow_movement.x = 1.0f;
-    }
-
-    if (key_states[SDL_SCANCODE_UP]) {
-        cow_movement.y = 1.0f;
-    } else if (key_states[SDL_SCANCODE_DOWN]) {
-        cow_movement.y = -1.0f;
-    }
-
-    if (glm::length(cow_movement) > 1.0f) {
-        cow_movement = glm::normalize(cow_movement);
     }
 }
 

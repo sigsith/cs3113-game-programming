@@ -113,26 +113,32 @@ void update()
     // g_model_matrix = glm::rotate(g_model_matrix, glm::radians(g_triangle_rotate), glm::vec3(0.0f, 0.0f, 1.0f));
 }
 
-void render() {
-    glClear(GL_COLOR_BUFFER_BIT);
-    
-    g_program.SetModelMatrix(g_model_matrix);
-    
+void render_rectangle(float half_width, float half_height, glm::vec3 position) {
+    constexpr auto base_matrix = glm::mat4(1.0f);
+    const auto model_matrix = glm::translate(base_matrix, position);
+    g_program.SetModelMatrix(model_matrix);
     float vertices[] =
     {
-            -0.5f, -0.5f, // bottom-left
-     0.5f, -0.5f, // bottom-right
-     0.5f,  0.5f, // top-right
-    // Second triangle
-    -0.5f, -0.5f, // bottom-left
-     0.5f,  0.5f, // top-right
-    -0.5f,  0.5f  // top-left
+        -half_width , -half_height, 
+         half_width, -half_height, 
+         half_width,  half_height,
+        -half_width , -half_height, 
+        half_width, half_height,
+        -half_width, half_height,
     };
     
     glVertexAttribPointer(g_program.positionAttribute, 2, GL_FLOAT, false, 0, vertices);
     glEnableVertexAttribArray(g_program.positionAttribute);
     glDrawArrays(GL_TRIANGLES, 0, 6);
     glDisableVertexAttribArray(g_program.positionAttribute);
+    
+}
+
+void render() {
+    glClear(GL_COLOR_BUFFER_BIT);
+    render_rectangle(1, 2, glm::vec3(1, -1, 0));    
+    render_rectangle(1, 1, glm::vec3(-1, -1, 0));    
+   
     
     SDL_GL_SwapWindow(g_display_window);
 }

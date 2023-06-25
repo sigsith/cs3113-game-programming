@@ -147,9 +147,11 @@ void update() {
     previous_ticks = ticks;
 
     // Update positions.
-    constexpr auto PADDLE_SPEED = 4.0f;
+    constexpr auto PADDLE_SPEED = 5.0f;
     left_paddle_position += left_paddle_velocity * PADDLE_SPEED * delta_time;
     right_paddle_position += right_paddle_velocity * PADDLE_SPEED * delta_time;
+    constexpr auto BALL_SPEED = 3.0f;
+    ball_position += ball_velocity * BALL_SPEED * delta_time;
 
     // Absolute screen boundary.
     constexpr auto TOP_BOUNDARY = 3.75f;

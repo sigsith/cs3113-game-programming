@@ -49,3 +49,6 @@ xcuserdata/
 ShaderProgram.cpp
 ShaderProgram.h
 stb_image.h
+
+build/
+common/includes

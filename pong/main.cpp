@@ -7,11 +7,11 @@
 * NYU School of Engineering Policies and Procedures on
 * Academic Misconduct.
 **/
-// -------- SECTION FORBID CHANGE --------
+
+/* ------------------------- SECTION FORBID CHANGE ------------------------- */
 // Contract code such as header files, shader path.
 #define GL_SILENCE_DEPRECATION
 #define GL_GLEXT_PROTOTYPES 1
-
 #ifdef _WINDOWS
 #include <GL/glew.h>
 #endif
@@ -26,14 +26,14 @@
 constexpr char V_SHADER_PATH[] = "shaders/vertex.glsl",
         F_SHADER_PATH[] = "shaders/fragment.glsl";
 
-// -------- SECTION GLOBAL CONSTANTS AND DEFINITIONS --------
+/* ------------------ SECTION GLOBAL CONSTANTS AND DEFINES ------------------ */
 // Shared compile time configurations. Keep this as small as possible.
 constexpr auto HALF_BALL_DIMENSION = 0.1f;   // The ball is a square.
 constexpr auto HALF_PADDLE_HEIGHT = 0.5f;
 constexpr auto HALF_PADDLE_WIDTH = 0.125f;
 constexpr auto PADDLE_X_AXIS = 4.0f;
 
-// -------- SECTION GLOBAL VARIABLES --------
+/* ------------------------ SECTION GLOBAL VARIABLES ------------------------ */
 // Shared states. Keep this as small as possible.
 SDL_Window *g_display_window;
 bool is_game_running = true;
@@ -46,54 +46,43 @@ glm::vec3 ball_position = glm::vec3(0.0f, 0.0f, 0.0f);
 glm::vec3 ball_velocity = glm::vec3(1.0f, 1.0f, 0.0f);
 double previous_ticks = 0.0f;
 
-// -------- SECTION FUNCTIONS --------
+/* --------------------------- SECTION FUNCTIONS --------------------------- */
 void initialise() {
     SDL_Init(SDL_INIT_VIDEO);
     constexpr int WINDOW_WIDTH = 640,
             WINDOW_HEIGHT = 480;
-
     constexpr float BG_RED = 0.0f,
             BG_BLUE = 0.0f,
             BG_GREEN = 0.0f,
             BG_OPACITY = 1.0f;
-
     constexpr int VIEWPORT_X = 0,
             VIEWPORT_Y = 0,
             VIEWPORT_WIDTH = WINDOW_WIDTH,
             VIEWPORT_HEIGHT = WINDOW_HEIGHT;
-
     constexpr double TRIANGLE_RED = 1.0,
             TRIANGLE_BLUE = 1.0,
             TRIANGLE_GREEN = 1.0,
             TRIANGLE_OPACITY = 1.0;
-    g_display_window = SDL_CreateWindow("Hello, Pong!",
+    g_display_window = SDL_CreateWindow("Pong",
                                         SDL_WINDOWPOS_CENTERED,
                                         SDL_WINDOWPOS_CENTERED,
                                         WINDOW_WIDTH, WINDOW_HEIGHT,
                                         SDL_WINDOW_OPENGL);
-
     SDL_GLContext context = SDL_GL_CreateContext(g_display_window);
     SDL_GL_MakeCurrent(g_display_window, context);
-
 #ifdef _WINDOWS
     glewInit();
 #endif
     glViewport(VIEWPORT_X, VIEWPORT_Y, VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
     program.Load(V_SHADER_PATH, F_SHADER_PATH);
-    auto view_matrix = glm::mat4(
-            1.0f);  // Defines the position (location and orientation) of the camera
-    const auto projection_matrix = glm::ortho(-5.0f, 5.0f, -3.75f, 3.75f,
-                                              -1.0f,
-                                              1.0f);  // Defines the characteristics of your camera, such as clip planes, field of view, projection method etc.
+    auto view_matrix = glm::mat4(1.0f);
+    const auto projection_matrix = glm::ortho(-5.0f, 5.0f, -3.75f, 3.75f, -1.0f,
+                                              1.0f);
     program.SetProjectionMatrix(projection_matrix);
     program.SetViewMatrix(view_matrix);
-    // Notice we haven't set our model matrix yet!
-
     program.SetColor(TRIANGLE_RED, TRIANGLE_BLUE, TRIANGLE_GREEN,
                      TRIANGLE_OPACITY);
-
     glUseProgram(program.programID);
-
     glClearColor(BG_RED, BG_GREEN, BG_BLUE, BG_OPACITY);
 }
 
@@ -187,8 +176,8 @@ void update() {
         ball_velocity.y *= -1;
     }
 
-    // Ball-paddle collision. Only consider collision with the inner longer side of the
-    // paddles. Generous corner hit detection.
+    // Ball-paddle collision. Only consider collision with the inner longer side
+    // of the paddles. Generous corner hit detection.
     constexpr auto LEFT_CHECK_LINE =
             -PADDLE_X_AXIS + HALF_PADDLE_WIDTH + HALF_BALL_DIMENSION;
     constexpr auto RIGHT_CHECK_LINE =
@@ -239,7 +228,6 @@ render_rectangle(float half_width, float half_height, glm::vec3 position) {
     glEnableVertexAttribArray(program.positionAttribute);
     glDrawArrays(GL_TRIANGLES, 0, 6);
     glDisableVertexAttribArray(program.positionAttribute);
-
 }
 
 void render() {
@@ -253,20 +241,14 @@ void render() {
     SDL_GL_SwapWindow(g_display_window);
 }
 
-void shutdown() { SDL_Quit(); }
-
-/**
- Start here—we can see the general structure of a game loop without worrying too much about the details yet.
- */
+// To play this game, use WS or UP/DOWN keys.
 int main() {
     initialise();
-
     while (is_game_running) {
         process_input();
         update();
         render();
     }
-
-    shutdown();
+    SDL_Quit();
     return 0;
 }

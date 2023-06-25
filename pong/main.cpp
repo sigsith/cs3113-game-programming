@@ -26,30 +26,11 @@ constexpr char V_SHADER_PATH[] = "shaders/vertex.glsl",
         F_SHADER_PATH[] = "shaders/fragment.glsl";
 
 // -------- SECTION GLOBAL CONSTANTS AND DEFINITIONS --------
-// Compile time configurations.
-constexpr int WINDOW_WIDTH = 640,
-        WINDOW_HEIGHT = 480;
+// Shared compile time configurations. Keep this as small as possible.
 
-constexpr float BG_RED = 0.0f,
-        BG_BLUE = 0.0f,
-        BG_GREEN = 0.0f,
-        BG_OPACITY = 1.0f;
-
-constexpr int VIEWPORT_X = 0,
-        VIEWPORT_Y = 0,
-        VIEWPORT_WIDTH = WINDOW_WIDTH,
-        VIEWPORT_HEIGHT = WINDOW_HEIGHT;
-
-constexpr double TRIANGLE_RED = 1.0,
-        TRIANGLE_BLUE = 1.0,
-        TRIANGLE_GREEN = 1.0,
-        TRIANGLE_OPACITY = 1.0;
-
-constexpr float MILLISECONDS_IN_SECOND = 1000.0;
 
 // -------- SECTION GLOBAL VARIABLES --------
-// Game level variable states; to be extensively shared.
-// Keep this as small as possible.
+// Shared states. Keep this as small as possible.
 SDL_Window *g_display_window;
 bool g_game_is_running = true;
 ShaderProgram program;
@@ -57,6 +38,23 @@ ShaderProgram program;
 // -------- SECTION FUNCTIONS --------
 void initialise() {
     SDL_Init(SDL_INIT_VIDEO);
+    constexpr int WINDOW_WIDTH = 640,
+            WINDOW_HEIGHT = 480;
+
+    constexpr float BG_RED = 0.0f,
+            BG_BLUE = 0.0f,
+            BG_GREEN = 0.0f,
+            BG_OPACITY = 1.0f;
+
+    constexpr int VIEWPORT_X = 0,
+            VIEWPORT_Y = 0,
+            VIEWPORT_WIDTH = WINDOW_WIDTH,
+            VIEWPORT_HEIGHT = WINDOW_HEIGHT;
+
+    constexpr double TRIANGLE_RED = 1.0,
+            TRIANGLE_BLUE = 1.0,
+            TRIANGLE_GREEN = 1.0,
+            TRIANGLE_OPACITY = 1.0;
     g_display_window = SDL_CreateWindow("Hello, Pong!",
                                         SDL_WINDOWPOS_CENTERED,
                                         SDL_WINDOWPOS_CENTERED,
@@ -98,6 +96,7 @@ void process_input() {
 }
 
 void update() {
+    constexpr float MILLISECONDS_IN_SECOND = 1000.0;
     // float ticks = (float) SDL_GetTicks() / MILLISECONDS_IN_SECOND; // get the current number of ticks
     // float delta_time = ticks - g_previous_ticks; // the delta time is the difference from the last frame
     // g_previous_ticks = ticks;

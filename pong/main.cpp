@@ -27,13 +27,21 @@ constexpr char V_SHADER_PATH[] = "shaders/vertex.glsl",
 
 // -------- SECTION GLOBAL CONSTANTS AND DEFINITIONS --------
 // Shared compile time configurations. Keep this as small as possible.
-
+constexpr auto HALF_BALL_DIMENSION = 0.1;   // The ball is a square.
+constexpr auto HALF_PADDLE_HEIGHT = 0.5;
+constexpr auto HALF_PADDLE_WIDTH = 0.125;
 
 // -------- SECTION GLOBAL VARIABLES --------
 // Shared states. Keep this as small as possible.
 SDL_Window *g_display_window;
 bool g_game_is_running = true;
 ShaderProgram program;
+glm::vec3 left_paddle_position = glm::vec3(-4.0f, 0.0f, 0.0f);
+glm::vec3 right_paddle_position = glm::vec3(4.0f, 0.0f, 0.0f);
+glm::vec3 left_paddle_velocity = glm::vec3(0.0f, 0.0f, 0.0f);
+glm::vec3 right_paddle_velocity = glm::vec3(0.0f, 0.0f, 0.0f);
+glm::vec3 ball_position = glm::vec3(0.0f, 0.0f, 0.0f);
+glm::vec3 ball_velocity = glm::vec3(1.0f, 1.0f, 0.0f);
 
 // -------- SECTION FUNCTIONS --------
 void initialise() {
@@ -134,8 +142,10 @@ void render_rectangle(float half_width, float half_height, glm::vec3 position) {
 
 void render() {
     glClear(GL_COLOR_BUFFER_BIT);
-    render_rectangle(1, 2, glm::vec3(1, -1, 0));
-    render_rectangle(1, 1, glm::vec3(-1, -1, 0));
+    render_rectangle(HALF_PADDLE_WIDTH, HALF_PADDLE_HEIGHT,
+                     left_paddle_position);
+    render_rectangle(HALF_PADDLE_WIDTH, HALF_PADDLE_HEIGHT,
+                     right_paddle_position);
     SDL_GL_SwapWindow(g_display_window);
 }
 

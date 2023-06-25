@@ -31,14 +31,15 @@ constexpr char V_SHADER_PATH[] = "shaders/vertex.glsl",
 constexpr auto HALF_BALL_DIMENSION = 0.1f;   // The ball is a square.
 constexpr auto HALF_PADDLE_HEIGHT = 0.5f;
 constexpr auto HALF_PADDLE_WIDTH = 0.125f;
+constexpr auto PADDLE_X_AXIS = 4.0f;
 
 // -------- SECTION GLOBAL VARIABLES --------
 // Shared states. Keep this as small as possible.
 SDL_Window *g_display_window;
 bool is_game_running = true;
 ShaderProgram program;
-glm::vec3 left_paddle_position = glm::vec3(-4.0f, 0.0f, 0.0f);
-glm::vec3 right_paddle_position = glm::vec3(4.0f, 0.0f, 0.0f);
+glm::vec3 left_paddle_position = glm::vec3(-PADDLE_X_AXIS, 0.0f, 0.0f);
+glm::vec3 right_paddle_position = glm::vec3(PADDLE_X_AXIS, 0.0f, 0.0f);
 glm::vec3 left_paddle_velocity = glm::vec3(0.0f, 0.0f, 0.0f);
 glm::vec3 right_paddle_velocity = glm::vec3(0.0f, 0.0f, 0.0f);
 glm::vec3 ball_position = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -138,6 +139,11 @@ void inplace_clamp(T &value, const T &lower, const T &upper) {
     value = std::max(lower, std::min(value, upper));
 }
 
+template<typename T>
+bool within(T &value, const T &lower, const T &upper) {
+    return value >= lower && value <= upper;
+}
+
 void update() {
     // Calculate delta time.
     constexpr auto MILLISECONDS_IN_SECOND = 1000.0;
@@ -147,11 +153,19 @@ void update() {
     previous_ticks = ticks;
 
     // Update positions.
-    constexpr auto PADDLE_SPEED = 5.0f;
+    constexpr auto PADDLE_SPEED = 6.0f;
     left_paddle_position += left_paddle_velocity * PADDLE_SPEED * delta_time;
     right_paddle_position += right_paddle_velocity * PADDLE_SPEED * delta_time;
-    constexpr auto BALL_SPEED = 3.0f;
+    constexpr auto BALL_SPEED = 2.5f;
     ball_position += ball_velocity * BALL_SPEED * delta_time;
+
+    // Check if ball is lost.
+    constexpr auto RIGHT_BOUNDARY = 5.0f;
+    constexpr auto LEFT_BOUNDARY = -RIGHT_BOUNDARY;
+    if (!within(ball_position.x, LEFT_BOUNDARY, RIGHT_BOUNDARY)) {
+        is_game_running = false;
+        return;
+    }
 
     // Absolute screen boundary.
     constexpr auto TOP_BOUNDARY = 3.75f;
@@ -168,12 +182,38 @@ void update() {
     // Ball top/bottom bouncing.
     constexpr auto BALL_TOP_BOUND = TOP_BOUNDARY - HALF_BALL_DIMENSION;
     constexpr auto BALL_BOTTOM_BOUND = BOTTOM_BOUNDARY + HALF_BALL_DIMENSION;
-    if (ball_position.y > BALL_TOP_BOUND ||
-        ball_position.y < BALL_BOTTOM_BOUND) {
+    if (!within(ball_position.y, BALL_BOTTOM_BOUND, BALL_TOP_BOUND)) {
         inplace_clamp(ball_position.y, BALL_BOTTOM_BOUND, BALL_TOP_BOUND);
         ball_velocity.y *= -1;
     }
 
+    // Ball-paddle collision. Only consider collision with the inner longer side of the
+    // paddles. Only reference the central left and central right points of the ball
+    const auto central_left_x = ball_position.x - HALF_BALL_DIMENSION;
+    const auto central_right_x = ball_position.x + HALF_BALL_DIMENSION;
+    constexpr auto LEFT_PADDLE_INNER = -PADDLE_X_AXIS + HALF_PADDLE_WIDTH;
+    constexpr auto RIGHT_PADDLE_INNER = PADDLE_X_AXIS - HALF_PADDLE_WIDTH;
+    const auto left_paddle_top = left_paddle_position.y + HALF_PADDLE_HEIGHT;
+    const auto left_paddle_bottom = left_paddle_position.y - HALF_PADDLE_HEIGHT;
+    const auto right_paddle_top = right_paddle_position.y + HALF_PADDLE_HEIGHT;
+    const auto right_paddle_bottom =
+            right_paddle_position.y - HALF_PADDLE_HEIGHT;
+
+    // See if the central left reference point is inside left paddle.
+    if (central_left_x < LEFT_PADDLE_INNER &&
+        within(ball_position.y,
+               left_paddle_bottom, left_paddle_top)) {
+        ball_position.x = LEFT_PADDLE_INNER + HALF_BALL_DIMENSION;
+        ball_velocity.x *= -1;
+        return;
+    }
+    // See if the central right reference point is inside right paddle.
+    if (central_right_x > RIGHT_PADDLE_INNER &&
+        within(ball_position.y, right_paddle_bottom, right_paddle_top)) {
+        ball_position.x = RIGHT_PADDLE_INNER - HALF_BALL_DIMENSION;
+        ball_velocity.x *= -1;
+        return;
+    }
 }
 
 void render_rectangle(float half_width, float half_height, glm::vec3 position) {

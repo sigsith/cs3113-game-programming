@@ -188,32 +188,32 @@ void update() {
     }
 
     // Ball-paddle collision. Only consider collision with the inner longer side of the
-    // paddles. Only reference the central left and central right points of the ball
-    const auto central_left_x = ball_position.x - HALF_BALL_DIMENSION;
-    const auto central_right_x = ball_position.x + HALF_BALL_DIMENSION;
-    constexpr auto LEFT_PADDLE_INNER = -PADDLE_X_AXIS + HALF_PADDLE_WIDTH;
-    constexpr auto RIGHT_PADDLE_INNER = PADDLE_X_AXIS - HALF_PADDLE_WIDTH;
-    const auto left_paddle_top = left_paddle_position.y + HALF_PADDLE_HEIGHT;
-    const auto left_paddle_bottom = left_paddle_position.y - HALF_PADDLE_HEIGHT;
-    const auto right_paddle_top = right_paddle_position.y + HALF_PADDLE_HEIGHT;
+    // paddles. Generous corner hit detection.
+    constexpr auto LEFT_CHECK_LINE =
+            -PADDLE_X_AXIS + HALF_PADDLE_WIDTH + HALF_BALL_DIMENSION;
+    constexpr auto RIGHT_CHECK_LINE =
+            PADDLE_X_AXIS - HALF_PADDLE_WIDTH - HALF_BALL_DIMENSION;
+    const auto left_paddle_top =
+            left_paddle_position.y + HALF_PADDLE_HEIGHT + HALF_BALL_DIMENSION;
+    const auto left_paddle_bottom =
+            left_paddle_position.y - HALF_PADDLE_HEIGHT - HALF_BALL_DIMENSION;
+    const auto right_paddle_top =
+            right_paddle_position.y + HALF_PADDLE_HEIGHT + HALF_BALL_DIMENSION;
     const auto right_paddle_bottom =
-            right_paddle_position.y - HALF_PADDLE_HEIGHT;
-
+            right_paddle_position.y - HALF_PADDLE_HEIGHT - HALF_BALL_DIMENSION;
     constexpr auto OVERSHOOT_MARGIN = 0.1f;
-    // See if the central left reference point is inside left paddle.
-    if (within(ball_position.x, LEFT_PADDLE_INNER - OVERSHOOT_MARGIN,
-               LEFT_PADDLE_INNER) &&
+    if (within(ball_position.x, LEFT_CHECK_LINE - OVERSHOOT_MARGIN,
+               LEFT_CHECK_LINE) &&
         within(ball_position.y,
                left_paddle_bottom, left_paddle_top)) {
-        ball_position.x = LEFT_PADDLE_INNER + HALF_BALL_DIMENSION;
+        ball_position.x = LEFT_CHECK_LINE;
         ball_velocity.x *= -1;
         return;
     }
-    // See if the central right reference point is inside right paddle.
-    if (within(ball_position.x, RIGHT_PADDLE_INNER,
-               RIGHT_PADDLE_INNER + OVERSHOOT_MARGIN) &&
+    if (within(ball_position.x, RIGHT_CHECK_LINE,
+               RIGHT_CHECK_LINE + OVERSHOOT_MARGIN) &&
         within(ball_position.y, right_paddle_bottom, right_paddle_top)) {
-        ball_position.x = RIGHT_PADDLE_INNER - HALF_BALL_DIMENSION;
+        ball_position.x = RIGHT_CHECK_LINE;
         ball_velocity.x *= -1;
         return;
     }

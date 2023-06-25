@@ -99,18 +99,18 @@ void process_input()
 
 void update()
 {
-    float ticks = (float) SDL_GetTicks() / MILLISECONDS_IN_SECOND; // get the current number of ticks
-    float delta_time = ticks - g_previous_ticks; // the delta time is the difference from the last frame
-    g_previous_ticks = ticks;
+    // float ticks = (float) SDL_GetTicks() / MILLISECONDS_IN_SECOND; // get the current number of ticks
+    // float delta_time = ticks - g_previous_ticks; // the delta time is the difference from the last frame
+    // g_previous_ticks = ticks;
 
-    g_triangle_x += 1.0f * delta_time;
-    g_triangle_rotate += DEGREES_PER_SECOND * delta_time; // 90-degrees per second
+    // g_triangle_x += 1.0f * delta_time;
+    // g_triangle_rotate += DEGREES_PER_SECOND * delta_time; // 90-degrees per second
     g_model_matrix = glm::mat4(1.0f);
     
 
-    /* Translate -> Rotate */
-    g_model_matrix = glm::translate(g_model_matrix, glm::vec3(g_triangle_x, 0.0f, 0.0f));
-    g_model_matrix = glm::rotate(g_model_matrix, glm::radians(g_triangle_rotate), glm::vec3(0.0f, 0.0f, 1.0f));
+    // /* Translate -> Rotate */
+    // g_model_matrix = glm::translate(g_model_matrix, glm::vec3(g_triangle_x, 0.0f, 0.0f));
+    // g_model_matrix = glm::rotate(g_model_matrix, glm::radians(g_triangle_rotate), glm::vec3(0.0f, 0.0f, 1.0f));
 }
 
 void render() {
@@ -120,14 +120,18 @@ void render() {
     
     float vertices[] =
     {
-         0.5f, -0.5f,
-         0.0f,  0.5f,
-        -0.5f, -0.5f
+            -0.5f, -0.5f, // bottom-left
+     0.5f, -0.5f, // bottom-right
+     0.5f,  0.5f, // top-right
+    // Second triangle
+    -0.5f, -0.5f, // bottom-left
+     0.5f,  0.5f, // top-right
+    -0.5f,  0.5f  // top-left
     };
     
     glVertexAttribPointer(g_program.positionAttribute, 2, GL_FLOAT, false, 0, vertices);
     glEnableVertexAttribArray(g_program.positionAttribute);
-    glDrawArrays(GL_TRIANGLES, 0, 3);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
     glDisableVertexAttribArray(g_program.positionAttribute);
     
     SDL_GL_SwapWindow(g_display_window);

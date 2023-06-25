@@ -28,9 +28,9 @@
 #define LOG(argument) std::cout << argument << '\n'
 const int WINDOW_WIDTH = 640,
         WINDOW_HEIGHT = 480;
-const float BG_RED = 0.1922f,
-        BG_BLUE = 0.549f,
-        BG_GREEN = 0.9059f,
+const float BG_RED = 0.0f,
+        BG_BLUE = 0.0f,
+        BG_GREEN = 0.0f,
         BG_OPACITY = 1.0f;
 const int VIEWPORT_X = 0,
         VIEWPORT_Y = 0,

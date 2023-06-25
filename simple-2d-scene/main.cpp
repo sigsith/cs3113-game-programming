@@ -182,7 +182,7 @@ void update() {
     previous_ticks = ticks;
 
 
-    if (abs(cow_position[0] - saucer_position[0]) < 0.2 && ticks > cool_down) {
+    if (abs(cow_position[0] - saucer_position[0]) < 0.1 && ticks > cool_down) {
         is_beaming = true;
         beam_count += 1;
     }
@@ -195,7 +195,7 @@ void update() {
             cool_down_small = ticks + 2.0;
         }
     }
-    if (is_beaming || cool_down_small > ticks) {
+    if (is_beaming || cool_down_small > ticks || cow_position[1] > 0) {
         saucer_velocity = glm::vec3(0, 0, 0);
     } else {
         if (saucer_velocity[1] > 0) {
@@ -232,8 +232,8 @@ void update() {
     } else if
             (cow_position[1] > FLOOR) {
         cow_angle = 0;
-        cow_velocity[0] = beam_count % 2 == 0 ? 0.9 : -0.9;
-        cow_velocity[1] -= 3.0 * delta_time;
+        cow_velocity[0] = beam_count % 2 == 0 ? 1.5 : -1.5;
+        cow_velocity[1] -= 4.0 * delta_time;
     } else {
         cow_angle = 0;
 

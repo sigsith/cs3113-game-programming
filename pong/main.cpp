@@ -39,7 +39,6 @@ const int VIEWPORT_X = 0,
 const char V_SHADER_PATH[] = "shaders/vertex_textured.glsl",
         F_SHADER_PATH[] = "shaders/fragment_textured.glsl";
 const float MILLISECONDS_IN_SECOND = 1000.0;
-const char PLAYER_SPRITE_FILEPATH[] = "soph.png";
 const float MINIMUM_COLLISION_DISTANCE = 1.0f;
 const int NUMBER_OF_TEXTURES = 1; // to be generated, that is
 const GLint LEVEL_OF_DETAIL = 0;  // base image level; Level n is the nth mipmap reduction image
@@ -51,8 +50,6 @@ bool is_growing = true;
 ShaderProgram program;
 glm::mat4 view_matrix, model_matrix, projection_matrix, trans_matrix, other_model_matrix;
 float previous_ticks = 0.0f;
-GLuint player_texture_id;
-GLuint other_texture_id;
 glm::vec3 player_position = glm::vec3(0.0f, 0.0f, 0.0f);
 glm::vec3 player_movement = glm::vec3(0.0f, 0.0f, 0.0f);
 glm::vec3 other_position = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -61,37 +58,6 @@ glm::vec3 player_orientation = glm::vec3(0.0f, 0.0f, 0.0f);
 glm::vec3 player_rotation = glm::vec3(0.0f, 0.0f, 0.0f);
 float player_speed = 1.0f;  // move 1 unit per second
 // -------- SECTION FUNCTIONS --------
-GLuint load_texture(const char *filepath) {
-    // STEP 1: Loading the image file
-    int width, height, number_of_components;
-    unsigned char *image = stbi_load(filepath, &width, &height,
-                                     &number_of_components, STBI_rgb_alpha);
-
-    if (image == NULL) {
-        std::stringstream ss;
-        ss << "Unable to load image from path \"" << filepath
-           << "\". Make sure the path is correct.";
-        LOG(ss.str());
-        assert(false);
-    }
-
-    // STEP 2: Generating and binding a texture ID to our image
-    GLuint textureID;
-    glGenTextures(NUMBER_OF_TEXTURES, &textureID);
-    glBindTexture(GL_TEXTURE_2D, textureID);
-    glTexImage2D(GL_TEXTURE_2D, LEVEL_OF_DETAIL, GL_RGBA, width, height,
-                 TEXTURE_BORDER, GL_RGBA, GL_UNSIGNED_BYTE, image);
-
-    // STEP 3: Setting our texture filter parameters
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-    // STEP 4: Releasing our file from memory and returning our texture id
-    stbi_image_free(image);
-
-    return textureID;
-}
-
 void initialise() {
     SDL_Init(SDL_INIT_VIDEO);
     display_window = SDL_CreateWindow("Pong",
@@ -128,9 +94,6 @@ void initialise() {
     glUseProgram(program.programID);
 
     glClearColor(BG_RED, BG_BLUE, BG_GREEN, BG_OPACITY);
-
-    player_texture_id = load_texture(PLAYER_SPRITE_FILEPATH);
-    other_texture_id = load_texture(PLAYER_SPRITE_FILEPATH);
 
     // enable blending
     glEnable(GL_BLEND);
@@ -222,12 +185,12 @@ void update() {
     }
 }
 
-void draw_object(glm::mat4 &object_model_matrix, GLuint &object_texture_id) {
-    program.SetModelMatrix(object_model_matrix);
-    glBindTexture(GL_TEXTURE_2D, object_texture_id);
-    glDrawArrays(GL_TRIANGLES, 0,
-                 6); // we are now drawing 2 triangles, so we use 6 instead of 3
-}
+//void draw_object(glm::mat4 &object_model_matrix, GLuint &object_texture_id) {
+//    program.SetModelMatrix(object_model_matrix);
+//    glBindTexture(GL_TEXTURE_2D, object_texture_id);
+//    glDrawArrays(GL_TRIANGLES, 0,
+//                 6); // we are now drawing 2 triangles, so we use 6 instead of 3
+//}
 
 void render() {
     glClear(GL_COLOR_BUFFER_BIT);
@@ -253,8 +216,8 @@ void render() {
     glEnableVertexAttribArray(program.texCoordAttribute);
 
     // Bind texture
-    draw_object(model_matrix, player_texture_id);
-    draw_object(other_model_matrix, other_texture_id);
+//    draw_object(model_matrix, player_texture_id);
+//    draw_object(other_model_matrix, other_texture_id);
 
     // We disable two attribute arrays now
     glDisableVertexAttribArray(program.positionAttribute);

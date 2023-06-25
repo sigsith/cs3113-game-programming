@@ -7,13 +7,13 @@
 * NYU School of Engineering Policies and Procedures on
 * Academic Misconduct.
 **/
+
+// -------- SECTION DO NOT CHANGE --------
 #define GL_SILENCE_DEPRECATION
 #define STB_IMAGE_IMPLEMENTATION
-
 #ifdef _WINDOWS
 #include <GL/glew.h>
 #endif
-
 #define GL_GLEXT_PROTOTYPES 1
 
 #include <SDL.h>
@@ -24,60 +24,43 @@
 #include "stb_image.h"
 #include "cmath"
 #include <ctime>
-
+// -------- SECTION GLOBAL CONSTANTS AND DEFINITIONS --------
 #define LOG(argument) std::cout << argument << '\n'
-
 const int WINDOW_WIDTH = 640,
         WINDOW_HEIGHT = 480;
-
 const float BG_RED = 0.1922f,
         BG_BLUE = 0.549f,
         BG_GREEN = 0.9059f,
         BG_OPACITY = 1.0f;
-
 const int VIEWPORT_X = 0,
         VIEWPORT_Y = 0,
         VIEWPORT_WIDTH = WINDOW_WIDTH,
         VIEWPORT_HEIGHT = WINDOW_HEIGHT;
-
 const char V_SHADER_PATH[] = "shaders/vertex_textured.glsl",
         F_SHADER_PATH[] = "shaders/fragment_textured.glsl";
-
 const float MILLISECONDS_IN_SECOND = 1000.0;
-
 const char PLAYER_SPRITE_FILEPATH[] = "soph.png";
-
 const float MINIMUM_COLLISION_DISTANCE = 1.0f;
-
-SDL_Window *display_window;
-bool game_is_running = true;
-bool is_growing = true;
-
-ShaderProgram program;
-glm::mat4 view_matrix, model_matrix, projection_matrix, trans_matrix, other_model_matrix;
-
-float previous_ticks = 0.0f;
-
-GLuint player_texture_id;
-GLuint other_texture_id;
-
-glm::vec3 player_position = glm::vec3(0.0f, 0.0f, 0.0f);
-glm::vec3 player_movement = glm::vec3(0.0f, 0.0f, 0.0f);
-
-glm::vec3 other_position = glm::vec3(0.0f, 0.0f, 0.0f);
-glm::vec3 other_movement = glm::vec3(1.0f, 1.0f, 0.0f);
-
-glm::vec3 player_orientation = glm::vec3(0.0f, 0.0f, 0.0f);
-glm::vec3 player_rotation = glm::vec3(0.0f, 0.0f, 0.0f);
-
-float player_speed = 1.0f;  // move 1 unit per second
-
-#define LOG(argument) std::cout << argument << '\n'
-
 const int NUMBER_OF_TEXTURES = 1; // to be generated, that is
 const GLint LEVEL_OF_DETAIL = 0;  // base image level; Level n is the nth mipmap reduction image
 const GLint TEXTURE_BORDER = 0;   // this value MUST be zero
-
+// -------- SECTION GLOBAL VARIABLES --------
+SDL_Window *display_window;
+bool game_is_running = true;
+bool is_growing = true;
+ShaderProgram program;
+glm::mat4 view_matrix, model_matrix, projection_matrix, trans_matrix, other_model_matrix;
+float previous_ticks = 0.0f;
+GLuint player_texture_id;
+GLuint other_texture_id;
+glm::vec3 player_position = glm::vec3(0.0f, 0.0f, 0.0f);
+glm::vec3 player_movement = glm::vec3(0.0f, 0.0f, 0.0f);
+glm::vec3 other_position = glm::vec3(0.0f, 0.0f, 0.0f);
+glm::vec3 other_movement = glm::vec3(1.0f, 1.0f, 0.0f);
+glm::vec3 player_orientation = glm::vec3(0.0f, 0.0f, 0.0f);
+glm::vec3 player_rotation = glm::vec3(0.0f, 0.0f, 0.0f);
+float player_speed = 1.0f;  // move 1 unit per second
+// -------- SECTION FUNCTIONS --------
 GLuint load_texture(const char *filepath) {
     // STEP 1: Loading the image file
     int width, height, number_of_components;

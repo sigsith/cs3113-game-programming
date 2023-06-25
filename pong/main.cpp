@@ -34,7 +34,7 @@ constexpr auto HALF_PADDLE_WIDTH = 0.125;
 // -------- SECTION GLOBAL VARIABLES --------
 // Shared states. Keep this as small as possible.
 SDL_Window *g_display_window;
-bool g_game_is_running = true;
+bool is_game_running = true;
 ShaderProgram program;
 glm::vec3 left_paddle_position = glm::vec3(-4.0f, 0.0f, 0.0f);
 glm::vec3 right_paddle_position = glm::vec3(4.0f, 0.0f, 0.0f);
@@ -42,6 +42,7 @@ glm::vec3 left_paddle_velocity = glm::vec3(0.0f, 0.0f, 0.0f);
 glm::vec3 right_paddle_velocity = glm::vec3(0.0f, 0.0f, 0.0f);
 glm::vec3 ball_position = glm::vec3(0.0f, 0.0f, 0.0f);
 glm::vec3 ball_velocity = glm::vec3(1.0f, 1.0f, 0.0f);
+double previous_ticks = 0.0f;
 
 // -------- SECTION FUNCTIONS --------
 void initialise() {
@@ -96,33 +97,64 @@ void initialise() {
 
 void process_input() {
     SDL_Event event;
+    // Handle quitting.
     while (SDL_PollEvent(&event)) {
-        if (event.type == SDL_QUIT || event.type == SDL_WINDOWEVENT_CLOSE) {
-            g_game_is_running = false;
+        switch (event.type) {
+            case SDL_QUIT:
+            case SDL_WINDOWEVENT_CLOSE:
+                is_game_running = false;
+                break;
+            case SDL_KEYDOWN:
+                switch (event.key.keysym.sym) {
+                    case SDLK_q:
+                        is_game_running = false;
+                        break;
+                    default:
+                        break;
+                }
+            default:
+                break;
         }
+    }
+    const Uint8 *key_state = SDL_GetKeyboardState(nullptr);
+    // No acceleration. Binary response to input.
+    left_paddle_velocity = glm::vec3(0.0f);
+    right_paddle_velocity = glm::vec3(0.0f);
+    if (key_state[SDL_SCANCODE_W]) {
+        left_paddle_velocity.y = 1.0f;
+    } else if (key_state[SDL_SCANCODE_S]) {
+        left_paddle_velocity.y = -1.0f;
+    }
+    if (key_state[SDL_SCANCODE_UP]) {
+        right_paddle_velocity.y = 1.0f;
+    } else if (key_state[SDL_SCANCODE_DOWN]) {
+        right_paddle_velocity.y = -1.0f;
     }
 }
 
 void update() {
-    constexpr float MILLISECONDS_IN_SECOND = 1000.0;
-    // float ticks = (float) SDL_GetTicks() / MILLISECONDS_IN_SECOND; // get the current number of ticks
-    // float delta_time = ticks - g_previous_ticks; // the delta time is the difference from the last frame
-    // g_previous_ticks = ticks;
+    // Calculate delta time.
+    constexpr auto MILLISECONDS_IN_SECOND = 1000.0;
+    const auto ticks = SDL_GetTicks() /
+                       MILLISECONDS_IN_SECOND;
+    const auto delta_time = static_cast<float>(ticks - previous_ticks);
+    previous_ticks = ticks;
 
-    // g_triangle_x += 1.0f * delta_time;
-    // g_triangle_rotate += DEGREES_PER_SECOND * delta_time; // 90-degrees per second
+    // Update positions.
+    constexpr auto PADDLE_SPEED = 4.0f;
+    left_paddle_position += left_paddle_velocity * PADDLE_SPEED * delta_time;
+    right_paddle_position += right_paddle_velocity * PADDLE_SPEED * delta_time;
+
+//     Keep paddle position in boundary.
 
 
-    // /* Translate -> Rotate */
-    // g_model_matrix = glm::translate(g_model_matrix, glm::vec3(g_triangle_x, 0.0f, 0.0f));
-    // g_model_matrix = glm::rotate(g_model_matrix, glm::radians(g_triangle_rotate), glm::vec3(0.0f, 0.0f, 1.0f));
 }
 
 void render_rectangle(float half_width, float half_height, glm::vec3 position) {
     constexpr auto base_matrix = glm::mat4(1.0f);
     const auto model_matrix = glm::translate(base_matrix, position);
     program.SetModelMatrix(model_matrix);
-    float vertices[] =
+    const float vertices[] =
             {
                     -half_width, -half_height,
                     half_width, -half_height,
@@ -157,7 +189,7 @@ void shutdown() { SDL_Quit(); }
 int main() {
     initialise();
 
-    while (g_game_is_running) {
+    while (is_game_running) {
         process_input();
         update();
         render();

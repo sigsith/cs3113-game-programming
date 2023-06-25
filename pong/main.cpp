@@ -21,15 +21,16 @@
 #include "glm/mat4x4.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 #include "ShaderProgram.h"
+#include <algorithm>
 
 constexpr char V_SHADER_PATH[] = "shaders/vertex.glsl",
         F_SHADER_PATH[] = "shaders/fragment.glsl";
 
 // -------- SECTION GLOBAL CONSTANTS AND DEFINITIONS --------
 // Shared compile time configurations. Keep this as small as possible.
-constexpr auto HALF_BALL_DIMENSION = 0.1;   // The ball is a square.
-constexpr auto HALF_PADDLE_HEIGHT = 0.5;
-constexpr auto HALF_PADDLE_WIDTH = 0.125;
+constexpr auto HALF_BALL_DIMENSION = 0.1f;   // The ball is a square.
+constexpr auto HALF_PADDLE_HEIGHT = 0.5f;
+constexpr auto HALF_PADDLE_WIDTH = 0.125f;
 
 // -------- SECTION GLOBAL VARIABLES --------
 // Shared states. Keep this as small as possible.
@@ -132,6 +133,11 @@ void process_input() {
     }
 }
 
+template<typename T>
+void inplace_clamp(T &value, const T &lower, const T &upper) {
+    value = std::max(lower, std::min(value, upper));
+}
+
 void update() {
     // Calculate delta time.
     constexpr auto MILLISECONDS_IN_SECOND = 1000.0;
@@ -145,9 +151,17 @@ void update() {
     left_paddle_position += left_paddle_velocity * PADDLE_SPEED * delta_time;
     right_paddle_position += right_paddle_velocity * PADDLE_SPEED * delta_time;
 
-//     Keep paddle position in boundary.
+    // Absolute screen boundary.
+    constexpr auto TOP_BOUNDARY = 3.75f;
+    constexpr auto BOTTOM_BOUNDARY = -TOP_BOUNDARY;
 
-
+    // Keep paddles position in boundary.
+    constexpr auto PADDLE_TOP_BOUND = TOP_BOUNDARY - HALF_PADDLE_HEIGHT;
+    constexpr auto PADDLE_BOTTOM_BOUND = BOTTOM_BOUNDARY + HALF_PADDLE_HEIGHT;
+    inplace_clamp(left_paddle_position.y, PADDLE_BOTTOM_BOUND,
+                  PADDLE_TOP_BOUND);
+    inplace_clamp(right_paddle_position.y, PADDLE_BOTTOM_BOUND,
+                  PADDLE_TOP_BOUND);
 }
 
 void render_rectangle(float half_width, float half_height, glm::vec3 position) {

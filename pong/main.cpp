@@ -30,9 +30,9 @@ constexpr char V_SHADER_PATH[] = "shaders/vertex.glsl",
 constexpr int WINDOW_WIDTH = 640,
         WINDOW_HEIGHT = 480;
 
-constexpr float BG_RED = 0.1922f,
-        BG_BLUE = 0.549f,
-        BG_GREEN = 0.9059f,
+constexpr float BG_RED = 0.0f,
+        BG_BLUE = 0.0f,
+        BG_GREEN = 0.0f,
         BG_OPACITY = 1.0f;
 
 constexpr int VIEWPORT_X = 0,
@@ -41,8 +41,8 @@ constexpr int VIEWPORT_X = 0,
         VIEWPORT_HEIGHT = WINDOW_HEIGHT;
 
 constexpr double TRIANGLE_RED = 1.0,
-        TRIANGLE_BLUE = 0.4,
-        TRIANGLE_GREEN = 0.4,
+        TRIANGLE_BLUE = 1.0,
+        TRIANGLE_GREEN = 1.0,
         TRIANGLE_OPACITY = 1.0;
 
 constexpr float MILLISECONDS_IN_SECOND = 1000.0;

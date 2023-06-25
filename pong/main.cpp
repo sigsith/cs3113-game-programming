@@ -199,8 +199,10 @@ void update() {
     const auto right_paddle_bottom =
             right_paddle_position.y - HALF_PADDLE_HEIGHT;
 
+    constexpr auto OVERSHOOT_MARGIN = 0.1f;
     // See if the central left reference point is inside left paddle.
-    if (central_left_x < LEFT_PADDLE_INNER &&
+    if (within(ball_position.x, LEFT_PADDLE_INNER - OVERSHOOT_MARGIN,
+               LEFT_PADDLE_INNER) &&
         within(ball_position.y,
                left_paddle_bottom, left_paddle_top)) {
         ball_position.x = LEFT_PADDLE_INNER + HALF_BALL_DIMENSION;
@@ -208,7 +210,8 @@ void update() {
         return;
     }
     // See if the central right reference point is inside right paddle.
-    if (central_right_x > RIGHT_PADDLE_INNER &&
+    if (within(ball_position.x, RIGHT_PADDLE_INNER,
+               RIGHT_PADDLE_INNER + OVERSHOOT_MARGIN) &&
         within(ball_position.y, right_paddle_bottom, right_paddle_top)) {
         ball_position.x = RIGHT_PADDLE_INNER - HALF_BALL_DIMENSION;
         ball_velocity.x *= -1;
@@ -216,7 +219,8 @@ void update() {
     }
 }
 
-void render_rectangle(float half_width, float half_height, glm::vec3 position) {
+void
+render_rectangle(float half_width, float half_height, glm::vec3 position) {
     constexpr auto base_matrix = glm::mat4(1.0f);
     const auto model_matrix = glm::translate(base_matrix, position);
     program.SetModelMatrix(model_matrix);

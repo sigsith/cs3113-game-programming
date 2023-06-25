@@ -164,6 +164,16 @@ void update() {
                   PADDLE_TOP_BOUND);
     inplace_clamp(right_paddle_position.y, PADDLE_BOTTOM_BOUND,
                   PADDLE_TOP_BOUND);
+
+    // Ball top/bottom bouncing.
+    constexpr auto BALL_TOP_BOUND = TOP_BOUNDARY - HALF_BALL_DIMENSION;
+    constexpr auto BALL_BOTTOM_BOUND = BOTTOM_BOUNDARY + HALF_BALL_DIMENSION;
+    if (ball_position.y > BALL_TOP_BOUND ||
+        ball_position.y < BALL_BOTTOM_BOUND) {
+        inplace_clamp(ball_position.y, BALL_BOTTOM_BOUND, BALL_TOP_BOUND);
+        ball_velocity.y *= -1;
+    }
+
 }
 
 void render_rectangle(float half_width, float half_height, glm::vec3 position) {

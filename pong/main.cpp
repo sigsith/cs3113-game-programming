@@ -192,6 +192,8 @@ void render() {
                      left_paddle_position);
     render_rectangle(HALF_PADDLE_WIDTH, HALF_PADDLE_HEIGHT,
                      right_paddle_position);
+    render_rectangle(HALF_BALL_DIMENSION, HALF_BALL_DIMENSION,
+                     ball_position);
     SDL_GL_SwapWindow(g_display_window);
 }
 

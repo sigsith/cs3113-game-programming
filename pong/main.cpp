@@ -28,10 +28,10 @@ constexpr char V_SHADER_PATH[] = "shaders/vertex.glsl",
 
 /* ------------------ SECTION GLOBAL CONSTANTS AND DEFINES ------------------ */
 // Shared compile time configurations. Keep this as small as possible.
-constexpr auto HALF_BALL_DIMENSION = 0.1f;   // The ball is a square.
+constexpr auto HALF_BALL_DIMENSION = 0.05f;   // The ball is a square.
 constexpr auto HALF_PADDLE_HEIGHT = 0.5f;
-constexpr auto HALF_PADDLE_WIDTH = 0.125f;
-constexpr auto PADDLE_X_AXIS = 4.0f;
+constexpr auto HALF_PADDLE_WIDTH = 0.1f;
+constexpr auto PADDLE_X_AXIS = 4.2f;
 
 /* ------------------------ SECTION GLOBAL VARIABLES ------------------------ */
 // Shared states. Keep this as small as possible.
@@ -43,7 +43,7 @@ glm::vec3 right_paddle_position = glm::vec3(PADDLE_X_AXIS, 0.0f, 0.0f);
 glm::vec3 left_paddle_velocity = glm::vec3(0.0f, 0.0f, 0.0f);
 glm::vec3 right_paddle_velocity = glm::vec3(0.0f, 0.0f, 0.0f);
 glm::vec3 ball_position = glm::vec3(0.0f, 0.0f, 0.0f);
-glm::vec3 ball_velocity = glm::vec3(1.0f, 1.0f, 0.0f);
+glm::vec3 ball_velocity = glm::vec3(1.0f, 0.6f, 0.0f);
 double previous_ticks = 0.0f;
 
 /* --------------------------- SECTION FUNCTIONS --------------------------- */
@@ -142,10 +142,10 @@ void update() {
     previous_ticks = ticks;
 
     // Update positions.
-    constexpr auto PADDLE_SPEED = 6.0f;
+    constexpr auto PADDLE_SPEED = 8.0f;
     left_paddle_position += left_paddle_velocity * PADDLE_SPEED * delta_time;
     right_paddle_position += right_paddle_velocity * PADDLE_SPEED * delta_time;
-    constexpr auto BALL_SPEED = 2.5f;
+    constexpr auto BALL_SPEED = 3.0f;
     ball_position += ball_velocity * BALL_SPEED * delta_time;
 
     // Check if ball is lost.
@@ -190,13 +190,15 @@ void update() {
             right_paddle_position.y + HALF_PADDLE_HEIGHT + HALF_BALL_DIMENSION;
     const auto right_paddle_bottom =
             right_paddle_position.y - HALF_PADDLE_HEIGHT - HALF_BALL_DIMENSION;
-    constexpr auto OVERSHOOT_MARGIN = 0.1f;
+    constexpr auto OVERSHOOT_MARGIN = 0.05f;
     if (within(ball_position.x, LEFT_CHECK_LINE - OVERSHOOT_MARGIN,
                LEFT_CHECK_LINE) &&
         within(ball_position.y,
                left_paddle_bottom, left_paddle_top)) {
         ball_position.x = LEFT_CHECK_LINE;
         ball_velocity.x *= -1;
+        ball_velocity.y += 0.01f * left_paddle_velocity.y;
+        ball_velocity *= 1.005;
         return;
     }
     if (within(ball_position.x, RIGHT_CHECK_LINE,
@@ -204,6 +206,8 @@ void update() {
         within(ball_position.y, right_paddle_bottom, right_paddle_top)) {
         ball_position.x = RIGHT_CHECK_LINE;
         ball_velocity.x *= -1;
+        ball_velocity.y += 0.01f * right_paddle_velocity.y;
+        ball_velocity *= 1.005;
         return;
     }
 }

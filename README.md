@@ -16,7 +16,7 @@
 
 For instance:
 ```shell
-git clone https://github.com/sigsith/cs3113-game-programming.git
+git clone https://github.com/sigsith/cs3113-game-programming.git && cd cs3113-game-programming
 mkdir build && cd build
 cmake -DCMAKE_BUILD_TYPE=Release ..
 make

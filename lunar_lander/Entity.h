@@ -8,4 +8,13 @@
 * Academic Misconduct.
 **/
 
-int main() {}
+#ifndef LUNAR_LANDER_ENTITY_H
+#define LUNAR_LANDER_ENTITY_H
+
+
+class Entity {
+
+};
+
+
+#endif //LUNAR_LANDER_ENTITY_H

@@ -8,4 +8,4 @@
 * Academic Misconduct.
 **/
 
-int main() {}
+#include "Entity.h"

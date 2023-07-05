@@ -9,10 +9,10 @@ find_library(OPENGL_LIBRARY OpenGL)
 include_directories(common/includes)
 
 function(add_executable_and_link name)
-    add_executable(${name} ${name}/main.cpp common/src/ShaderProgram.cpp)
+    add_executable(${name} ${name}/main.cpp common/src/ShaderProgram.cpp ${name}/${ARGN})
     target_link_libraries(${name} ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES} ${OPENGL_LIBRARY})
 endfunction()
 
 add_executable_and_link(simple-2d-scene)
 add_executable_and_link(pong)
-add_executable_and_link(lunar_lander)
+add_executable_and_link(lunar_lander Entity.cpp)

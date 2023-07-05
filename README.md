@@ -1,16 +1,24 @@
 # cs3113-game-programming
 [Intro to Game Programming](https://github.com/sebastianromerocruz/CS3113-material)
 
-## Build Instruction
-Add the following files to common:
+## Prerequisites
+* CMake 3.10 or later
+* C++14 compiler
+* SDL2
+* SDL2_image
+* OpenGL
+
+## Build
+1. Clone this repo
+2. Create a build directory.
+3. Compile with CMake.
+4. Copy all files in /assets into the build directory.
+
+For instance:
+```shell
+git clone https://github.com/sigsith/cs3113-game-programming.git
+mkdir build && cd build
+cmake -DCMAKE_BUILD_TYPE=Release ..
+make
+cp -r ../assets/* .
 ```
-project_root/
-|-- common/
-    |-- includes/
-        |-- glm/
-        |-- ShaderProgram.h
-        |-- stb_image.h
-    |-- src/
-        |-- ShaderProgram.cpp
-```
-Move shaders/ and relevant image texture files to the build directory

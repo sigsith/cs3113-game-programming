@@ -11,9 +11,17 @@
 #ifndef LUNAR_LANDER_ENTITY_H
 #define LUNAR_LANDER_ENTITY_H
 
+#include "ShaderProgram.h"
 
 class Entity {
+private:
 
+public:
+    Entity();
+
+    void Update(float delta_time);
+
+    void Render(ShaderProgram *program);
 };
 
 

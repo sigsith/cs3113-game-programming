@@ -42,6 +42,9 @@ void Ship::Render(ShaderProgram &program) const {
 }
 Ship::Ship(GLuint texture_id) : _texture_id(texture_id) {}
 int Ship::ComputeState() const {
-  return 4;
+  return _rcs_state + (_is_engine_on ? 4 : 1);
 }
+void Ship::SetEngine(bool is_on) { _is_engine_on = is_on; }
+
+void Ship::SetRcs(int state) { _rcs_state = state; }
 }

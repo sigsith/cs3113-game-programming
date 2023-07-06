@@ -29,7 +29,7 @@ constexpr auto TOP_BOUNDARY = 3.75f;
 constexpr auto RIGHT_BOUNDARY = 5.0f;
 /* ---------------------------  GLOBAL VARIABLES --------------------------- */
 SDL_Window *display_window;
-bool game_is_running = true;
+bool is_game_running = true;
 ShaderProgram program;
 float previous_ticks = 0.0f;
 GLuint saucer_texture_id;
@@ -46,7 +46,7 @@ void Render();
 /* ---------------------------------  MAIN --------------------------------- */
 int main() {
   Initialize();
-  while (game_is_running) {
+  while (is_game_running) {
     ProcessInput();
     Update();
     Render();
@@ -112,11 +112,32 @@ void ProcessInput() {
   SDL_Event event;
   while (SDL_PollEvent(&event)) {
     switch (event.type) {
-      case SDL_WINDOWEVENT_CLOSE:
-      case SDL_QUIT:game_is_running = false;
-        break;
+      case SDL_QUIT:
+      case SDL_WINDOWEVENT_CLOSE:is_game_running = false;
+        return;
+      case SDL_KEYDOWN:
+        switch (event.key.keysym.sym) {
+          case SDLK_q:is_game_running = false;
+            return;
+          default:break;
+        }
       default:break;
     }
+  }
+  const Uint8 *key_state = SDL_GetKeyboardState(nullptr);
+  if (key_state[SDL_SCANCODE_S]) {
+    apollo->SetEngine(true);
+  } else {
+    apollo->SetEngine(false);
+  }
+  const auto A_PRESSED = key_state[SDL_SCANCODE_A];
+  const auto D_PRESSED = key_state[SDL_SCANCODE_D];
+  if (A_PRESSED && !D_PRESSED) {
+    apollo->SetRcs(1);
+  } else if (D_PRESSED && !A_PRESSED) {
+    apollo->SetRcs(-1);
+  } else {
+    apollo->SetRcs(0);
   }
 }
 void Update() {

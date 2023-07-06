@@ -18,6 +18,8 @@ namespace ship {
 class Ship : public Entity {
  private:
   const GLuint _texture_id;
+  int _rcs_state = 0;  // -1, 0, 1
+  bool _is_engine_on = false;
   int ComputeState() const;
  public:
   void Update(float delta_time) override;
@@ -25,6 +27,10 @@ class Ship : public Entity {
   void Render(ShaderProgram &program) const override;
 
   explicit Ship(GLuint texture_id);
+
+  void SetEngine(bool is_on);
+
+  void SetRcs(int state);
 };
 }
 #endif //CS3113_GAME_PROGRAMMING_LUNAR_LANDER_ENTITY_H_

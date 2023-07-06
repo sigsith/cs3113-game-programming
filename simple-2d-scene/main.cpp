@@ -61,7 +61,7 @@ int beam_count = 0;
 const float RIGHT_BORDER = 4.6f;
 float cow_angle = 0.0;
 SDL_Window *display_window;
-bool game_is_running = true;
+bool is_game_running = true;
 bool is_beaming = false;
 float cool_down = 0.0;
 double cool_down_small = 0.0;
@@ -167,7 +167,7 @@ void ProcessInput() {
   while (SDL_PollEvent(&event)) {
     switch (event.type) {
       case SDL_WINDOWEVENT_CLOSE:
-      case SDL_QUIT:game_is_running = false;
+      case SDL_QUIT:is_game_running = false;
         break;
       default:break;
     }
@@ -341,7 +341,7 @@ void shutdown() {
 int main(int argc, char *argv[]) {
   initialise();
 
-  while (game_is_running) {
+  while (is_game_running) {
     ProcessInput();
     Update();
     Render();

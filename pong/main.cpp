@@ -47,7 +47,7 @@ glm::vec3 ball_velocity = glm::vec3(1.0f, 0.6f, 0.0f);
 double previous_ticks = 0.0f;
 
 /* --------------------------- SECTION FUNCTIONS --------------------------- */
-void initialise() {
+void initialize() {
   SDL_Init(SDL_INIT_VIDEO);
   constexpr int WINDOW_WIDTH = 640,
       WINDOW_HEIGHT = 480;
@@ -243,7 +243,7 @@ void render() {
 
 // To play this game, use WS or UP/DOWN keys.
 int main() {
-  initialise();
+  initialize();
   while (is_game_running) {
     process_input();
     update();

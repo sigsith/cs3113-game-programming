@@ -7,6 +7,8 @@
 * NYU School of Engineering Policies and Procedures on
 * Academic Misconduct.
 **/
+
+/* -----------------------------  FORBID CHANGE ----------------------------- */
 #define GL_SILENCE_DEPRECATION
 #define STB_IMAGE_IMPLEMENTATION
 
@@ -22,24 +24,10 @@
 #include "glm/gtc/matrix_transform.hpp"
 #include "ShaderProgram.h"
 #include "stb_image.h"
+/* ---------------------  GLOBAL CONSTANTS AND DEFINES --------------------- */
+/* ---------------------------  GLOBAL VARIABLES --------------------------- */
+/* --------------------------  FUNCTION SIGNATURES -------------------------- */
 
-enum Coordinate {
-  x_coordinate,
-  y_coordinate
-};
-
-const int WINDOW_WIDTH = 640,
-    WINDOW_HEIGHT = 480;
-
-const float BG_RED = 0.1922f,
-    BG_BLUE = 0.549f,
-    BG_GREEN = 0.9059f,
-    BG_OPACITY = 1.0f;
-
-const int VIEWPORT_X = 0,
-    VIEWPORT_Y = 0,
-    VIEWPORT_WIDTH = WINDOW_WIDTH,
-    VIEWPORT_HEIGHT = WINDOW_HEIGHT;
 
 const char V_SHADER_PATH[] = "shaders/vertex_textured.glsl",
     F_SHADER_PATH[] = "shaders/fragment_textured.glsl";
@@ -62,22 +50,34 @@ bool game_is_running = true;
 const float FLOOR = -1.0f;
 
 ShaderProgram program;
-glm::mat4 view_matrix, cow_matrix, projection_matrix, trans_matrix,
-    saucer_matrix;
+glm::mat4 view_matrix, projection_matrix, saucer_matrix;
 
 float previous_ticks = 0.0f;
 
 GLuint cow_texture_id;
 GLuint saucer_texture_id;
-SDL_Joystick *player_one_controller;
 
-// overall position
-glm::vec3 cow_position = glm::vec3(0.0f, 0.0f, 0.0f);
 glm::vec3 saucer_position = glm::vec3(0.0f, 2.0f, 0.0f);
-
-// movement tracker
-glm::vec3 cow_velocity = glm::vec3(0.0f, 0.0f, 0.0f);
 glm::vec3 saucer_velocity = glm::vec3(0.0f, 0.0f, 0.0f);
+
+void initialize();
+GLuint load_texture(const char *filepath);
+void process_input();
+void update();
+void render();
+
+int main() {
+  initialize();
+
+  while (game_is_running) {
+    process_input();
+    update();
+    render();
+  }
+
+  SDL_Quit();
+  return 0;
+}
 
 GLuint load_texture(const char *filepath) {
   // STEP 1: Loading the image file
@@ -107,14 +107,20 @@ GLuint load_texture(const char *filepath) {
   return textureID;
 }
 
-void initialise() {
+void initialize() {
+  const int WINDOW_WIDTH = 640,
+      WINDOW_HEIGHT = 480;
+
+  const int VIEWPORT_X = 0,
+      VIEWPORT_Y = 0,
+      VIEWPORT_WIDTH = WINDOW_WIDTH,
+      VIEWPORT_HEIGHT = WINDOW_HEIGHT;
   // Initialise video and joystick subsystems
   SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK);
 
   // Open the first controller found. Returns null on error
-  player_one_controller = SDL_JoystickOpen(0);
 
-  display_window = SDL_CreateWindow("Simple 2d scene",
+  display_window = SDL_CreateWindow("Lunar Lander",
                                     SDL_WINDOWPOS_CENTERED,
                                     SDL_WINDOWPOS_CENTERED,
                                     WINDOW_WIDTH, WINDOW_HEIGHT,
@@ -131,7 +137,6 @@ void initialise() {
 
   program.Load(V_SHADER_PATH, F_SHADER_PATH);
 
-  cow_matrix = glm::mat4(1.0f);
   saucer_matrix = glm::mat4(1.0f);
   view_matrix = glm::mat4(
       1.0f);  // Defines the position (location and orientation) of the camera
@@ -144,7 +149,7 @@ void initialise() {
 
   glUseProgram(program.programID);
 
-  glClearColor(BG_RED, BG_BLUE, BG_GREEN, BG_OPACITY);
+  glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
   saucer_texture_id = load_texture(SAUCER_SPRITE_FILEPATH);
 
@@ -208,22 +213,4 @@ void render() {
   glDisableVertexAttribArray(program.texCoordAttribute);
 
   SDL_GL_SwapWindow(display_window);
-}
-
-void shutdown() {
-  SDL_JoystickClose(player_one_controller);
-  SDL_Quit();
-}
-
-int main(int argc, char *argv[]) {
-  initialise();
-
-  while (game_is_running) {
-    process_input();
-    update();
-    render();
-  }
-
-  shutdown();
-  return 0;
 }

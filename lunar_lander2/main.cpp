@@ -33,8 +33,6 @@ bool is_game_running = true;
 ShaderProgram program;
 float previous_ticks = 0.0f;
 GLuint saucer_texture_id;
-glm::vec3 ship_position = glm::vec3(0.0f, 2.0f, 0.0f);
-glm::vec3 ship_velocity = glm::vec3(0.0f, 0.0f, 0.0f);
 // To avoid default initialization.
 std::unique_ptr<ship::Ship> apollo;
 float time_accumulator = 0.0;
@@ -107,8 +105,8 @@ void Initialize() {
   saucer_texture_id = LoadTexture("lunar_lander.png");
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-  apollo = std::make_unique<ship::Ship>(glm::vec3(0.0, 0.0, 0.0),
-                                        glm::vec3(1.0, 0.0, 0.0),
+  apollo = std::make_unique<ship::Ship>(glm::vec3(-4.0, 2.0, 0.0),
+                                        glm::vec3(0.5, -0.8, 0.0),
                                         0.0,
                                         saucer_texture_id);
 }

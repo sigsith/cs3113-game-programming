@@ -23,25 +23,34 @@
 #include "stb_image.h"
 #include "Entity.h"
 /* -----------------------------  STD INCLUDES ----------------------------- */
-//#include <memory>
+#include <memory>
+#include <iostream>
+#include <cmath>
 /* ---------------------  GLOBAL CONSTANTS AND DEFINES --------------------- */
 constexpr auto TOP_BOUNDARY = 3.75f;
 constexpr auto RIGHT_BOUNDARY = 5.0f;
 /* ---------------------------  GLOBAL VARIABLES --------------------------- */
 SDL_Window *display_window;
 bool is_game_running = true;
+bool quit_immediately = true;
 ShaderProgram program;
 float previous_ticks = 0.0f;
 GLuint saucer_texture_id;
 std::unique_ptr<ship::Ship> apollo;
 std::unique_ptr<moon::Moon> luna;
+std::vector<message::Message> messages;
 float time_accumulator = 0.0;
+enum Result { PREMATURE, SUCCESS, FAILURE };
+Result result = Result::PREMATURE;
 /* --------------------------  FUNCTION SIGNATURES -------------------------- */
 void Initialize();
 GLuint LoadTexture(const char *filepath);
 void ProcessInput();
 void Update();
 void Render();
+void DisplayMessage();
+void ProcessInterrupt();
+void UpdateTime();
 /* ---------------------------------  MAIN --------------------------------- */
 int main() {
   Initialize();
@@ -49,6 +58,11 @@ int main() {
     ProcessInput();
     Update();
     Render();
+  }
+  while (!quit_immediately) {
+    ProcessInterrupt();
+    DisplayMessage();
+    UpdateTime();
   }
   SDL_Quit();
   return 0;
@@ -109,6 +123,8 @@ void Initialize() {
                                         0.0,
                                         LoadTexture("lunar_lander.png"));
   luna = std::make_unique<moon::Moon>(LoadTexture("lunar_surface.png"));
+  messages.emplace_back(LoadTexture("mission_accomplished.png"));
+  messages.emplace_back(LoadTexture("mission_failed.png"));
 }
 void ProcessInput() {
   SDL_Event event;
@@ -159,6 +175,19 @@ void Update() {
     luna->Update(FIXED_TIMESTEP);
     epoch -= FIXED_TIMESTEP;
   }
+  const auto apollo_pos = apollo->GetPosition();
+  if (apollo_pos.y < -2.2) {
+    if (abs(apollo_pos.x) < 1.0 && apollo->ScalarVelocity() < 1.0
+        && abs(fmod(apollo->GetOrientation(), (2 * glm::pi<float>()))
+                   - glm::pi<float>() / 2)
+            < glm::pi<float>() / 4) {
+      result = Result::SUCCESS;
+    } else {
+      result = Result::FAILURE;
+    }
+    is_game_running = false;
+    quit_immediately = false;
+  }
   time_accumulator = epoch;
 }
 void DrawObject(glm::mat4 &object_model_matrix, GLuint &object_texture_id) {
@@ -172,3 +201,33 @@ void Render() {
   apollo->Render(program);
   SDL_GL_SwapWindow(display_window);
 }
+void DisplayMessage() {
+  glClear(GL_COLOR_BUFFER_BIT);
+  luna->Render(program);
+  apollo->Render(program);
+  static const auto index_to_show = (result == Result::SUCCESS) ? 0 : 1;
+  messages[index_to_show].Render(program);
+  SDL_GL_SwapWindow(display_window);
+}
+void ProcessInterrupt() {
+  SDL_Event event;
+  while (SDL_PollEvent(&event)) {
+    switch (event.type) {
+      case SDL_QUIT:
+      case SDL_WINDOWEVENT_CLOSE:quit_immediately = true;
+        return;
+      case SDL_KEYDOWN:
+        switch (event.key.keysym.sym) {
+          case SDLK_q:quit_immediately = true;
+            return;
+          default:break;
+        }
+      default:break;
+    }
+  }
+}
+void UpdateTime() {
+
+}
+
+

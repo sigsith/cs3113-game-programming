@@ -56,6 +56,12 @@ class Ship : public Entity {
   void SetEngine(bool is_on);
 
   void SetRcs(int state);
+
+  glm::vec3 GetPosition() const;
+
+  float GetOrientation() const;
+
+  float ScalarVelocity() const;
 };
 glm::vec3 VectorByAngle(float scalar, float angle_in_radians);
 }
@@ -66,6 +72,19 @@ class Moon : public Entity {
   GLuint _texture_id;
  public:
   explicit Moon(GLuint texture_id);
+
+  void Update(float delta_time) override;
+
+  void Render(ShaderProgram &program) const override;
+};
+}
+
+namespace message {
+class Message : public Entity {
+ private:
+  GLuint _texture_id;
+ public:
+  explicit Message(GLuint texture_id);
 
   void Update(float delta_time) override;
 

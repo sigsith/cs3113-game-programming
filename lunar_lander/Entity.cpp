@@ -68,6 +68,17 @@ void Ship::SetEngine(bool is_on) { _is_engine_on = is_on; }
 
 void Ship::SetRcs(int state) { _rcs_state = state; }
 
+glm::vec3 Ship::GetPosition() const {
+  return _position;
+}
+
+float Ship::GetOrientation() const {
+  return _orientation;
+}
+
+float Ship::ScalarVelocity() const {
+  return glm::length(_velocity);
+}
 glm::vec3 VectorByAngle(float scalar, float angle_in_radians) {
   float x = scalar * glm::cos(angle_in_radians);
   float y = scalar * glm::sin(angle_in_radians);
@@ -96,6 +107,36 @@ void moon::Moon::Render(ShaderProgram &program) const {
   constexpr auto scale_factor_y = 3.0f;
   static const auto model_matrix =
       glm::scale(glm::translate(base_matrix, glm::vec3(0.0f, -2.6f, 0.0f)),
+                 glm::vec3(scale_factor_x, scale_factor_y, 1.0f));
+  program.SetModelMatrix(model_matrix);
+  glBindTexture(GL_TEXTURE_2D, _texture_id);
+  glDrawArrays(GL_TRIANGLES, 0, 6);
+  glDisableVertexAttribArray(program.positionAttribute);
+  glDisableVertexAttribArray(program.texCoordAttribute);
+}
+
+message::Message::Message(GLuint texture_id) : _texture_id(texture_id) {}
+void message::Message::Update(float delta_time) {}
+void message::Message::Render(ShaderProgram &program) const {
+  constexpr float vertices[] = {
+      -0.5f, -0.5f, 0.5f, -0.5f, 0.5f, 0.5f,
+      -0.5f, -0.5f, 0.5f, 0.5f, -0.5f, 0.5f
+  };
+  constexpr float texture_coordinates[] = {
+      0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
+      0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f,
+  };
+  glVertexAttribPointer(program.positionAttribute, 2, GL_FLOAT, false, 0,
+                        vertices);
+  glEnableVertexAttribArray(program.positionAttribute);
+  glVertexAttribPointer(program.texCoordAttribute, 2, GL_FLOAT, false, 0,
+                        texture_coordinates);
+  glEnableVertexAttribArray(program.texCoordAttribute);
+  constexpr auto base_matrix = glm::mat4(1.0f);
+  constexpr auto scale_factor_x = 10.0f;
+  constexpr auto scale_factor_y = 2.0f;
+  static const auto model_matrix =
+      glm::scale(glm::translate(base_matrix, glm::vec3(0.0f, 1.0f, 0.0f)),
                  glm::vec3(scale_factor_x, scale_factor_y, 1.0f));
   program.SetModelMatrix(model_matrix);
   glBindTexture(GL_TEXTURE_2D, _texture_id);

@@ -106,7 +106,10 @@ void Initialize() {
   saucer_texture_id = LoadTexture("lunar_lander.png");
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-  apollo = std::make_unique<ship::Ship>(saucer_texture_id);
+  apollo = std::make_unique<ship::Ship>(glm::vec3(0.0, 0.0, 0.0),
+                                        glm::vec3(1.0, 0.0, 0.0),
+                                        0.0,
+                                        saucer_texture_id);
 }
 void ProcessInput() {
   SDL_Event event;

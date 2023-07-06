@@ -40,7 +40,11 @@ void Ship::Render(ShaderProgram &program) const {
   glDisableVertexAttribArray(program.positionAttribute);
   glDisableVertexAttribArray(program.texCoordAttribute);
 }
-Ship::Ship(GLuint texture_id) : _texture_id(texture_id) {}
+Ship::Ship(glm::vec3 position, glm::vec3 velocity, float orientation,
+           GLuint texture_id) : _position(position),
+                                _velocity(velocity),
+                                _orientation(orientation),
+                                _texture_id(texture_id) {}
 int Ship::ComputeState() const {
   return _rcs_state + (_is_engine_on ? 4 : 1);
 }

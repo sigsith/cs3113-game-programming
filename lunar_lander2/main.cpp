@@ -28,7 +28,7 @@ constexpr auto RIGHT_BOUNDARY = 5.0f;
 SDL_Window *display_window;
 bool game_is_running = true;
 ShaderProgram program;
-glm::mat4 view_matrix, projection_matrix, saucer_matrix;
+glm::mat4 saucer_matrix;
 float previous_ticks = 0.0f;
 GLuint saucer_texture_id;
 glm::vec3 saucer_position = glm::vec3(0.0f, 2.0f, 0.0f);
@@ -94,10 +94,9 @@ void Initialize() {
   program.Load("shaders/vertex_textured.glsl",
                "shaders/fragment_textured.glsl");
   saucer_matrix = glm::mat4(1.0f);
-  view_matrix = glm::mat4(
-      1.0f);  // Defines the position (location and orientation) of the camera
-  projection_matrix = glm::ortho(-5.0f, 5.0f, -3.75f, 3.75f, -1.0f,
-                                 1.0f);  // Defines the characteristics of your camera, such as clip planes, field of view, projection method etc.
+  const auto view_matrix = glm::mat4(1.0f);
+  const auto
+      projection_matrix = glm::ortho(-5.0f, 5.0f, -3.75f, 3.75f, -1.0f, 1.0f);
   program.SetProjectionMatrix(projection_matrix);
   program.SetViewMatrix(view_matrix);
   glUseProgram(program.programID);
@@ -121,8 +120,8 @@ void ProcessInput() {
 
 void Update() {
   constexpr auto MILLISECONDS_IN_SECOND = 1000.0f;
-  float ticks = (float) SDL_GetTicks() / MILLISECONDS_IN_SECOND;
-  float delta_time = ticks - previous_ticks;
+  const float ticks = (float) SDL_GetTicks() / MILLISECONDS_IN_SECOND;
+  const float delta_time = ticks - previous_ticks;
   previous_ticks = ticks;
   saucer_matrix = glm::mat4(1.0f);
   saucer_matrix = glm::translate(saucer_matrix, saucer_position);
@@ -136,11 +135,11 @@ void DrawObject(glm::mat4 &object_model_matrix, GLuint &object_texture_id) {
 
 void Render() {
   glClear(GL_COLOR_BUFFER_BIT);
-  float vertices[] = {
+  const float vertices[] = {
       -0.5f, -0.5f, 0.5f, -0.5f, 0.5f, 0.5f,
       -0.5f, -0.5f, 0.5f, 0.5f, -0.5f, 0.5f
   };
-  float texture_coordinates[] = {
+  const float texture_coordinates[] = {
       0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
       0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f,
   };

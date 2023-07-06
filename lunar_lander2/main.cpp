@@ -1,22 +1,19 @@
 /**
-* Author: Yifei Yao
-* Assignment: Simple 2D Scene
-* Date due: 2023-06-11, 11:59pm
-* I pledge that I have completed this assignment without
-* collaborating with anyone else, in conformance with the
-* NYU School of Engineering Policies and Procedures on
-* Academic Misconduct.
-**/
-
+ * Author: Yifei Yao
+ * Assignment: Lunar Lander
+ * Date due: 2023-07-07, 11:59pm
+ * I pledge that I have completed this assignment without
+ * collaborating with anyone else, in conformance with the
+ * NYU School of Engineering Policies and Procedures on
+ * Academic Misconduct.
+ **/
 /* -----------------------------  FORBID CHANGE ----------------------------- */
 #define GL_SILENCE_DEPRECATION
 #define STB_IMAGE_IMPLEMENTATION
-
+#define GL_GLEXT_PROTOTYPES 1
 #ifdef _WINDOWS
 #include <GL/glew.h>
 #endif
-
-#define GL_GLEXT_PROTOTYPES 1
 
 #include <SDL.h>
 #include <SDL_opengl.h>
@@ -25,30 +22,11 @@
 #include "ShaderProgram.h"
 #include "stb_image.h"
 /* ---------------------  GLOBAL CONSTANTS AND DEFINES --------------------- */
+constexpr auto TOP_BOUNDARY = 3.75f;
+constexpr auto RIGHT_BOUNDARY = 5.0f;
 /* ---------------------------  GLOBAL VARIABLES --------------------------- */
-/* --------------------------  FUNCTION SIGNATURES -------------------------- */
-
-
-const char V_SHADER_PATH[] = "shaders/vertex_textured.glsl",
-    F_SHADER_PATH[] = "shaders/fragment_textured.glsl";
-
-const float MILLISECONDS_IN_SECOND = 1000.0;
-
-const int NUMBER_OF_TEXTURES = 1; // to be generated, that is
-const GLint LEVEL_OF_DETAIL =
-    0;  // base image level; Level n is the nth mipmap reduction image
-const GLint TEXTURE_BORDER = 0;   // this value MUST be zero
-
-const char SAUCER_SPRITE_FILEPATH[] = "lunar_lander.png";
-
-const float LEFT_BORDER = -4.6f;
-int beam_count = 0;
-const float RIGHT_BORDER = 4.6f;
-float cow_angle = 0.0;
 SDL_Window *display_window;
 bool game_is_running = true;
-const float FLOOR = -1.0f;
-
 ShaderProgram program;
 glm::mat4 view_matrix, projection_matrix, saucer_matrix;
 
@@ -59,43 +37,43 @@ GLuint saucer_texture_id;
 
 glm::vec3 saucer_position = glm::vec3(0.0f, 2.0f, 0.0f);
 glm::vec3 saucer_velocity = glm::vec3(0.0f, 0.0f, 0.0f);
-
-void initialize();
-GLuint load_texture(const char *filepath);
-void process_input();
-void update();
-void render();
-
+/* --------------------------  FUNCTION SIGNATURES -------------------------- */
+void Initialize();
+GLuint LoadTexture(const char *filepath);
+void ProcessInput();
+void Update();
+void Render();
+/* ---------------------------------  MAIN --------------------------------- */
 int main() {
-  initialize();
+  Initialize();
 
   while (game_is_running) {
-    process_input();
-    update();
-    render();
+    ProcessInput();
+    Update();
+    Render();
   }
 
   SDL_Quit();
   return 0;
 }
-
-GLuint load_texture(const char *filepath) {
+/* -----------------------  FUNCTION IMPLEMENTATIONS ----------------------- */
+GLuint LoadTexture(const char *filepath) {
   // STEP 1: Loading the image file
   int width, height, number_of_components;
   unsigned char *image = stbi_load(filepath, &width, &height,
                                    &number_of_components, STBI_rgb_alpha);
-
   if (image == nullptr) {
     throw std::runtime_error(
         "Unable to load image. Make sure the path is correct.");
   }
-
   // STEP 2: Generating and binding a texture ID to our image
   GLuint textureID;
+  // The value of which doesn't seem to matter?
+  constexpr int NUMBER_OF_TEXTURES = 1;
   glGenTextures(NUMBER_OF_TEXTURES, &textureID);
   glBindTexture(GL_TEXTURE_2D, textureID);
-  glTexImage2D(GL_TEXTURE_2D, LEVEL_OF_DETAIL, GL_RGBA, width, height,
-               TEXTURE_BORDER, GL_RGBA, GL_UNSIGNED_BYTE, image);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height,
+               0, GL_RGBA, GL_UNSIGNED_BYTE, image);
 
   // STEP 3: Setting our texture filter parameters
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -107,7 +85,7 @@ GLuint load_texture(const char *filepath) {
   return textureID;
 }
 
-void initialize() {
+void Initialize() {
   const int WINDOW_WIDTH = 640,
       WINDOW_HEIGHT = 480;
 
@@ -135,7 +113,8 @@ void initialize() {
 
   glViewport(VIEWPORT_X, VIEWPORT_Y, VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
 
-  program.Load(V_SHADER_PATH, F_SHADER_PATH);
+  program.Load("shaders/vertex_textured.glsl",
+               "shaders/fragment_textured.glsl");
 
   saucer_matrix = glm::mat4(1.0f);
   view_matrix = glm::mat4(
@@ -151,14 +130,14 @@ void initialize() {
 
   glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
-  saucer_texture_id = load_texture(SAUCER_SPRITE_FILEPATH);
+  saucer_texture_id = LoadTexture("lunar_lander.png");
 
   // enable blending
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
-void process_input() {
+void ProcessInput() {
   SDL_Event event;
   while (SDL_PollEvent(&event)) {
     switch (event.type) {
@@ -170,7 +149,8 @@ void process_input() {
   }
 }
 
-void update() {
+void Update() {
+  constexpr auto MILLISECONDS_IN_SECOND = 1000.0f;
   float ticks = (float) SDL_GetTicks() /
       MILLISECONDS_IN_SECOND; // get the current number of ticks
   float delta_time = ticks -
@@ -187,7 +167,7 @@ void draw_object(glm::mat4 &object_model_matrix, GLuint &object_texture_id) {
                6); // we are now drawing 2 triangles, so we use 6 instead of 3
 }
 
-void render() {
+void Render() {
   glClear(GL_COLOR_BUFFER_BIT);
 
   // Vertices

@@ -44,11 +44,11 @@ float time_accumulator = 0.0;
 float previous_ticks = 0.0;
 
 /* --------------------------- SECTION FUNCTIONS --------------------------- */
-void initialize();
-GLuint load_texture(const char *filepath);
-void process_input();
-void update();
-void render();
+void Initialize();
+GLuint LoadTexture(const char *filepath);
+void ProcessInput();
+void Update();
+void Render();
 
 template<typename T>
 void inplace_clamp(T &value, const T &lower, const T &upper) {
@@ -72,7 +72,7 @@ int main() {
   return 0;
 }
 
-void initialize() {
+void Initialize() {
   SDL_Init(SDL_INIT_VIDEO);
   constexpr int WINDOW_WIDTH = 640, WINDOW_HEIGHT = 480;
   constexpr float BG_RED = 0.0f, BG_BLUE = 0.0f, BG_GREEN = 0.0f,
@@ -105,7 +105,7 @@ void initialize() {
   lunar = ship::Ship(glm::vec3(0.0, 0.0, 0.0), glm::vec3(1.0, 0.0, 0.0), 0.0,
                      load_texture("lunar_lander.png"));
 }
-GLuint load_texture(const char *filepath) {
+GLuint LoadTexture(const char *filepath) {
   // STEP 1: Loading the image file
   int width, height, number_of_components;
   unsigned char *image = stbi_load(filepath, &width, &height,
@@ -132,7 +132,7 @@ GLuint load_texture(const char *filepath) {
 
   return textureID;
 }
-void process_input() {
+void ProcessInput() {
   SDL_Event event;
   // Handle quitting.
   while (SDL_PollEvent(&event)) {
@@ -165,7 +165,7 @@ void process_input() {
     lunar.SetRcs(0);
   }
 }
-void update() {
+void Update() {
   // Calculate delta time.
   constexpr auto MILLISECONDS_IN_SECOND = 1000.0f;
   const auto ticks =
@@ -195,7 +195,7 @@ void update() {
 
   time_accumulator = epoch;
 }
-void render() {
+void Render() {
   glClear(GL_COLOR_BUFFER_BIT);
 
   // Vertices

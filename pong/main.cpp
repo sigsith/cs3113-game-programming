@@ -47,7 +47,7 @@ glm::vec3 ball_velocity = glm::vec3(1.0f, 0.6f, 0.0f);
 double previous_ticks = 0.0f;
 
 /* --------------------------- SECTION FUNCTIONS --------------------------- */
-void initialize() {
+void Initialize() {
   SDL_Init(SDL_INIT_VIDEO);
   constexpr int WINDOW_WIDTH = 640,
       WINDOW_HEIGHT = 480;
@@ -86,7 +86,7 @@ void initialize() {
   glClearColor(BG_RED, BG_GREEN, BG_BLUE, BG_OPACITY);
 }
 
-void process_input() {
+void ProcessInput() {
   SDL_Event event;
   // Handle quitting.
   while (SDL_PollEvent(&event)) {
@@ -129,7 +129,7 @@ bool within(T &value, const T &lower, const T &upper) {
   return value >= lower && value <= upper;
 }
 
-void update() {
+void Update() {
   // Calculate delta time.
   constexpr auto MILLISECONDS_IN_SECOND = 1000.0;
   const auto ticks = SDL_GetTicks() /
@@ -230,7 +230,7 @@ render_rectangle(float half_width, float half_height, glm::vec3 position) {
   glDisableVertexAttribArray(program.positionAttribute);
 }
 
-void render() {
+void Render() {
   glClear(GL_COLOR_BUFFER_BIT);
   render_rectangle(HALF_PADDLE_WIDTH, HALF_PADDLE_HEIGHT,
                    left_paddle_position);
@@ -243,11 +243,11 @@ void render() {
 
 // To play this game, use WS or UP/DOWN keys.
 int main() {
-  initialize();
+  Initialize();
   while (is_game_running) {
-    process_input();
-    update();
-    render();
+    ProcessInput();
+    Update();
+    Render();
   }
   SDL_Quit();
   return 0;

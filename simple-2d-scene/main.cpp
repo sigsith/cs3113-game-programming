@@ -87,7 +87,7 @@ glm::vec3 saucer_position = glm::vec3(0.0f, 2.0f, 0.0f);
 glm::vec3 cow_velocity = glm::vec3(0.0f, 0.0f, 0.0f);
 glm::vec3 saucer_velocity = glm::vec3(0.0f, 0.0f, 0.0f);
 
-GLuint load_texture(const char *filepath) {
+GLuint LoadTexture(const char *filepath) {
   // STEP 1: Loading the image file
   int width, height, number_of_components;
   unsigned char *image = stbi_load(filepath, &width, &height,
@@ -154,15 +154,15 @@ void initialise() {
 
   glClearColor(BG_RED, BG_BLUE, BG_GREEN, BG_OPACITY);
 
-  cow_texture_id = load_texture(COW_SPRITE_FILEPATH);
-  saucer_texture_id = load_texture(SAUCER_SPRITE_FILEPATH);
+  cow_texture_id = LoadTexture(COW_SPRITE_FILEPATH);
+  saucer_texture_id = LoadTexture(SAUCER_SPRITE_FILEPATH);
 
   // enable blending
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
-void process_input() {
+void ProcessInput() {
   SDL_Event event;
   while (SDL_PollEvent(&event)) {
     switch (event.type) {
@@ -174,7 +174,7 @@ void process_input() {
   }
 }
 
-void update() {
+void Update() {
   float ticks = (float) SDL_GetTicks() /
       MILLISECONDS_IN_SECOND; // get the current number of ticks
   float delta_time = ticks -
@@ -296,7 +296,7 @@ void draw_object(glm::mat4 &object_model_matrix, GLuint &object_texture_id) {
                6); // we are now drawing 2 triangles, so we use 6 instead of 3
 }
 
-void render() {
+void Render() {
   glClear(GL_COLOR_BUFFER_BIT);
 
   // Vertices
@@ -342,9 +342,9 @@ int main(int argc, char *argv[]) {
   initialise();
 
   while (game_is_running) {
-    process_input();
-    update();
-    render();
+    ProcessInput();
+    Update();
+    Render();
   }
 
   shutdown();

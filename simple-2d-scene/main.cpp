@@ -289,7 +289,7 @@ void Update() {
   }
 }
 
-void draw_object(glm::mat4 &object_model_matrix, GLuint &object_texture_id) {
+void DrawObject(glm::mat4 &object_model_matrix, GLuint &object_texture_id) {
   program.SetModelMatrix(object_model_matrix);
   glBindTexture(GL_TEXTURE_2D, object_texture_id);
   glDrawArrays(GL_TRIANGLES, 0,
@@ -320,8 +320,8 @@ void Render() {
   glEnableVertexAttribArray(program.texCoordAttribute);
 
   // Bind texture
-  draw_object(cow_matrix, cow_texture_id);
-  draw_object(saucer_matrix, saucer_texture_id);
+  DrawObject(cow_matrix, cow_texture_id);
+  DrawObject(saucer_matrix, saucer_texture_id);
 
   // We disable two attribute arrays now
   glDisableVertexAttribArray(program.positionAttribute);

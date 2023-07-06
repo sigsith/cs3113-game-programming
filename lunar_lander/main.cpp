@@ -52,6 +52,7 @@ void DisplayMessage();
 void Update2();
 /* ---------------------------------  MAIN --------------------------------- */
 int main() {
+  std::cout << "Use A, S, and D for control. Try land on the flag nicely.\n";
   Initialize();
   while (is_game_running) {
     ProcessInput();
@@ -77,7 +78,7 @@ GLuint LoadTexture(const char *filepath) {
   }
   GLuint textureID;
   // The value doesn't seem to matter?
-  constexpr int NUMBER_OF_TEXTURES = 1;
+  constexpr int NUMBER_OF_TEXTURES = 3;
   glGenTextures(NUMBER_OF_TEXTURES, &textureID);
   glBindTexture(GL_TEXTURE_2D, textureID);
   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height,
@@ -158,9 +159,7 @@ void ProcessInput() {
   }
 }
 void Update() {
-  constexpr auto MILLISECONDS_IN_SECOND = 1000.0f;
-  const auto ticks =
-      static_cast<float>(SDL_GetTicks()) / MILLISECONDS_IN_SECOND;
+  const auto ticks = static_cast<float>(SDL_GetTicks()) / 1000.0f;
   const auto delta_time = static_cast<float>(ticks - previous_ticks);
   previous_ticks = ticks;
   auto epoch = delta_time + time_accumulator;
@@ -176,10 +175,10 @@ void Update() {
   }
   const auto apollo_pos = apollo->GetPosition();
   if (apollo_pos.y < -2.2) {
-    if (abs(apollo_pos.x) < 1.0 && apollo->ScalarVelocity() < 1.0
+    if (abs(apollo_pos.x) < 0.75 && apollo->ScalarVelocity() < 0.6
         && abs(fmod(apollo->GetOrientation(), (2 * glm::pi<float>()))
                    - glm::pi<float>() / 2)
-            < glm::pi<float>() / 4) {
+            < glm::pi<float>() / 6) {
       result = Result::SUCCESS;
     } else {
       result = Result::FAILURE;
@@ -209,9 +208,7 @@ void DisplayMessage() {
   SDL_GL_SwapWindow(display_window);
 }
 void Update2() {
-  constexpr auto MILLISECONDS_IN_SECOND = 1000.0f;
-  const auto ticks =
-      static_cast<float>(SDL_GetTicks()) / MILLISECONDS_IN_SECOND;
+  const auto ticks = static_cast<float>(SDL_GetTicks()) / 1000.0f;
   const auto delta_time = static_cast<float>(ticks - previous_ticks);
   previous_ticks = ticks;
   time_accumulator += delta_time;

@@ -134,7 +134,7 @@ void message::Message::Render(ShaderProgram &program) const {
   glEnableVertexAttribArray(program.texCoordAttribute);
   constexpr auto base_matrix = glm::mat4(1.0f);
   constexpr auto scale_factor_x = 10.0f;
-  constexpr auto scale_factor_y = 2.0f;
+  constexpr auto scale_factor_y = 1.5f;
   static const auto model_matrix =
       glm::scale(glm::translate(base_matrix, glm::vec3(0.0f, 1.0f, 0.0f)),
                  glm::vec3(scale_factor_x, scale_factor_y, 1.0f));

@@ -22,7 +22,12 @@ void Ship::Update(float delta_time) {
 }
 
 void Ship::Render(ShaderProgram &program) const {
-  const auto state_index = _rcs_state + 1 + (_is_engine_on ? 3 : 0);
+  // const auto state_index = _rcs_state + 1 + (_is_engine_on ? 3 : 0);
+  constexpr auto base_matrix = glm::mat4(1.0f);
+  const auto model_matrix = glm::translate(base_matrix, _position);
+  program.SetModelMatrix(model_matrix);
+  glBindTexture(GL_TEXTURE_2D, _texture_id);
+  glDrawArrays(GL_TRIANGLES, 0, 6);
 }
 
 Ship::Ship(glm::vec3 position, glm::vec3 velocity, float orientation,

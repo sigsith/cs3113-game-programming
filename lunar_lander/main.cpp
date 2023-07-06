@@ -18,13 +18,15 @@
 #include <GL/glew.h>
 #endif
 
+#include <SDL.h>
+#include <SDL_opengl.h>
+
+#include <algorithm>
+
 #include "ShaderProgram.h"
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/mat4x4.hpp"
 #include "stb_image.h"
-#include <SDL.h>
-#include <SDL_opengl.h>
-#include <algorithm>
 
 constexpr char V_SHADER_PATH[] = "shaders/vertex.glsl",
                F_SHADER_PATH[] = "shaders/fragment.glsl";
@@ -42,9 +44,35 @@ float time_accumulator = 0.0;
 float previous_ticks = 0.0;
 
 /* --------------------------- SECTION FUNCTIONS --------------------------- */
+void initialize();
 GLuint load_texture(const char *filepath);
+void process_input();
+void update();
+void render();
 
-void initialise() {
+template <typename T>
+void inplace_clamp(T &value, const T &lower, const T &upper) {
+  value = std::max(lower, std::min(value, upper));
+}
+
+template <typename T>
+bool within(T &value, const T &lower, const T &upper) {
+  return value >= lower && value <= upper;
+}
+
+// To play this game, use A, S, and D keys.
+int main() {
+  initialize();
+  while (is_game_running) {
+    process_input();
+    update();
+    render();
+  }
+  SDL_Quit();
+  return 0;
+}
+
+void initialize() {
   SDL_Init(SDL_INIT_VIDEO);
   constexpr int WINDOW_WIDTH = 640, WINDOW_HEIGHT = 480;
   constexpr float BG_RED = 0.0f, BG_BLUE = 0.0f, BG_GREEN = 0.0f,
@@ -77,7 +105,6 @@ void initialise() {
   lunar = ship::Ship(glm::vec3(0.0, 0.0, 0.0), glm::vec3(1.0, 0.0, 0.0), 0.0,
                      load_texture("lunar_lander.png"));
 }
-
 GLuint load_texture(const char *filepath) {
   // STEP 1: Loading the image file
   int width, height, number_of_components;
@@ -105,26 +132,25 @@ GLuint load_texture(const char *filepath) {
 
   return textureID;
 }
-
 void process_input() {
   SDL_Event event;
   // Handle quitting.
   while (SDL_PollEvent(&event)) {
     switch (event.type) {
-    case SDL_QUIT:
-    case SDL_WINDOWEVENT_CLOSE:
-      is_game_running = false;
-      break;
-    case SDL_KEYDOWN:
-      switch (event.key.keysym.sym) {
-      case SDLK_q:
+      case SDL_QUIT:
+      case SDL_WINDOWEVENT_CLOSE:
         is_game_running = false;
         break;
+      case SDL_KEYDOWN:
+        switch (event.key.keysym.sym) {
+          case SDLK_q:
+            is_game_running = false;
+            break;
+          default:
+            break;
+        }
       default:
         break;
-      }
-    default:
-      break;
     }
   }
   const Uint8 *key_state = SDL_GetKeyboardState(nullptr);
@@ -143,16 +169,6 @@ void process_input() {
     lunar.SetRcs(0);
   }
 }
-
-template <typename T>
-void inplace_clamp(T &value, const T &lower, const T &upper) {
-  value = std::max(lower, std::min(value, upper));
-}
-
-template <typename T> bool within(T &value, const T &lower, const T &upper) {
-  return value >= lower && value <= upper;
-}
-
 void update() {
   // Calculate delta time.
   constexpr auto MILLISECONDS_IN_SECOND = 1000.0f;
@@ -183,38 +199,34 @@ void update() {
 
   time_accumulator = epoch;
 }
+void render() {
+  glClear(GL_COLOR_BUFFER_BIT);
 
-void render_rectangle(float half_width, float half_height, glm::vec3 position) {
-  constexpr auto base_matrix = glm::mat4(1.0f);
-  const auto model_matrix = glm::translate(base_matrix, position);
-  program.SetModelMatrix(model_matrix);
-  const float vertices[] = {
-      -half_width, -half_height, half_width,  -half_height,
-      half_width,  half_height,  -half_width, -half_height,
-      half_width,  half_height,  -half_width, half_height,
+  // Vertices
+  float vertices[] = {
+      -0.5f, -0.5f, 0.5f, -0.5f, 0.5f,  0.5f,  // triangle 1
+      -0.5f, -0.5f, 0.5f, 0.5f,  -0.5f, 0.5f   // triangle 2
+  };
+
+  // Textures
+  float texture_coordinates[] = {
+      0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,  // triangle 1
+      0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f,  // triangle 2
   };
 
   glVertexAttribPointer(program.positionAttribute, 2, GL_FLOAT, false, 0,
                         vertices);
   glEnableVertexAttribArray(program.positionAttribute);
-  glDrawArrays(GL_TRIANGLES, 0, 6);
-  glDisableVertexAttribArray(program.positionAttribute);
-}
 
-void render() {
-  glClear(GL_COLOR_BUFFER_BIT);
+  glVertexAttribPointer(program.texCoordAttribute, 2, GL_FLOAT, false, 0,
+                        texture_coordinates);
+  glEnableVertexAttribArray(program.texCoordAttribute);
+
   lunar.Render(program);
-  SDL_GL_SwapWindow(g_display_window);
-}
 
-// To play this game, use A, S, and D keys.
-int main() {
-  initialise();
-  while (is_game_running) {
-    process_input();
-    update();
-    render();
-  }
-  SDL_Quit();
-  return 0;
+  // We disable two attribute arrays now
+  glDisableVertexAttribArray(program.positionAttribute);
+  glDisableVertexAttribArray(program.texCoordAttribute);
+
+  SDL_GL_SwapWindow(g_display_window);
 }

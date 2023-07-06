@@ -52,8 +52,7 @@ const int NUMBER_OF_TEXTURES = 1; // to be generated, that is
 const GLint LEVEL_OF_DETAIL = 0;  // base image level; Level n is the nth mipmap reduction image
 const GLint TEXTURE_BORDER = 0;   // this value MUST be zero
 
-const char COW_SPRITE_FILEPATH[] = "cow.png";
-const char SAUCER_SPRITE_FILEPATH[] = "flying-saucer.png";
+const char SAUCER_SPRITE_FILEPATH[] = "lunar_lander.png";
 
 const float LEFT_BORDER = -4.6f;
 int beam_count = 0;
@@ -152,7 +151,6 @@ void initialise() {
 
     glClearColor(BG_RED, BG_BLUE, BG_GREEN, BG_OPACITY);
 
-    cow_texture_id = load_texture(COW_SPRITE_FILEPATH);
     saucer_texture_id = load_texture(SAUCER_SPRITE_FILEPATH);
 
     // enable blending
@@ -213,82 +211,6 @@ void update() {
     }
     saucer_matrix = glm::mat4(1.0f);
     saucer_matrix = glm::translate(saucer_matrix, saucer_position);
-
-    cow_matrix = glm::mat4(1.0f);
-    const float COW_ROT_ANGLE = glm::radians(0.1f);
-    bool was_going = is_going_left;
-    float progress = (saucer_position[1] - cow_position[1] - 0.5) / 2.0;
-    if (is_beaming) {
-        if (is_going_left) { cow_angle += COW_ROT_ANGLE; }
-        else {
-            cow_angle -= COW_ROT_ANGLE;
-        }
-        cow_velocity = glm::vec3(0.0f, 0.6f, 0.0f);
-
-
-    } else if (cool_down_small > ticks) {
-        cow_angle = 0;
-        cow_velocity = glm::vec3(0.0f, 0.0f, 0.0f);
-    } else if
-            (cow_position[1] > FLOOR) {
-        cow_angle = 0;
-        cow_velocity[0] = beam_count % 2 == 0 ? 1.5 : -1.5;
-        cow_velocity[1] -= 4.0 * delta_time;
-    } else {
-        cow_angle = 0;
-
-        if (turn_cool_down < ticks) {
-            if (cow_position[0] < saucer_position[0]) {
-                is_going_left = true;
-            } else
-                is_going_left = false;
-        }
-
-        if (cow_position[0] < LEFT_BORDER) {
-            is_going_left = false;
-            turn_cool_down = ticks + 5;
-        } else if (cow_position[0] > RIGHT_BORDER) {
-            is_going_left = true;
-            turn_cool_down = ticks + 5;
-        }
-        if (is_going_left) {
-            cow_velocity[0] -= 0.01;
-            if (cow_velocity[0] < -0.9) {
-                cow_velocity[0] = -0.9;
-            }
-        } else {
-            cow_velocity[0] += 0.01;
-            if (cow_velocity[0] > 0.9) {
-                cow_velocity[0] = 0.9;
-            }
-        }
-
-    }
-    cow_position +=
-            cow_velocity * delta_time
-            * 1.0f;
-    if (cow_position[1] < FLOOR) {
-        cow_position[1] =
-                FLOOR;
-        cow_velocity[1] = 0;
-    }
-
-    cow_matrix = glm::translate(cow_matrix, cow_position);
-    cow_matrix = glm::rotate(cow_matrix, cow_angle,
-                             glm::vec3(0.0f, 0.0f, 1.0f));
-    if (cool_down_small > ticks) {
-        if (int(ticks * 1000) % 1000 == 0) {
-            is_going_left = !was_going;
-        }
-    }
-    if (!is_going_left) {
-        cow_matrix = glm::scale(cow_matrix, glm::vec3(-1.0f, 1.0f, 1.0f));
-    }
-    if (is_beaming) {
-        cow_matrix = glm::scale(cow_matrix,
-                                glm::vec3(1.0f * progress, 1.0f * progress,
-                                          1.0f * progress));
-    }
 }
 
 void draw_object(glm::mat4 &object_model_matrix, GLuint &object_texture_id) {
@@ -322,7 +244,6 @@ void render() {
     glEnableVertexAttribArray(program.texCoordAttribute);
 
     // Bind texture
-    draw_object(cow_matrix, cow_texture_id);
     draw_object(saucer_matrix, saucer_texture_id);
 
     // We disable two attribute arrays now
@@ -337,9 +258,6 @@ void shutdown() {
     SDL_Quit();
 }
 
-/**
- Start here—we can see the general structure of a game loop without worrying too much about the details yet.
- */
 int main(int argc, char *argv[]) {
     initialise();
 

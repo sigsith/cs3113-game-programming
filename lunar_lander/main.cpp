@@ -29,7 +29,7 @@
 #include "stb_image.h"
 
 constexpr char V_SHADER_PATH[] = "shaders/vertex.glsl",
-               F_SHADER_PATH[] = "shaders/fragment.glsl";
+    F_SHADER_PATH[] = "shaders/fragment.glsl";
 
 /* ------------------ SECTION GLOBAL CONSTANTS AND DEFINES ------------------ */
 // Shared compile time configurations. Keep this as small as possible.
@@ -50,12 +50,12 @@ void process_input();
 void update();
 void render();
 
-template <typename T>
+template<typename T>
 void inplace_clamp(T &value, const T &lower, const T &upper) {
   value = std::max(lower, std::min(value, upper));
 }
 
-template <typename T>
+template<typename T>
 bool within(T &value, const T &lower, const T &upper) {
   return value >= lower && value <= upper;
 }
@@ -76,11 +76,11 @@ void initialize() {
   SDL_Init(SDL_INIT_VIDEO);
   constexpr int WINDOW_WIDTH = 640, WINDOW_HEIGHT = 480;
   constexpr float BG_RED = 0.0f, BG_BLUE = 0.0f, BG_GREEN = 0.0f,
-                  BG_OPACITY = 1.0f;
+      BG_OPACITY = 1.0f;
   constexpr int VIEWPORT_X = 0, VIEWPORT_Y = 0, VIEWPORT_WIDTH = WINDOW_WIDTH,
-                VIEWPORT_HEIGHT = WINDOW_HEIGHT;
+      VIEWPORT_HEIGHT = WINDOW_HEIGHT;
   constexpr double TRIANGLE_RED = 1.0, TRIANGLE_BLUE = 1.0,
-                   TRIANGLE_GREEN = 1.0, TRIANGLE_OPACITY = 1.0;
+      TRIANGLE_GREEN = 1.0, TRIANGLE_OPACITY = 1.0;
   g_display_window = SDL_CreateWindow("Lunar Lander", SDL_WINDOWPOS_CENTERED,
                                       SDL_WINDOWPOS_CENTERED, WINDOW_WIDTH,
                                       WINDOW_HEIGHT, SDL_WINDOW_OPENGL);
@@ -138,19 +138,15 @@ void process_input() {
   while (SDL_PollEvent(&event)) {
     switch (event.type) {
       case SDL_QUIT:
-      case SDL_WINDOWEVENT_CLOSE:
-        is_game_running = false;
+      case SDL_WINDOWEVENT_CLOSE:is_game_running = false;
         break;
       case SDL_KEYDOWN:
         switch (event.key.keysym.sym) {
-          case SDLK_q:
-            is_game_running = false;
+          case SDLK_q:is_game_running = false;
             break;
-          default:
-            break;
+          default:break;
         }
-      default:
-        break;
+      default:break;
     }
   }
   const Uint8 *key_state = SDL_GetKeyboardState(nullptr);
@@ -204,8 +200,8 @@ void render() {
 
   // Vertices
   float vertices[] = {
-      -0.5f, -0.5f, 0.5f, -0.5f, 0.5f,  0.5f,  // triangle 1
-      -0.5f, -0.5f, 0.5f, 0.5f,  -0.5f, 0.5f   // triangle 2
+      -0.5f, -0.5f, 0.5f, -0.5f, 0.5f, 0.5f,  // triangle 1
+      -0.5f, -0.5f, 0.5f, 0.5f, -0.5f, 0.5f   // triangle 2
   };
 
   // Textures

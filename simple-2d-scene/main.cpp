@@ -24,32 +24,33 @@
 #include "stb_image.h"
 
 enum Coordinate {
-    x_coordinate,
-    y_coordinate
+  x_coordinate,
+  y_coordinate
 };
 
 #define LOG(argument) std::cout << argument << '\n'
 
 const int WINDOW_WIDTH = 640,
-        WINDOW_HEIGHT = 480;
+    WINDOW_HEIGHT = 480;
 
 const float BG_RED = 0.1922f,
-        BG_BLUE = 0.549f,
-        BG_GREEN = 0.9059f,
-        BG_OPACITY = 1.0f;
+    BG_BLUE = 0.549f,
+    BG_GREEN = 0.9059f,
+    BG_OPACITY = 1.0f;
 
 const int VIEWPORT_X = 0,
-        VIEWPORT_Y = 0,
-        VIEWPORT_WIDTH = WINDOW_WIDTH,
-        VIEWPORT_HEIGHT = WINDOW_HEIGHT;
+    VIEWPORT_Y = 0,
+    VIEWPORT_WIDTH = WINDOW_WIDTH,
+    VIEWPORT_HEIGHT = WINDOW_HEIGHT;
 
 const char V_SHADER_PATH[] = "shaders/vertex_textured.glsl",
-        F_SHADER_PATH[] = "shaders/fragment_textured.glsl";
+    F_SHADER_PATH[] = "shaders/fragment_textured.glsl";
 
 const float MILLISECONDS_IN_SECOND = 1000.0;
 
 const int NUMBER_OF_TEXTURES = 1; // to be generated, that is
-const GLint LEVEL_OF_DETAIL = 0;  // base image level; Level n is the nth mipmap reduction image
+const GLint LEVEL_OF_DETAIL =
+    0;  // base image level; Level n is the nth mipmap reduction image
 const GLint TEXTURE_BORDER = 0;   // this value MUST be zero
 
 const char COW_SPRITE_FILEPATH[] = "cow.png";
@@ -69,7 +70,8 @@ bool is_going_left = true;
 const float FLOOR = -1.0f;
 
 ShaderProgram program;
-glm::mat4 view_matrix, cow_matrix, projection_matrix, trans_matrix, saucer_matrix;
+glm::mat4 view_matrix, cow_matrix, projection_matrix, trans_matrix,
+    saucer_matrix;
 
 float previous_ticks = 0.0f;
 
@@ -86,269 +88,265 @@ glm::vec3 cow_velocity = glm::vec3(0.0f, 0.0f, 0.0f);
 glm::vec3 saucer_velocity = glm::vec3(0.0f, 0.0f, 0.0f);
 
 GLuint load_texture(const char *filepath) {
-    // STEP 1: Loading the image file
-    int width, height, number_of_components;
-    unsigned char *image = stbi_load(filepath, &width, &height,
-                                     &number_of_components, STBI_rgb_alpha);
+  // STEP 1: Loading the image file
+  int width, height, number_of_components;
+  unsigned char *image = stbi_load(filepath, &width, &height,
+                                   &number_of_components, STBI_rgb_alpha);
 
-    if (image == NULL) {
-        LOG("Unable to load image. Make sure the path is correct.");
-        assert(false);
-    }
+  if (image == NULL) {
+    LOG("Unable to load image. Make sure the path is correct.");
+    assert(false);
+  }
 
-    // STEP 2: Generating and binding a texture ID to our image
-    GLuint textureID;
-    glGenTextures(NUMBER_OF_TEXTURES, &textureID);
-    glBindTexture(GL_TEXTURE_2D, textureID);
-    glTexImage2D(GL_TEXTURE_2D, LEVEL_OF_DETAIL, GL_RGBA, width, height,
-                 TEXTURE_BORDER, GL_RGBA, GL_UNSIGNED_BYTE, image);
+  // STEP 2: Generating and binding a texture ID to our image
+  GLuint textureID;
+  glGenTextures(NUMBER_OF_TEXTURES, &textureID);
+  glBindTexture(GL_TEXTURE_2D, textureID);
+  glTexImage2D(GL_TEXTURE_2D, LEVEL_OF_DETAIL, GL_RGBA, width, height,
+               TEXTURE_BORDER, GL_RGBA, GL_UNSIGNED_BYTE, image);
 
-    // STEP 3: Setting our texture filter parameters
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+  // STEP 3: Setting our texture filter parameters
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-    // STEP 4: Releasing our file from memory and returning our texture id
-    stbi_image_free(image);
+  // STEP 4: Releasing our file from memory and returning our texture id
+  stbi_image_free(image);
 
-    return textureID;
+  return textureID;
 }
 
 void initialise() {
-    // Initialise video and joystick subsystems
-    SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK);
+  // Initialise video and joystick subsystems
+  SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK);
 
-    // Open the first controller found. Returns null on error
-    player_one_controller = SDL_JoystickOpen(0);
+  // Open the first controller found. Returns null on error
+  player_one_controller = SDL_JoystickOpen(0);
 
-    display_window = SDL_CreateWindow("Simple 2d scene",
-                                      SDL_WINDOWPOS_CENTERED,
-                                      SDL_WINDOWPOS_CENTERED,
-                                      WINDOW_WIDTH, WINDOW_HEIGHT,
-                                      SDL_WINDOW_OPENGL);
+  display_window = SDL_CreateWindow("Simple 2d scene",
+                                    SDL_WINDOWPOS_CENTERED,
+                                    SDL_WINDOWPOS_CENTERED,
+                                    WINDOW_WIDTH, WINDOW_HEIGHT,
+                                    SDL_WINDOW_OPENGL);
 
-    SDL_GLContext context = SDL_GL_CreateContext(display_window);
-    SDL_GL_MakeCurrent(display_window, context);
+  SDL_GLContext context = SDL_GL_CreateContext(display_window);
+  SDL_GL_MakeCurrent(display_window, context);
 
 #ifdef _WINDOWS
-    glewInit();
+  glewInit();
 #endif
 
-    glViewport(VIEWPORT_X, VIEWPORT_Y, VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
+  glViewport(VIEWPORT_X, VIEWPORT_Y, VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
 
-    program.Load(V_SHADER_PATH, F_SHADER_PATH);
+  program.Load(V_SHADER_PATH, F_SHADER_PATH);
 
-    cow_matrix = glm::mat4(1.0f);
-    saucer_matrix = glm::mat4(1.0f);
-    view_matrix = glm::mat4(
-            1.0f);  // Defines the position (location and orientation) of the camera
-    projection_matrix = glm::ortho(-5.0f, 5.0f, -3.75f, 3.75f, -1.0f,
-                                   1.0f);  // Defines the characteristics of your camera, such as clip planes, field of view, projection method etc.
+  cow_matrix = glm::mat4(1.0f);
+  saucer_matrix = glm::mat4(1.0f);
+  view_matrix = glm::mat4(
+      1.0f);  // Defines the position (location and orientation) of the camera
+  projection_matrix = glm::ortho(-5.0f, 5.0f, -3.75f, 3.75f, -1.0f,
+                                 1.0f);  // Defines the characteristics of your camera, such as clip planes, field of view, projection method etc.
 
-    program.SetProjectionMatrix(projection_matrix);
-    program.SetViewMatrix(view_matrix);
-    // Notice we haven't set our model matrix yet!
+  program.SetProjectionMatrix(projection_matrix);
+  program.SetViewMatrix(view_matrix);
+  // Notice we haven't set our model matrix yet!
 
-    glUseProgram(program.programID);
+  glUseProgram(program.programID);
 
-    glClearColor(BG_RED, BG_BLUE, BG_GREEN, BG_OPACITY);
+  glClearColor(BG_RED, BG_BLUE, BG_GREEN, BG_OPACITY);
 
-    cow_texture_id = load_texture(COW_SPRITE_FILEPATH);
-    saucer_texture_id = load_texture(SAUCER_SPRITE_FILEPATH);
+  cow_texture_id = load_texture(COW_SPRITE_FILEPATH);
+  saucer_texture_id = load_texture(SAUCER_SPRITE_FILEPATH);
 
-    // enable blending
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  // enable blending
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
 void process_input() {
-    SDL_Event event;
-    while (SDL_PollEvent(&event)) {
-        switch (event.type) {
-            case SDL_WINDOWEVENT_CLOSE:
-            case SDL_QUIT:
-                game_is_running = false;
-                break;
-            default:
-                break;
-        }
+  SDL_Event event;
+  while (SDL_PollEvent(&event)) {
+    switch (event.type) {
+      case SDL_WINDOWEVENT_CLOSE:
+      case SDL_QUIT:game_is_running = false;
+        break;
+      default:break;
     }
+  }
 }
 
 void update() {
-    float ticks = (float) SDL_GetTicks() /
-                  MILLISECONDS_IN_SECOND; // get the current number of ticks
-    float delta_time = ticks -
-                       previous_ticks; // the delta time is the difference from the last frame
-    previous_ticks = ticks;
+  float ticks = (float) SDL_GetTicks() /
+      MILLISECONDS_IN_SECOND; // get the current number of ticks
+  float delta_time = ticks -
+      previous_ticks; // the delta time is the difference from the last frame
+  previous_ticks = ticks;
 
-
-    if (abs(cow_position[0] - saucer_position[0]) < 0.1 && ticks > cool_down) {
-        is_beaming = true;
-        beam_count += 1;
+  if (abs(cow_position[0] - saucer_position[0]) < 0.1 && ticks > cool_down) {
+    is_beaming = true;
+    beam_count += 1;
+  }
+  if (abs(cow_position[1] - saucer_position[1]) < 0.5) {
+    is_beaming = false;
+    cow_velocity[1] = 0.0;
+    is_going_left = !is_going_left;
+    if (ticks > cool_down) {
+      cool_down = ticks + 8.0;
+      cool_down_small = ticks + 2.0;
     }
-    if (abs(cow_position[1] - saucer_position[1]) < 0.5) {
-        is_beaming = false;
-        cow_velocity[1] = 0.0;
-        is_going_left = !is_going_left;
-        if (ticks > cool_down) {
-            cool_down = ticks + 8.0;
-            cool_down_small = ticks + 2.0;
-        }
+  }
+  if (is_beaming || cool_down_small > ticks || cow_position[1] > 0) {
+    saucer_velocity = glm::vec3(0, 0, 0);
+  } else {
+    if (saucer_velocity[1] > 0) {
+      saucer_velocity[1] = 0;
     }
-    if (is_beaming || cool_down_small > ticks || cow_position[1] > 0) {
-        saucer_velocity = glm::vec3(0, 0, 0);
-    } else {
-        if (saucer_velocity[1] > 0) {
-            saucer_velocity[1] = 0;
-        }
-        saucer_velocity = glm::vec3(cow_position[0] - saucer_position[0], 0, 0);
-        if (saucer_velocity[0] > 0.7) {
-            saucer_velocity[0] = 0.7;
-        } else if (saucer_velocity[0] < 0.7) {
-            saucer_velocity[0] = -0.7;
-        }
-        saucer_position +=
-                saucer_velocity * delta_time
-                * 1.0f;
+    saucer_velocity = glm::vec3(cow_position[0] - saucer_position[0], 0, 0);
+    if (saucer_velocity[0] > 0.7) {
+      saucer_velocity[0] = 0.7;
+    } else if (saucer_velocity[0] < 0.7) {
+      saucer_velocity[0] = -0.7;
     }
-    saucer_matrix = glm::mat4(1.0f);
-    saucer_matrix = glm::translate(saucer_matrix, saucer_position);
-
-    cow_matrix = glm::mat4(1.0f);
-    const float COW_ROT_ANGLE = glm::radians(0.1f);
-    bool was_going = is_going_left;
-    float progress = (saucer_position[1] - cow_position[1] - 0.5) / 2.0;
-    if (is_beaming) {
-        if (is_going_left) { cow_angle += COW_ROT_ANGLE; }
-        else {
-            cow_angle -= COW_ROT_ANGLE;
-        }
-        cow_velocity = glm::vec3(0.0f, 0.6f, 0.0f);
-
-
-    } else if (cool_down_small > ticks) {
-        cow_angle = 0;
-        cow_velocity = glm::vec3(0.0f, 0.0f, 0.0f);
-    } else if
-            (cow_position[1] > FLOOR) {
-        cow_angle = 0;
-        cow_velocity[0] = beam_count % 2 == 0 ? 1.5 : -1.5;
-        cow_velocity[1] -= 4.0 * delta_time;
-    } else {
-        cow_angle = 0;
-
-        if (turn_cool_down < ticks) {
-            if (cow_position[0] < saucer_position[0]) {
-                is_going_left = true;
-            } else
-                is_going_left = false;
-        }
-
-        if (cow_position[0] < LEFT_BORDER) {
-            is_going_left = false;
-            turn_cool_down = ticks + 5;
-        } else if (cow_position[0] > RIGHT_BORDER) {
-            is_going_left = true;
-            turn_cool_down = ticks + 5;
-        }
-        if (is_going_left) {
-            cow_velocity[0] -= 0.01;
-            if (cow_velocity[0] < -0.9) {
-                cow_velocity[0] = -0.9;
-            }
-        } else {
-            cow_velocity[0] += 0.01;
-            if (cow_velocity[0] > 0.9) {
-                cow_velocity[0] = 0.9;
-            }
-        }
-
-    }
-    cow_position +=
-            cow_velocity * delta_time
+    saucer_position +=
+        saucer_velocity * delta_time
             * 1.0f;
-    if (cow_position[1] < FLOOR) {
-        cow_position[1] =
-                FLOOR;
-        cow_velocity[1] = 0;
+  }
+  saucer_matrix = glm::mat4(1.0f);
+  saucer_matrix = glm::translate(saucer_matrix, saucer_position);
+
+  cow_matrix = glm::mat4(1.0f);
+  const float COW_ROT_ANGLE = glm::radians(0.1f);
+  bool was_going = is_going_left;
+  float progress = (saucer_position[1] - cow_position[1] - 0.5) / 2.0;
+  if (is_beaming) {
+    if (is_going_left) { cow_angle += COW_ROT_ANGLE; }
+    else {
+      cow_angle -= COW_ROT_ANGLE;
+    }
+    cow_velocity = glm::vec3(0.0f, 0.6f, 0.0f);
+
+  } else if (cool_down_small > ticks) {
+    cow_angle = 0;
+    cow_velocity = glm::vec3(0.0f, 0.0f, 0.0f);
+  } else if
+      (cow_position[1] > FLOOR) {
+    cow_angle = 0;
+    cow_velocity[0] = beam_count % 2 == 0 ? 1.5 : -1.5;
+    cow_velocity[1] -= 4.0 * delta_time;
+  } else {
+    cow_angle = 0;
+
+    if (turn_cool_down < ticks) {
+      if (cow_position[0] < saucer_position[0]) {
+        is_going_left = true;
+      } else
+        is_going_left = false;
     }
 
-    cow_matrix = glm::translate(cow_matrix, cow_position);
-    cow_matrix = glm::rotate(cow_matrix, cow_angle,
-                             glm::vec3(0.0f, 0.0f, 1.0f));
-    if (cool_down_small > ticks) {
-        if (int(ticks * 1000) % 1000 == 0) {
-            is_going_left = !was_going;
-        }
+    if (cow_position[0] < LEFT_BORDER) {
+      is_going_left = false;
+      turn_cool_down = ticks + 5;
+    } else if (cow_position[0] > RIGHT_BORDER) {
+      is_going_left = true;
+      turn_cool_down = ticks + 5;
     }
-    if (!is_going_left) {
-        cow_matrix = glm::scale(cow_matrix, glm::vec3(-1.0f, 1.0f, 1.0f));
+    if (is_going_left) {
+      cow_velocity[0] -= 0.01;
+      if (cow_velocity[0] < -0.9) {
+        cow_velocity[0] = -0.9;
+      }
+    } else {
+      cow_velocity[0] += 0.01;
+      if (cow_velocity[0] > 0.9) {
+        cow_velocity[0] = 0.9;
+      }
     }
-    if (is_beaming) {
-        cow_matrix = glm::scale(cow_matrix,
-                                glm::vec3(1.0f * progress, 1.0f * progress,
-                                          1.0f * progress));
+
+  }
+  cow_position +=
+      cow_velocity * delta_time
+          * 1.0f;
+  if (cow_position[1] < FLOOR) {
+    cow_position[1] =
+        FLOOR;
+    cow_velocity[1] = 0;
+  }
+
+  cow_matrix = glm::translate(cow_matrix, cow_position);
+  cow_matrix = glm::rotate(cow_matrix, cow_angle,
+                           glm::vec3(0.0f, 0.0f, 1.0f));
+  if (cool_down_small > ticks) {
+    if (int(ticks * 1000) % 1000 == 0) {
+      is_going_left = !was_going;
     }
+  }
+  if (!is_going_left) {
+    cow_matrix = glm::scale(cow_matrix, glm::vec3(-1.0f, 1.0f, 1.0f));
+  }
+  if (is_beaming) {
+    cow_matrix = glm::scale(cow_matrix,
+                            glm::vec3(1.0f * progress, 1.0f * progress,
+                                      1.0f * progress));
+  }
 }
 
 void draw_object(glm::mat4 &object_model_matrix, GLuint &object_texture_id) {
-    program.SetModelMatrix(object_model_matrix);
-    glBindTexture(GL_TEXTURE_2D, object_texture_id);
-    glDrawArrays(GL_TRIANGLES, 0,
-                 6); // we are now drawing 2 triangles, so we use 6 instead of 3
+  program.SetModelMatrix(object_model_matrix);
+  glBindTexture(GL_TEXTURE_2D, object_texture_id);
+  glDrawArrays(GL_TRIANGLES, 0,
+               6); // we are now drawing 2 triangles, so we use 6 instead of 3
 }
 
 void render() {
-    glClear(GL_COLOR_BUFFER_BIT);
+  glClear(GL_COLOR_BUFFER_BIT);
 
-    // Vertices
-    float vertices[] = {
-            -0.5f, -0.5f, 0.5f, -0.5f, 0.5f, 0.5f,  // triangle 1
-            -0.5f, -0.5f, 0.5f, 0.5f, -0.5f, 0.5f   // triangle 2
-    };
+  // Vertices
+  float vertices[] = {
+      -0.5f, -0.5f, 0.5f, -0.5f, 0.5f, 0.5f,  // triangle 1
+      -0.5f, -0.5f, 0.5f, 0.5f, -0.5f, 0.5f   // triangle 2
+  };
 
-    // Textures
-    float texture_coordinates[] = {
-            0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,     // triangle 1
-            0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f,     // triangle 2
-    };
+  // Textures
+  float texture_coordinates[] = {
+      0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,     // triangle 1
+      0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f,     // triangle 2
+  };
 
-    glVertexAttribPointer(program.positionAttribute, 2, GL_FLOAT, false, 0,
-                          vertices);
-    glEnableVertexAttribArray(program.positionAttribute);
+  glVertexAttribPointer(program.positionAttribute, 2, GL_FLOAT, false, 0,
+                        vertices);
+  glEnableVertexAttribArray(program.positionAttribute);
 
-    glVertexAttribPointer(program.texCoordAttribute, 2, GL_FLOAT, false, 0,
-                          texture_coordinates);
-    glEnableVertexAttribArray(program.texCoordAttribute);
+  glVertexAttribPointer(program.texCoordAttribute, 2, GL_FLOAT, false, 0,
+                        texture_coordinates);
+  glEnableVertexAttribArray(program.texCoordAttribute);
 
-    // Bind texture
-    draw_object(cow_matrix, cow_texture_id);
-    draw_object(saucer_matrix, saucer_texture_id);
+  // Bind texture
+  draw_object(cow_matrix, cow_texture_id);
+  draw_object(saucer_matrix, saucer_texture_id);
 
-    // We disable two attribute arrays now
-    glDisableVertexAttribArray(program.positionAttribute);
-    glDisableVertexAttribArray(program.texCoordAttribute);
+  // We disable two attribute arrays now
+  glDisableVertexAttribArray(program.positionAttribute);
+  glDisableVertexAttribArray(program.texCoordAttribute);
 
-    SDL_GL_SwapWindow(display_window);
+  SDL_GL_SwapWindow(display_window);
 }
 
 void shutdown() {
-    SDL_JoystickClose(player_one_controller);
-    SDL_Quit();
+  SDL_JoystickClose(player_one_controller);
+  SDL_Quit();
 }
 
 /**
  Start here—we can see the general structure of a game loop without worrying too much about the details yet.
  */
 int main(int argc, char *argv[]) {
-    initialise();
+  initialise();
 
-    while (game_is_running) {
-        process_input();
-        update();
-        render();
-    }
+  while (game_is_running) {
+    process_input();
+    update();
+    render();
+  }
 
-    shutdown();
-    return 0;
+  shutdown();
+  return 0;
 }

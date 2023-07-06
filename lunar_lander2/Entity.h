@@ -59,4 +59,17 @@ class Ship : public Entity {
 };
 glm::vec3 VectorByAngle(float scalar, float angle_in_radians);
 }
+
+namespace moon {
+class Moon : public Entity {
+ private:
+  GLuint _texture_id;
+ public:
+  Moon(GLuint texture_id);
+
+  void Update(float delta_time) override;
+
+  void Render(ShaderProgram &program) const override;
+};
+}
 #endif //CS3113_GAME_PROGRAMMING_LUNAR_LANDER_ENTITY_H_

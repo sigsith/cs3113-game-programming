@@ -33,8 +33,8 @@ bool is_game_running = true;
 ShaderProgram program;
 float previous_ticks = 0.0f;
 GLuint saucer_texture_id;
-// To avoid default initialization.
 std::unique_ptr<ship::Ship> apollo;
+std::unique_ptr<moon::Moon> luna;
 float time_accumulator = 0.0;
 /* --------------------------  FUNCTION SIGNATURES -------------------------- */
 void Initialize();
@@ -102,13 +102,13 @@ void Initialize() {
   program.SetViewMatrix(view_matrix);
   glUseProgram(program.programID);
   glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-  saucer_texture_id = LoadTexture("lunar_lander.png");
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   apollo = std::make_unique<ship::Ship>(glm::vec3(-4.0, 2.0, 0.0),
                                         glm::vec3(0.5, -0.8, 0.0),
                                         0.0,
-                                        saucer_texture_id);
+                                        LoadTexture("lunar_lander.png"));
+  luna = std::make_unique<moon::Moon>(LoadTexture("lunar_surface.png"));
 }
 void ProcessInput() {
   SDL_Event event;
@@ -143,33 +143,22 @@ void ProcessInput() {
   }
 }
 void Update() {
-  // Calculate delta time.
   constexpr auto MILLISECONDS_IN_SECOND = 1000.0f;
   const auto ticks =
       static_cast<float>(SDL_GetTicks()) / MILLISECONDS_IN_SECOND;
   const auto delta_time = static_cast<float>(ticks - previous_ticks);
   previous_ticks = ticks;
-
-  // ————— FIXED TIMESTEP ————— //
-  // STEP 1: Keep track of how much time has passed since last step
   auto epoch = delta_time + time_accumulator;
-
-  // STEP 2: Accumulate the amount of time passed while we're under our fixed
-  // timestep
   constexpr auto FIXED_TIMESTEP = 1.0f / 60.0f;
   if (epoch < FIXED_TIMESTEP) {
     time_accumulator = epoch;
     return;
   }
-
-  // STEP 3: Once we exceed our fixed timestep, apply that elapsed time into the
-  // objects' update function invocation
   while (epoch >= FIXED_TIMESTEP) {
-    // Notice that we're using FIXED_TIMESTEP as our delta time
     apollo->Update(FIXED_TIMESTEP);
+    luna->Update(FIXED_TIMESTEP);
     epoch -= FIXED_TIMESTEP;
   }
-
   time_accumulator = epoch;
 }
 void DrawObject(glm::mat4 &object_model_matrix, GLuint &object_texture_id) {
@@ -179,6 +168,7 @@ void DrawObject(glm::mat4 &object_model_matrix, GLuint &object_texture_id) {
 }
 void Render() {
   glClear(GL_COLOR_BUFFER_BIT);
+  luna->Render(program);
   apollo->Render(program);
   SDL_GL_SwapWindow(display_window);
 }

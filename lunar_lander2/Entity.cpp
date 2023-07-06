@@ -73,3 +73,32 @@ glm::vec3 VectorByAngle(float scalar, float angle_in_radians) {
   return {x, y, 0.0f};
 }
 }
+moon::Moon::Moon(GLuint texture_id) : _texture_id(texture_id) {}
+void moon::Moon::Update(float delta_time) {}
+void moon::Moon::Render(ShaderProgram &program) const {
+  constexpr float vertices[] = {
+      -0.5f, -0.5f, 0.5f, -0.5f, 0.5f, 0.5f,
+      -0.5f, -0.5f, 0.5f, 0.5f, -0.5f, 0.5f
+  };
+  constexpr float texture_coordinates[] = {
+      0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
+      0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f,
+  };
+  glVertexAttribPointer(program.positionAttribute, 2, GL_FLOAT, false, 0,
+                        vertices);
+  glEnableVertexAttribArray(program.positionAttribute);
+  glVertexAttribPointer(program.texCoordAttribute, 2, GL_FLOAT, false, 0,
+                        texture_coordinates);
+  glEnableVertexAttribArray(program.texCoordAttribute);
+  constexpr auto base_matrix = glm::mat4(1.0f);
+  constexpr auto scale_factor_x = 10.0f;
+  constexpr auto scale_factor_y = 3.0f;
+  static const auto model_matrix =
+      glm::scale(glm::translate(base_matrix, glm::vec3(0.0f, -2.6f, 0.0f)),
+                 glm::vec3(scale_factor_x, scale_factor_y, 1.0f));
+  program.SetModelMatrix(model_matrix);
+  glBindTexture(GL_TEXTURE_2D, _texture_id);
+  glDrawArrays(GL_TRIANGLES, 0, 6);
+  glDisableVertexAttribArray(program.positionAttribute);
+  glDisableVertexAttribArray(program.texCoordAttribute);
+}

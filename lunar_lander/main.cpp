@@ -77,9 +77,7 @@ GLuint LoadTexture(const char *filepath) {
         "Unable to load image. Make sure the path is correct.");
   }
   GLuint textureID;
-  // The value doesn't seem to matter?
-  constexpr int NUMBER_OF_TEXTURES = 3;
-  glGenTextures(NUMBER_OF_TEXTURES, &textureID);
+  glGenTextures(1, &textureID);
   glBindTexture(GL_TEXTURE_2D, textureID);
   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height,
                0, GL_RGBA, GL_UNSIGNED_BYTE, image);

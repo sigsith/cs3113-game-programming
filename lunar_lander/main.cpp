@@ -49,8 +49,7 @@ void ProcessInput();
 void Update();
 void Render();
 void DisplayMessage();
-void ProcessInterrupt();
-void UpdateTime();
+void Update2();
 /* ---------------------------------  MAIN --------------------------------- */
 int main() {
   Initialize();
@@ -59,10 +58,10 @@ int main() {
     Update();
     Render();
   }
+  time_accumulator = 0.0f;
   while (!quit_immediately) {
-    ProcessInterrupt();
+    Update2();
     DisplayMessage();
-    UpdateTime();
   }
   SDL_Quit();
   return 0;
@@ -209,7 +208,18 @@ void DisplayMessage() {
   messages[index_to_show].Render(program);
   SDL_GL_SwapWindow(display_window);
 }
-void ProcessInterrupt() {
+void Update2() {
+  constexpr auto MILLISECONDS_IN_SECOND = 1000.0f;
+  const auto ticks =
+      static_cast<float>(SDL_GetTicks()) / MILLISECONDS_IN_SECOND;
+  const auto delta_time = static_cast<float>(ticks - previous_ticks);
+  previous_ticks = ticks;
+  time_accumulator += delta_time;
+  constexpr auto FIXED_TIMESTEP = 3.0f;
+  if (time_accumulator > FIXED_TIMESTEP) {
+    quit_immediately = true;
+    return;
+  }
   SDL_Event event;
   while (SDL_PollEvent(&event)) {
     switch (event.type) {
@@ -225,9 +235,6 @@ void ProcessInterrupt() {
       default:break;
     }
   }
-}
-void UpdateTime() {
-
 }
 
 

@@ -30,7 +30,7 @@ namespace ship {
 // This value is used for acceleration when no other forces are around.
 constexpr glm::vec3 GRAVITY = glm::vec3(0.0f, -0.1f, 0.0f);
 // THRUST and RCS_THRUST here are simply acceleration and angular acceleration
-constexpr float THRUST = 0.1f;
+constexpr float THRUST = 0.2f;
 constexpr float RCS_THRUST = 1.0f;
 class Ship : public Entity {
  private:

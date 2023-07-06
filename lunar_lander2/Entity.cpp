@@ -9,8 +9,18 @@
  **/
 
 #include "Entity.h"
+#include "glm/mat4x4.hpp"
+#include "glm/gtc/matrix_transform.hpp"
 namespace ship {
-void Ship::Update(float delta_time) {}
+void Ship::Update(float delta_time) {
+  _position += _velocity * delta_time;
+  _velocity += _acceleration * delta_time;
+  _acceleration =
+      _is_engine_on ? GRAVITY + VectorByAngle(THRUST, _orientation) : GRAVITY;
+  _orientation += _angular_velocity * delta_time;
+  _angular_velocity += _angular_acceleration * delta_time;
+  _angular_acceleration = static_cast<float>(_rcs_state) * RCS_THRUST;
+}
 void Ship::Render(ShaderProgram &program) const {
   constexpr float vertices[] = {
       -0.5f, -0.5f, 0.5f, -0.5f, 0.5f, 0.5f,
@@ -33,7 +43,10 @@ void Ship::Render(ShaderProgram &program) const {
   glVertexAttribPointer(program.texCoordAttribute, 2, GL_FLOAT, false, 0,
                         texture_coordinates);
   glEnableVertexAttribArray(program.texCoordAttribute);
-  const auto model_matrix = glm::mat4(1.0f);
+  constexpr auto base_matrix = glm::mat4(1.0f);
+  auto model_matrix = glm::translate(base_matrix, _position);
+  model_matrix =
+      glm::rotate(model_matrix, _orientation, glm::vec3(0.0f, 0.0f, 1.0f));
   program.SetModelMatrix(model_matrix);
   glBindTexture(GL_TEXTURE_2D, _texture_id);
   glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -51,4 +64,10 @@ int Ship::ComputeState() const {
 void Ship::SetEngine(bool is_on) { _is_engine_on = is_on; }
 
 void Ship::SetRcs(int state) { _rcs_state = state; }
+
+glm::vec3 VectorByAngle(float scalar, float angle_in_radians) {
+  float x = scalar * glm::cos(angle_in_radians);
+  float y = scalar * glm::sin(angle_in_radians);
+  return {x, y, 0.0f};
+}
 }

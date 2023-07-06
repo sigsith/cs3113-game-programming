@@ -59,5 +59,6 @@ class Ship : public Entity {
 
   void SetRcs(int state);
 };
+glm::vec3 VectorByAngle(float scalar, float angle_in_radians);
 }
 #endif //CS3113_GAME_PROGRAMMING_LUNAR_LANDER_ENTITY_H_

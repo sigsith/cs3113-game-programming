@@ -37,6 +37,7 @@ glm::vec3 ship_position = glm::vec3(0.0f, 2.0f, 0.0f);
 glm::vec3 ship_velocity = glm::vec3(0.0f, 0.0f, 0.0f);
 // To avoid default initialization.
 std::unique_ptr<ship::Ship> apollo;
+float time_accumulator = 0.0;
 /* --------------------------  FUNCTION SIGNATURES -------------------------- */
 void Initialize();
 GLuint LoadTexture(const char *filepath);
@@ -144,10 +145,34 @@ void ProcessInput() {
   }
 }
 void Update() {
+  // Calculate delta time.
   constexpr auto MILLISECONDS_IN_SECOND = 1000.0f;
-  const float ticks = (float) SDL_GetTicks() / MILLISECONDS_IN_SECOND;
-  const float delta_time = ticks - previous_ticks;
+  const auto ticks =
+      static_cast<float>(SDL_GetTicks()) / MILLISECONDS_IN_SECOND;
+  const auto delta_time = static_cast<float>(ticks - previous_ticks);
   previous_ticks = ticks;
+
+  // ————— FIXED TIMESTEP ————— //
+  // STEP 1: Keep track of how much time has passed since last step
+  auto epoch = delta_time + time_accumulator;
+
+  // STEP 2: Accumulate the amount of time passed while we're under our fixed
+  // timestep
+  constexpr auto FIXED_TIMESTEP = 1.0f / 60.0f;
+  if (epoch < FIXED_TIMESTEP) {
+    time_accumulator = epoch;
+    return;
+  }
+
+  // STEP 3: Once we exceed our fixed timestep, apply that elapsed time into the
+  // objects' update function invocation
+  while (epoch >= FIXED_TIMESTEP) {
+    // Notice that we're using FIXED_TIMESTEP as our delta time
+    apollo->Update(FIXED_TIMESTEP);
+    epoch -= FIXED_TIMESTEP;
+  }
+
+  time_accumulator = epoch;
 }
 void DrawObject(glm::mat4 &object_model_matrix, GLuint &object_texture_id) {
   program.SetModelMatrix(object_model_matrix);

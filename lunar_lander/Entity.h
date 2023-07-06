@@ -44,20 +44,24 @@ namespace ship {
 
     class Ship : public Entity {
     private:
-        glm::vec3 _position;
-        glm::vec3 _velocity;
+        glm::vec3 _position{};
+        glm::vec3 _velocity{};
         glm::vec3 _acceleration = GRAVITY;
 
         // Orientation in DEGREE in the Cartesian convention. Always modular by 360.
-        float _orientation;
+        float _orientation{};
         float _angular_velocity = 0; // In degree / second.
         float _angular_acceleration = 0; // In degree / second^2;
 
         int _rcs_state = 0;  // -1, 0, 1
         bool _is_engine_on = false;
+        GLuint _texture_id{};
     public:
         // Assuming the ship is drifting in idle initially.
-        Ship(glm::vec3 position, glm::vec3 velocity, float orientation);
+        Ship(glm::vec3 position, glm::vec3 velocity, float orientation,
+             GLuint texture_id);
+
+        Ship();
 
         void SetEngine(bool is_on);
 

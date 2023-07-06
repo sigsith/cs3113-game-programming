@@ -23,14 +23,13 @@ namespace ship {
     }
 
     void Ship::Render(ShaderProgram &program) {
-        // TODO
+        const auto state_index = _rcs_state + 1 + (_is_engine_on ? 3 : 0);
     }
 
-    Ship::Ship(glm::vec3 position, glm::vec3 velocity, float orientation) :
+    Ship::Ship(glm::vec3 position, glm::vec3 velocity, float orientation,
+               GLuint texture_id) :
             _position(position), _velocity(velocity),
-            _orientation(orientation) {
-
-    }
+            _orientation(orientation), _texture_id(texture_id) {}
 
     void Ship::SetEngine(bool is_on) {
         _is_engine_on = is_on;
@@ -39,6 +38,8 @@ namespace ship {
     void Ship::SetRcs(int state) {
         _rcs_state = state;
     }
+
+    Ship::Ship() = default;
 
     glm::vec3 VectorByAngle(float scalar, float angle_in_degree) {
         float angle_in_radians = glm::radians(angle_in_degree);

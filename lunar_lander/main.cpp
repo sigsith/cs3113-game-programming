@@ -13,6 +13,7 @@
 // Contract code such as header files, shader path.
 #define GL_SILENCE_DEPRECATION
 #define GL_GLEXT_PROTOTYPES 1
+#define STB_IMAGE_IMPLEMENTATION
 #ifdef _WINDOWS
 #include <GL/glew.h>
 #endif
@@ -22,6 +23,7 @@
 #include "glm/mat4x4.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 #include "ShaderProgram.h"
+#include "stb_image.h"
 #include <algorithm>
 
 constexpr char V_SHADER_PATH[] = "shaders/vertex.glsl",
@@ -35,12 +37,13 @@ constexpr char V_SHADER_PATH[] = "shaders/vertex.glsl",
 SDL_Window *g_display_window;
 bool is_game_running = true;
 ShaderProgram program;
-//glm::vec3 position, glm::vec3 velocity, float orientation
-ship::Ship lunar = ship::Ship(glm::vec3(0), glm::vec3(1, 0, 0), 0);
+ship::Ship lunar;
 float time_accumulator = 0.0;
 float previous_ticks = 0.0;
 
 /* --------------------------- SECTION FUNCTIONS --------------------------- */
+GLuint load_texture(const char *filepath);
+
 void initialise() {
     SDL_Init(SDL_INIT_VIDEO);
     constexpr int WINDOW_WIDTH = 640,
@@ -78,6 +81,36 @@ void initialise() {
                      TRIANGLE_OPACITY);
     glUseProgram(program.programID);
     glClearColor(BG_RED, BG_GREEN, BG_BLUE, BG_OPACITY);
+    lunar = ship::Ship(glm::vec3(0.0, 0.0, 0.0), glm::vec3(1.0, 0.0, 0.0), 0.0,
+                       load_texture("lunar_lander.png"));
+}
+
+GLuint load_texture(const char *filepath) {
+    // STEP 1: Loading the image file
+    int width, height, number_of_components;
+    unsigned char *image = stbi_load(filepath, &width, &height,
+                                     &number_of_components, STBI_rgb_alpha);
+
+    if (image == nullptr) {
+        throw std::runtime_error(
+                "Unable to load image. Make sure the path is correct.");
+    }
+
+    // STEP 2: Generating and binding a texture ID to our image
+    GLuint textureID;
+    glGenTextures(1, &textureID);
+    glBindTexture(GL_TEXTURE_2D, textureID);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height,
+                 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+
+    // STEP 3: Setting our texture filter parameters
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    // STEP 4: Releasing our file from memory and returning our texture id
+    stbi_image_free(image);
+
+    return textureID;
 }
 
 void process_input() {

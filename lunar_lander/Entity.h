@@ -20,7 +20,7 @@ public:
     // The value should be set to a small fix number for all instances.
     virtual void Update(float delta_time) = 0;
 
-    virtual void Render(ShaderProgram &program) = 0;
+    virtual void Render(ShaderProgram &program) const = 0;
 };
 
 namespace ship {
@@ -69,7 +69,7 @@ namespace ship {
 
         void Update(float delta_time) override;
 
-        void Render(ShaderProgram &program) override;
+        void Render(ShaderProgram &program) const override;
     };
 
     glm::vec3 VectorByAngle(float scalar, float angle_in_degree);

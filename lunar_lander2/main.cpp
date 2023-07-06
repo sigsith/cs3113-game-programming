@@ -21,6 +21,7 @@
 #include "glm/gtc/matrix_transform.hpp"
 #include "ShaderProgram.h"
 #include "stb_image.h"
+#include "Entity.h"
 /* ---------------------  GLOBAL CONSTANTS AND DEFINES --------------------- */
 constexpr auto TOP_BOUNDARY = 3.75f;
 constexpr auto RIGHT_BOUNDARY = 5.0f;

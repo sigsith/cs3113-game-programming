@@ -15,4 +15,4 @@ endfunction()
 
 add_executable_and_link(simple-2d-scene)
 add_executable_and_link(pong)
-add_executable_and_link(lunar_lander2)
+add_executable_and_link(lunar_lander2 Entity.cpp)

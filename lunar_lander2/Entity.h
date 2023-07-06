@@ -18,6 +18,7 @@ namespace ship {
 class Ship : public Entity {
  private:
   const GLuint _texture_id;
+  int ComputeState() const;
  public:
   void Update(float delta_time) override;
 

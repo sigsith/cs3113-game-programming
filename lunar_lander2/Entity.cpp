@@ -12,13 +12,20 @@
 namespace ship {
 void Ship::Update(float delta_time) {}
 void Ship::Render(ShaderProgram &program) const {
-  const float vertices[] = {
+  constexpr float vertices[] = {
       -0.5f, -0.5f, 0.5f, -0.5f, 0.5f, 0.5f,
       -0.5f, -0.5f, 0.5f, 0.5f, -0.5f, 0.5f
   };
+  constexpr auto sprite_width = 1.0f / 6.0f;
+  constexpr float sprite_height = 1.0f;
+  const auto index = ComputeState();
+  const auto u_start = static_cast<float>(index) * sprite_width;
+  const auto u_end = u_start + sprite_width;
+  constexpr auto v_start = 0.0f;
+  constexpr auto v_end = sprite_height;
   const float texture_coordinates[] = {
-      0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
-      0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f,
+      u_start, v_end, u_end, v_end, u_end, v_start,
+      u_start, v_end, u_end, v_start, u_start, v_start
   };
   glVertexAttribPointer(program.positionAttribute, 2, GL_FLOAT, false, 0,
                         vertices);
@@ -26,12 +33,15 @@ void Ship::Render(ShaderProgram &program) const {
   glVertexAttribPointer(program.texCoordAttribute, 2, GL_FLOAT, false, 0,
                         texture_coordinates);
   glEnableVertexAttribArray(program.texCoordAttribute);
-  const auto saucer_matrix = glm::mat4(1.0f);
-  program.SetModelMatrix(saucer_matrix);
+  const auto model_matrix = glm::mat4(1.0f);
+  program.SetModelMatrix(model_matrix);
   glBindTexture(GL_TEXTURE_2D, _texture_id);
   glDrawArrays(GL_TRIANGLES, 0, 6);
   glDisableVertexAttribArray(program.positionAttribute);
   glDisableVertexAttribArray(program.texCoordAttribute);
 }
 Ship::Ship(GLuint texture_id) : _texture_id(texture_id) {}
+int Ship::ComputeState() const {
+  return 4;
+}
 }

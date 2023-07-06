@@ -81,11 +81,11 @@ SDL_Joystick *player_one_controller;
 
 // overall position
 glm::vec3 cow_position = glm::vec3(0.0f, 0.0f, 0.0f);
-glm::vec3 saucer_position = glm::vec3(0.0f, 2.0f, 0.0f);
+glm::vec3 ship_position = glm::vec3(0.0f, 2.0f, 0.0f);
 
 // movement tracker
 glm::vec3 cow_velocity = glm::vec3(0.0f, 0.0f, 0.0f);
-glm::vec3 saucer_velocity = glm::vec3(0.0f, 0.0f, 0.0f);
+glm::vec3 ship_velocity = glm::vec3(0.0f, 0.0f, 0.0f);
 
 GLuint LoadTexture(const char *filepath) {
   // STEP 1: Loading the image file
@@ -181,11 +181,11 @@ void Update() {
       previous_ticks; // the delta time is the difference from the last frame
   previous_ticks = ticks;
 
-  if (abs(cow_position[0] - saucer_position[0]) < 0.1 && ticks > cool_down) {
+  if (abs(cow_position[0] - ship_position[0]) < 0.1 && ticks > cool_down) {
     is_beaming = true;
     beam_count += 1;
   }
-  if (abs(cow_position[1] - saucer_position[1]) < 0.5) {
+  if (abs(cow_position[1] - ship_position[1]) < 0.5) {
     is_beaming = false;
     cow_velocity[1] = 0.0;
     is_going_left = !is_going_left;
@@ -195,28 +195,28 @@ void Update() {
     }
   }
   if (is_beaming || cool_down_small > ticks || cow_position[1] > 0) {
-    saucer_velocity = glm::vec3(0, 0, 0);
+    ship_velocity = glm::vec3(0, 0, 0);
   } else {
-    if (saucer_velocity[1] > 0) {
-      saucer_velocity[1] = 0;
+    if (ship_velocity[1] > 0) {
+      ship_velocity[1] = 0;
     }
-    saucer_velocity = glm::vec3(cow_position[0] - saucer_position[0], 0, 0);
-    if (saucer_velocity[0] > 0.7) {
-      saucer_velocity[0] = 0.7;
-    } else if (saucer_velocity[0] < 0.7) {
-      saucer_velocity[0] = -0.7;
+    ship_velocity = glm::vec3(cow_position[0] - ship_position[0], 0, 0);
+    if (ship_velocity[0] > 0.7) {
+      ship_velocity[0] = 0.7;
+    } else if (ship_velocity[0] < 0.7) {
+      ship_velocity[0] = -0.7;
     }
-    saucer_position +=
-        saucer_velocity * delta_time
+    ship_position +=
+        ship_velocity * delta_time
             * 1.0f;
   }
   saucer_matrix = glm::mat4(1.0f);
-  saucer_matrix = glm::translate(saucer_matrix, saucer_position);
+  saucer_matrix = glm::translate(saucer_matrix, ship_position);
 
   cow_matrix = glm::mat4(1.0f);
   const float COW_ROT_ANGLE = glm::radians(0.1f);
   bool was_going = is_going_left;
-  float progress = (saucer_position[1] - cow_position[1] - 0.5) / 2.0;
+  float progress = (ship_position[1] - cow_position[1] - 0.5) / 2.0;
   if (is_beaming) {
     if (is_going_left) { cow_angle += COW_ROT_ANGLE; }
     else {
@@ -236,7 +236,7 @@ void Update() {
     cow_angle = 0;
 
     if (turn_cool_down < ticks) {
-      if (cow_position[0] < saucer_position[0]) {
+      if (cow_position[0] < ship_position[0]) {
         is_going_left = true;
       } else
         is_going_left = false;

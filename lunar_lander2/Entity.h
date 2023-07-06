@@ -7,12 +7,23 @@
  * NYU School of Engineering Policies and Procedures on
  * Academic Misconduct.
  **/
-
 #ifndef CS3113_GAME_PROGRAMMING_LUNAR_LANDER_ENTITY_H_
 #define CS3113_GAME_PROGRAMMING_LUNAR_LANDER_ENTITY_H_
-
+#include "ShaderProgram.h"
 class Entity {
-
+  virtual void Update(float delta_time) = 0;
+  virtual void Render(ShaderProgram &program) const = 0;
 };
+namespace ship {
+class Ship : public Entity {
+ private:
+  const GLuint _texture_id;
+ public:
+  void Update(float delta_time) override;
 
+  void Render(ShaderProgram &program) const override;
+
+  explicit Ship(GLuint texture_id);
+};
+}
 #endif //CS3113_GAME_PROGRAMMING_LUNAR_LANDER_ENTITY_H_

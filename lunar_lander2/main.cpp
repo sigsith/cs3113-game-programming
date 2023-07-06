@@ -22,6 +22,8 @@
 #include "ShaderProgram.h"
 #include "stb_image.h"
 #include "Entity.h"
+/* -----------------------------  STD INCLUDES ----------------------------- */
+//#include <memory>
 /* ---------------------  GLOBAL CONSTANTS AND DEFINES --------------------- */
 constexpr auto TOP_BOUNDARY = 3.75f;
 constexpr auto RIGHT_BOUNDARY = 5.0f;
@@ -29,11 +31,12 @@ constexpr auto RIGHT_BOUNDARY = 5.0f;
 SDL_Window *display_window;
 bool game_is_running = true;
 ShaderProgram program;
-glm::mat4 saucer_matrix;
 float previous_ticks = 0.0f;
 GLuint saucer_texture_id;
-glm::vec3 saucer_position = glm::vec3(0.0f, 2.0f, 0.0f);
-glm::vec3 saucer_velocity = glm::vec3(0.0f, 0.0f, 0.0f);
+glm::vec3 ship_position = glm::vec3(0.0f, 2.0f, 0.0f);
+glm::vec3 ship_velocity = glm::vec3(0.0f, 0.0f, 0.0f);
+// To avoid default initialization.
+std::unique_ptr<ship::Ship> apollo;
 /* --------------------------  FUNCTION SIGNATURES -------------------------- */
 void Initialize();
 GLuint LoadTexture(const char *filepath);
@@ -72,7 +75,6 @@ GLuint LoadTexture(const char *filepath) {
   stbi_image_free(image);
   return textureID;
 }
-
 void Initialize() {
   constexpr int WINDOW_WIDTH = 640,
       WINDOW_HEIGHT = 480;
@@ -94,7 +96,6 @@ void Initialize() {
   glViewport(VIEWPORT_X, VIEWPORT_Y, VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
   program.Load("shaders/vertex_textured.glsl",
                "shaders/fragment_textured.glsl");
-  saucer_matrix = glm::mat4(1.0f);
   const auto view_matrix = glm::mat4(1.0f);
   const auto
       projection_matrix = glm::ortho(-5.0f, 5.0f, -3.75f, 3.75f, -1.0f, 1.0f);
@@ -105,8 +106,8 @@ void Initialize() {
   saucer_texture_id = LoadTexture("lunar_lander.png");
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  apollo = std::make_unique<ship::Ship>(saucer_texture_id);
 }
-
 void ProcessInput() {
   SDL_Event event;
   while (SDL_PollEvent(&event)) {
@@ -118,40 +119,19 @@ void ProcessInput() {
     }
   }
 }
-
 void Update() {
   constexpr auto MILLISECONDS_IN_SECOND = 1000.0f;
   const float ticks = (float) SDL_GetTicks() / MILLISECONDS_IN_SECOND;
   const float delta_time = ticks - previous_ticks;
   previous_ticks = ticks;
-  saucer_matrix = glm::mat4(1.0f);
-  saucer_matrix = glm::translate(saucer_matrix, saucer_position);
 }
-
 void DrawObject(glm::mat4 &object_model_matrix, GLuint &object_texture_id) {
   program.SetModelMatrix(object_model_matrix);
   glBindTexture(GL_TEXTURE_2D, object_texture_id);
   glDrawArrays(GL_TRIANGLES, 0, 6);
 }
-
 void Render() {
   glClear(GL_COLOR_BUFFER_BIT);
-  const float vertices[] = {
-      -0.5f, -0.5f, 0.5f, -0.5f, 0.5f, 0.5f,
-      -0.5f, -0.5f, 0.5f, 0.5f, -0.5f, 0.5f
-  };
-  const float texture_coordinates[] = {
-      0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
-      0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f,
-  };
-  glVertexAttribPointer(program.positionAttribute, 2, GL_FLOAT, false, 0,
-                        vertices);
-  glEnableVertexAttribArray(program.positionAttribute);
-  glVertexAttribPointer(program.texCoordAttribute, 2, GL_FLOAT, false, 0,
-                        texture_coordinates);
-  glEnableVertexAttribArray(program.texCoordAttribute);
-  DrawObject(saucer_matrix, saucer_texture_id);
-  glDisableVertexAttribArray(program.positionAttribute);
-  glDisableVertexAttribArray(program.texCoordAttribute);
+  apollo->Render(program);
   SDL_GL_SwapWindow(display_window);
 }

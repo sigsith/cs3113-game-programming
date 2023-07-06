@@ -65,7 +65,7 @@ class Moon : public Entity {
  private:
   GLuint _texture_id;
  public:
-  Moon(GLuint texture_id);
+  explicit Moon(GLuint texture_id);
 
   void Update(float delta_time) override;
 

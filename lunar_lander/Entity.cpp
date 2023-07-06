@@ -49,6 +49,7 @@ void Ship::Render(ShaderProgram &program) const {
       glm::rotate(model_matrix,
                   _orientation - glm::pi<float>() / 2,
                   glm::vec3(0.0f, 0.0f, 1.0f));
+  model_matrix = glm::scale(model_matrix, glm::vec3(0.65f, 0.65f, 1.0f));
   program.SetModelMatrix(model_matrix);
   glBindTexture(GL_TEXTURE_2D, _texture_id);
   glDrawArrays(GL_TRIANGLES, 0, 6);

@@ -85,9 +85,12 @@ class TextMap : public Map {
     std::vector<uint> index_mapping(width);
     for (size_t i = 0; i < text.size(); ++i) {
       // Ensure the character is not before 'A' in the ASCII table
-      char character = std::max(text[i], 'A');
+      char character = text[i];
+      if (character == ' ') {
+        index_mapping[i] = 0;
+      }
       // Assume 'A' is the first tile in the spritesheet
-      index_mapping[i] = static_cast<uint>(character - 'A');
+      index_mapping[i] = static_cast<uint>(character - 'A' + 33);
     }
     return {static_cast<uint>(width), height, index_mapping};
   }

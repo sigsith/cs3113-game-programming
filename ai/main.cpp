@@ -136,7 +136,7 @@ bool Dynamic::IsActive() const {
 enum class MobType {
   Patroller,
   Jumper,
-  Spinner
+  Chaser
 };
 enum class MobState {
   Idle,
@@ -198,9 +198,9 @@ void Mob::Update(float delta_t, EntityManager &manager) {
       }
       break;
     }
-    case MobType::Spinner: {
+    case MobType::Chaser: {
       glm::vec3 direction = manager.player_->position() - this->position_;
-      this->acceleration_ = 1.0f * Normalize(direction);
+      this->acceleration_ = 1.5f * Normalize(direction);
       if (Length(this->velocity_) > 2.0) {
         this->velocity_ = Normalize(this->velocity_) * 2.0f;
       }
@@ -249,7 +249,7 @@ Mob::Mob(glm::vec3 startpos, GLuint text_id, MobConfig config) :
       timer_ = SDL_GetTicks() + 4000;
       break;
     }
-    case MobType::Spinner: {
+    case MobType::Chaser: {
       gravity_ = 0;
       break;
     }
@@ -403,7 +403,7 @@ void Initialize() {
   const auto mob2_config = MobConfig{MobType::Patroller};
   const auto mob2 = new Mob(glm::vec3(1, -1, 0), mob2_id, mob2_config);
   const auto mob3_id = LoadTexture(std::string("mob3.png"));
-  const auto mob3_config = MobConfig{MobType::Spinner};
+  const auto mob3_config = MobConfig{MobType::Chaser};
   const auto mob3 = new Mob(glm::vec3(2, 2, 0), mob3_id, mob3_config);
 
   manager = std::make_unique<EntityManager>(background,

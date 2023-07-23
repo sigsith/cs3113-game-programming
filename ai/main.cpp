@@ -341,11 +341,15 @@ void Initialize() {
   const auto mob0_id = LoadTexture(std::string("mob1.png"));
   const auto mob0_config = MobConfig{MobType::Jumper};
   const auto mob0 = new Mob(glm::vec3(-3, 1, 0), mob0_id, mob0_config);
+  const auto mob2_id = LoadTexture(std::string("mob2.png"));
+  const auto mob2_config = MobConfig{MobType::Patroller};
+  const auto mob2 = new Mob(glm::vec3(1, 0, 0), mob2_id, mob2_config);
+
   manager = std::make_unique<EntityManager>(background,
                                             map,
                                             player,
                                             std::vector<Mob *>{
-                                                mob0
+                                                mob0, mob2
                                             });
 }
 void ProcessInput() {

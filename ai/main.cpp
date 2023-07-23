@@ -206,8 +206,12 @@ class Player : public Dynamic {
 };
 void Player::Update(float delta_t, EntityManager &manager) {
   Dynamic::Update(delta_t, manager);
+  const auto player_box = this->box();
   for (auto &&mob : manager.mobs()) {
-
+    const auto mob_box = mob->box();
+    if (player_box.IsCollision(mob_box)) {
+      std::cout << "Box hit!\n";
+    }
   }
 }
 Player::Player(glm::vec3 startpos, GLuint text_id) : Dynamic(startpos,

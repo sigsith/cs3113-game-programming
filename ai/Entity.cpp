@@ -87,3 +87,10 @@ float Box::YMax() const {
 float Box::YMin() const {
   return position.y - half_height;
 }
+bool Box::IsCollision(const Box &rhs) const {
+  const auto x_diff = abs(this->position.x - rhs.position.x);
+  const auto y_diff = abs(this->position.y - rhs.position.y);
+  const auto x_limit = this->half_width + rhs.half_width;
+  const auto y_limit = this->half_height + rhs.half_height;
+  return x_diff <= x_limit && y_diff <= y_limit;
+}

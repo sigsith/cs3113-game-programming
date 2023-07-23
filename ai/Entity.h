@@ -49,6 +49,7 @@ struct Box {
   float XMin() const;
   float YMax() const;
   float YMin() const;
+  bool IsCollision(const Box &rhs) const;
 };
 
 class Boxed : public Entity {

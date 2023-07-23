@@ -47,12 +47,6 @@ struct SpriteSheetMapping {
                      GLuint texture_id_);
 };
 
-enum SolidStatus {
-  Empty,
-  CompleteSolid,
-  TouchingEdges,
-};
-
 class Map : public Entity {
  private:
   std::vector<float> vertices_;

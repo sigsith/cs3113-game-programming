@@ -92,7 +92,7 @@ bool Map::IsSolid(Box &box) const {
   // 1. Check if box in range
   if (!(box.XMax() < min_x_ || box.XMin() > max_x_) || box.YMax() < min_y_
       || box.YMin() > max_y_) {
-    return Empty;
+    return false;
   }
   auto x_start =
       static_cast<int>(std::floor((box.XMin() - min_x_) / tile_size_));
@@ -110,11 +110,11 @@ bool Map::IsSolid(Box &box) const {
     for (int x = y_start; x < x_end; ++x) {
       // If the tile is solid, return CompleteSolid
       if (levels_.index_mapping_[y * levels_.width_ + x] != NONE) {
-        return CompleteSolid;
+        return true;
       }
     }
   }
-  return Empty;
+  return false;
 }
 LevelMapping::LevelMapping(uint width,
                            uint height,

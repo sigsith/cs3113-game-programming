@@ -47,15 +47,23 @@ struct SpriteSheetMapping {
                      GLuint texture_id_);
 };
 
+enum SolidStatus {
+  Empty,
+  CompleteSolid,
+  TouchingEdges,
+};
+
 class Map : public Entity {
  private:
   std::vector<float> vertices_;
   std::vector<float> tex_coords_;
+  LevelMapping levels_;
  public:
   Map(LevelMapping level_mapping,
       SpriteSheetMapping sprite_sheet_mapping,
       float m_tile_size, glm::vec3 top_left
   );
+  SolidStatus CheckSolid(glm::vec3 position, float half_width);
   void Render(ShaderProgram *shader) const override;
 };
 

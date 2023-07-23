@@ -26,20 +26,29 @@
 
 #include "Entity.h"
 
-class LevelMapping {
- private:
+struct LevelMapping {
   uint width_;
   uint height_;
+  // the index corresponds to the flattened sprit sheet index.
   std::vector<uint> index_mapping_;
- public:
   LevelMapping(uint width_,
                uint height_,
                std::vector<uint> index_mapping_);
 };
 
+struct SpriteSheetMapping {
+  uint width_;
+  uint height_;
+  GLuint texture_id_;
+  SpriteSheetMapping(uint width_,
+                     uint height_,
+                     GLuint texture_id_);
+};
+
 class Map : public Entity {
  public:
-  explicit Map(const std::string &tile_set_path, const LevelMapping &mapping);
+  explicit Map(LevelMapping level_mapping,
+               SpriteSheetMapping sprite_sheet_mapping);
   void Render(ShaderProgram *shader) const override;
 };
 

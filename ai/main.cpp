@@ -115,6 +115,7 @@ void Update() {
     return;
   }
   while (epoch >= FIXED_TIMESTEP) {
+    epoch -= FIXED_TIMESTEP;
     // Update all with fixed timestep
   }
   time_accumulator = epoch;

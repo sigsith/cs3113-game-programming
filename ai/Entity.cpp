@@ -38,11 +38,11 @@ void Background::Render(ShaderProgram *shader) const {
                         0,
                         FULL_TEX_COORDS);
   glEnableVertexAttribArray(shader->texCoordAttribute);
-  const auto base_matrix = glm::mat4(1.0f);
-  const auto scale_factor_x = 10.0f;
-  const auto scale_factor_y = 3.0f;
+  constexpr auto base_matrix = glm::mat4(1.0f);
+  constexpr auto scale_factor_x = 10.0f;
+  constexpr auto scale_factor_y = 7.5f;
   const auto model_matrix =
-      glm::scale(glm::translate(base_matrix, glm::vec3(0.0f, -2.6f, 0.0f)),
+      glm::scale(glm::translate(base_matrix, glm::vec3(0.0f, 0.0f, 0.0f)),
                  glm::vec3(scale_factor_x, scale_factor_y, 1.0f));
   shader->SetModelMatrix(model_matrix);
   glDrawArrays(GL_TRIANGLES, 0, 6);

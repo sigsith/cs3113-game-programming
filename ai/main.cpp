@@ -466,7 +466,7 @@ void ProcessInput() {
     manager->player_->MoveRight();
   }
   if (key_state[SDL_SCANCODE_W] || key_state[SDL_SCANCODE_SPACE]) {
-    manager->player_->Jump(2.0, *manager);
+    manager->player_->Jump(3.0, *manager);
   }
 }
 void Update() {

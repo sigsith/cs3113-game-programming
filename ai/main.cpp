@@ -22,6 +22,7 @@
 #include "ShaderProgram.h"
 #include "stb_image.h"
 #include "Entity.h"
+#include "Map.h"
 /* -----------------------------  STD INCLUDES ----------------------------- */
 #include <memory>
 #include <iostream>

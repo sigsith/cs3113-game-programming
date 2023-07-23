@@ -48,13 +48,14 @@ class EntityManager {
 class Dynamic : public Boxed {
  private:
   bool is_active_ = true;
-  glm::vec3 position_;
   glm::vec3 velocity_;
   glm::vec3 acceleration_;
   float half_height_;
   float half_width_;
   float horizontal_velocity_ = 0.5;
 
+ protected:
+  glm::vec3 position_;
  public:
   Dynamic(glm::vec3 startpos,
           GLuint text_id,
@@ -137,7 +138,7 @@ void Player::Render(ShaderProgram *shader) const {
   constexpr auto scale_factor_x = 1.0;
   constexpr auto scale_factor_y = 1.0f;
   const auto model_matrix =
-      glm::scale(glm::translate(base_matrix, glm::vec3(0.0f, 0.0f, 0.0f)),
+      glm::scale(glm::translate(base_matrix, position_),
                  glm::vec3(scale_factor_x, scale_factor_y, 1.0f));
   shader->SetModelMatrix(model_matrix);
   glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -239,7 +240,7 @@ void ProcessInput() {
     manager->player_->MoveLeft();
   }
   if (key_state[SDL_SCANCODE_D]) {
-    manager->player_->MoveLeft();
+    manager->player_->MoveRight();
   }
 }
 void Update() {

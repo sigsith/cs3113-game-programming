@@ -49,11 +49,14 @@ class Dynamic : public Boxed {
   glm::vec3 acceleration_;
   float half_height_;
   float half_width_;
+  float horizontal_velocity_ = 0.5;
 
  public:
   Dynamic(glm::vec3 startpos, GLuint text_id);
   virtual void Update(float delta_t, const EntityManager &manager);
   void Disable();
+  virtual void MoveLeft();
+  virtual void MoveRight();
   Box box() const override {
     return Box{
         position_,
@@ -82,6 +85,12 @@ Dynamic::Dynamic(glm::vec3 startpos, GLuint text_id) :
     position_(startpos) {
   texture_id_ = text_id;
 
+}
+void Dynamic::MoveLeft() {
+  velocity_.x = -horizontal_velocity_;
+}
+void Dynamic::MoveRight() {
+  velocity_.x = horizontal_velocity_;
 }
 class Player : public Dynamic {
  public:

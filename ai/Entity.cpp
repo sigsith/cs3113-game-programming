@@ -22,7 +22,49 @@
 #include "ShaderProgram.h"
 #include "Entity.h"
 #include "stb_image.h"
-void Background::Render(ShaderProgram *program) const {}
+void Background::Render(ShaderProgram *program) const {
+  constexpr float vertices[] = {
+      -0.5f, -0.5f,
+      0.5f, -0.5f,
+      0.5f, 0.5f,
+      -0.5f, -0.5f,
+      0.5f, 0.5f,
+      -0.5f, 0.5f
+  };
+  constexpr float texture_coordinates[] = {
+      0.0f, 1.0f,
+      1.0f, 1.0f,
+      1.0f, 0.0f,
+      0.0f, 1.0f,
+      1.0f, 0.0f,
+      0.0f, 0.0f,
+  };
+  glBindTexture(GL_TEXTURE_2D, this->texture_id_);
+  glVertexAttribPointer(program->positionAttribute,
+                        2,
+                        GL_FLOAT,
+                        false,
+                        0,
+                        vertices);
+  glEnableVertexAttribArray(program->positionAttribute);
+  glVertexAttribPointer(program->texCoordAttribute,
+                        2,
+                        GL_FLOAT,
+                        false,
+                        0,
+                        texture_coordinates);
+  glEnableVertexAttribArray(program->texCoordAttribute);
+  const auto base_matrix = glm::mat4(1.0f);
+  const auto scale_factor_x = 10.0f;
+  const auto scale_factor_y = 3.0f;
+  const auto model_matrix =
+      glm::scale(glm::translate(base_matrix, glm::vec3(0.0f, -2.6f, 0.0f)),
+                 glm::vec3(scale_factor_x, scale_factor_y, 1.0f));
+  program->SetModelMatrix(model_matrix);
+  glDrawArrays(GL_TRIANGLES, 0, 6);
+  glDisableVertexAttribArray(program->positionAttribute);
+  glDisableVertexAttribArray(program->texCoordAttribute);
+}
 Background::Background(std::string &texture_path)
     : texture_id_(LoadTexture((texture_path))) {
 }

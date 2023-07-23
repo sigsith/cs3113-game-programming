@@ -49,8 +49,8 @@ void Background::Render(ShaderProgram *program) const {
   glDisableVertexAttribArray(program->positionAttribute);
   glDisableVertexAttribArray(program->texCoordAttribute);
 }
-Background::Background(std::string &texture_path)
-    : texture_id_(LoadTexture((texture_path))) {
+Background::Background(std::string &texture_path) {
+  texture_id_ = LoadTexture((texture_path));
 }
 GLuint LoadTexture(const std::string &path) {
   int width, height, nrChannels;

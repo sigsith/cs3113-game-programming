@@ -42,7 +42,6 @@ class Entity {
 
 class Background : public Entity {
  private:
-  GLuint texture_id_;
  public:
   explicit Background(std::string &texture_path);
   void Render(ShaderProgram *program) const override;

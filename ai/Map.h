@@ -17,7 +17,7 @@
 #endif
 #define GL_GLEXT_PROTOTYPES 1
 #include <vector>
-#include <math.h>
+#include <cmath>
 #include <SDL.h>
 #include <SDL_opengl.h>
 #include "glm/mat4x4.hpp"
@@ -43,7 +43,7 @@ class Map {
   std::vector<float> m_texture_coordinates;
 
   // The boundaries of the map
-  float m_left_bound, m_right_bound, m_top_bound, m_bottom_bound;
+  float m_left_bound{}, m_right_bound{}, m_top_bound{}, m_bottom_bound{};
 
  public:
   // Constructor
@@ -62,22 +62,22 @@ class Map {
   bool is_solid(glm::vec3 position, float *penetration_x, float *penetration_y);
 
   // Getters
-  int const get_width() const { return m_width; }
-  int const get_height() const { return m_height; }
+  int get_width() const { return m_width; }
+  int get_height() const { return m_height; }
 
-  unsigned int *const get_level_data() const { return m_level_data; }
-  GLuint const get_texture_id() const { return m_texture_id; }
+  unsigned int *get_level_data() const { return m_level_data; }
+  GLuint get_texture_id() const { return m_texture_id; }
 
-  float const get_tile_size() const { return m_tile_size; }
-  int const get_tile_count_x() const { return m_tile_count_x; }
-  int const get_tile_count_y() const { return m_tile_count_y; }
+  float get_tile_size() const { return m_tile_size; }
+  int get_tile_count_x() const { return m_tile_count_x; }
+  int get_tile_count_y() const { return m_tile_count_y; }
 
-  std::vector<float> const get_vertices() const { return m_vertices; }
-  std::vector<float> const get_texture_coordinates() const { return m_texture_coordinates; }
+  std::vector<float> get_vertices() const { return m_vertices; }
+  std::vector<float> get_texture_coordinates() const { return m_texture_coordinates; }
 
-  float const get_left_bound() const { return m_left_bound; }
-  float const get_right_bound() const { return m_right_bound; }
-  float const get_top_bound() const { return m_top_bound; }
-  float const get_bottom_bound() const { return m_bottom_bound; }
+  float get_left_bound() const { return m_left_bound; }
+  float get_right_bound() const { return m_right_bound; }
+  float get_top_bound() const { return m_top_bound; }
+  float get_bottom_bound() const { return m_bottom_bound; }
 };
 #endif //CS3113_GAME_PROGRAMMING_AI_MAP_H_

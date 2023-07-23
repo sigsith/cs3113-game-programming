@@ -9,8 +9,13 @@
 **/
 #include "Map.h"
 
-Map::Map(int width, int height, unsigned int *level_data, GLuint texture_id, float tile_size, int tile_count_x, int tile_count_y)
-{
+Map::Map(int width,
+         int height,
+         unsigned int *level_data,
+         GLuint texture_id,
+         float tile_size,
+         int tile_count_x,
+         int tile_count_y) {
   m_width = width;
   m_height = height;
 
@@ -24,38 +29,40 @@ Map::Map(int width, int height, unsigned int *level_data, GLuint texture_id, flo
   build();
 }
 
-void Map::build()
-{
+void Map::build() {
   // Since this is a 2D map, we need a nested for-loop
-  for(int y_coord = 0; y_coord < m_height; y_coord++)
-  {
-    for(int x_coord = 0; x_coord < m_width; x_coord++)
-    {
+  for (int y_coord = 0; y_coord < m_height; y_coord++) {
+    for (int x_coord = 0; x_coord < m_width; x_coord++) {
       // Get the current tile
-      int tile = m_level_data[y_coord * m_width + x_coord];
+      int tile = static_cast<int>(m_level_data[y_coord * m_width + x_coord]);
 
       // If the tile number is 0 i.e. not solid, skip to the next one
       if (tile == 0) continue;
 
       // Otherwise, calculate its UV-coordinated
       float u_coord = (float) (tile % m_tile_count_x) / (float) m_tile_count_x;
-      float v_coord = (float) (tile / m_tile_count_x) / (float) m_tile_count_y;
+      float v_coord = (float) (static_cast<float>(tile)
+          / static_cast<float>(m_tile_count_x)) / (float) m_tile_count_y;
 
       // And work out their dimensions and posititions
-      float tile_width = 1.0f/ (float)  m_tile_count_x;
-      float tile_height = 1.0f/ (float) m_tile_count_y;
+      float tile_width = 1.0f / (float) m_tile_count_x;
+      float tile_height = 1.0f / (float) m_tile_count_y;
 
       float x_offset = -(m_tile_size / 2); // From center of tile
-      float y_offset =  (m_tile_size / 2); // From center of tile
+      float y_offset = (m_tile_size / 2); // From center of tile
 
       // So we can store them inside our std::vectors
       m_vertices.insert(m_vertices.end(), {
-          x_offset + (m_tile_size * x_coord),  y_offset +  -m_tile_size * y_coord,
-          x_offset + (m_tile_size * x_coord),  y_offset + (-m_tile_size * y_coord) - m_tile_size,
-          x_offset + (m_tile_size * x_coord) + m_tile_size, y_offset + (-m_tile_size * y_coord) - m_tile_size,
           x_offset + (m_tile_size * x_coord), y_offset + -m_tile_size * y_coord,
-          x_offset + (m_tile_size * x_coord) + m_tile_size, y_offset + (-m_tile_size * y_coord) - m_tile_size,
-          x_offset + (m_tile_size * x_coord) + m_tile_size, y_offset +  -m_tile_size * y_coord
+          x_offset + (m_tile_size * x_coord),
+          y_offset + (-m_tile_size * y_coord) - m_tile_size,
+          x_offset + (m_tile_size * x_coord) + m_tile_size,
+          y_offset + (-m_tile_size * y_coord) - m_tile_size,
+          x_offset + (m_tile_size * x_coord), y_offset + -m_tile_size * y_coord,
+          x_offset + (m_tile_size * x_coord) + m_tile_size,
+          y_offset + (-m_tile_size * y_coord) - m_tile_size,
+          x_offset + (m_tile_size * x_coord) + m_tile_size,
+          y_offset + -m_tile_size * y_coord
       });
 
       m_texture_coordinates.insert(m_texture_coordinates.end(), {
@@ -70,22 +77,31 @@ void Map::build()
   }
 
   // The bounds are dependent on the size of the tiles
-  m_left_bound   = 0 - (m_tile_size / 2);
-  m_right_bound  = (m_tile_size * m_width) - (m_tile_size / 2);
-  m_top_bound    = 0 + (m_tile_size / 2);
+  m_left_bound = 0 - (m_tile_size / 2);
+  m_right_bound = (m_tile_size * m_width) - (m_tile_size / 2);
+  m_top_bound = 0 + (m_tile_size / 2);
   m_bottom_bound = -(m_tile_size * m_height) + (m_tile_size / 2);
 }
 
-void Map::render(ShaderProgram *program)
-{
+void Map::render(ShaderProgram *program) {
   glm::mat4 model_matrix = glm::mat4(1.0f);
   program->SetModelMatrix(model_matrix);
 
   glUseProgram(program->programID);
 
-  glVertexAttribPointer(program->positionAttribute, 2, GL_FLOAT, false, 0, m_vertices.data());
+  glVertexAttribPointer(program->positionAttribute,
+                        2,
+                        GL_FLOAT,
+                        false,
+                        0,
+                        m_vertices.data());
   glEnableVertexAttribArray(program->positionAttribute);
-  glVertexAttribPointer(program->texCoordAttribute, 2, GL_FLOAT, false, 0, m_texture_coordinates.data());
+  glVertexAttribPointer(program->texCoordAttribute,
+                        2,
+                        GL_FLOAT,
+                        false,
+                        0,
+                        m_texture_coordinates.data());
   glEnableVertexAttribArray(program->texCoordAttribute);
 
   glBindTexture(GL_TEXTURE_2D, m_texture_id);
@@ -95,8 +111,9 @@ void Map::render(ShaderProgram *program)
   glDisableVertexAttribArray(program->texCoordAttribute);
 }
 
-bool Map::is_solid(glm::vec3 position, float *penetration_x, float *penetration_y)
-{
+bool Map::is_solid(glm::vec3 position,
+                   float *penetration_x,
+                   float *penetration_y) {
   // The penetration between the map and the object
   // The reason why these are pointers is because we want to reassign values
   // to them in case that we are colliding. That way the object that originally
@@ -106,14 +123,15 @@ bool Map::is_solid(glm::vec3 position, float *penetration_x, float *penetration_
   *penetration_y = 0;
 
   // If we are out of bounds, it is not solid
-  if (position.x < m_left_bound || position.x > m_right_bound)  return false;
-  if (position.y > m_top_bound  || position.y < m_bottom_bound) return false;
+  if (position.x < m_left_bound || position.x > m_right_bound) return false;
+  if (position.y > m_top_bound || position.y < m_bottom_bound) return false;
 
-  int tile_x = floor((position.x + (m_tile_size / 2))  / m_tile_size);
-  int tile_y = -(ceil(position.y - (m_tile_size / 2))) / m_tile_size; // Our array counts up as Y goes down.
+  int tile_x = floor((position.x + (m_tile_size / 2)) / m_tile_size);
+  int tile_y = -(ceil(position.y - (m_tile_size / 2)))
+      / m_tile_size; // Our array counts up as Y goes down.
 
   // If the tile index is negative or greater than the dimensions, it is not solid
-  if (tile_x < 0 || tile_x >= m_width)  return false;
+  if (tile_x < 0 || tile_x >= m_width) return false;
   if (tile_y < 0 || tile_y >= m_height) return false;
 
   // If the tile index is 0 i.e. an open space, it is not solid
@@ -121,7 +139,7 @@ bool Map::is_solid(glm::vec3 position, float *penetration_x, float *penetration_
   if (tile == 0) return false;
 
   // And we likely have some overlap
-  float tile_center_x = (tile_x  * m_tile_size);
+  float tile_center_x = (tile_x * m_tile_size);
   float tile_center_y = -(tile_y * m_tile_size);
 
   // And because we likely have some overlap, we adjust for that

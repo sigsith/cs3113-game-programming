@@ -23,36 +23,20 @@
 #include "Entity.h"
 #include "stb_image.h"
 void Background::Render(ShaderProgram *program) const {
-  constexpr float vertices[] = {
-      -0.5f, -0.5f,
-      0.5f, -0.5f,
-      0.5f, 0.5f,
-      -0.5f, -0.5f,
-      0.5f, 0.5f,
-      -0.5f, 0.5f
-  };
-  constexpr float texture_coordinates[] = {
-      0.0f, 1.0f,
-      1.0f, 1.0f,
-      1.0f, 0.0f,
-      0.0f, 1.0f,
-      1.0f, 0.0f,
-      0.0f, 0.0f,
-  };
   glBindTexture(GL_TEXTURE_2D, this->texture_id_);
   glVertexAttribPointer(program->positionAttribute,
                         2,
                         GL_FLOAT,
                         false,
                         0,
-                        vertices);
+                        SQUARE_VERTICES);
   glEnableVertexAttribArray(program->positionAttribute);
   glVertexAttribPointer(program->texCoordAttribute,
                         2,
                         GL_FLOAT,
                         false,
                         0,
-                        texture_coordinates);
+                        FULL_TEX_COORDS);
   glEnableVertexAttribArray(program->texCoordAttribute);
   const auto base_matrix = glm::mat4(1.0f);
   const auto scale_factor_x = 10.0f;

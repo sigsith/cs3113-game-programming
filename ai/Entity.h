@@ -16,10 +16,28 @@ class ShaderProgram;
 #include "Entity.h"
 GLuint LoadTexture(const std::string &path);
 
+static constexpr float SQUARE_VERTICES[12] = {
+    -0.5f, -0.5f,
+    0.5f, -0.5f,
+    0.5f, 0.5f,
+    -0.5f, -0.5f,
+    0.5f, 0.5f,
+    -0.5f, 0.5f
+};
+static constexpr float FULL_TEX_COORDS[12] = {
+    0.0f, 1.0f,
+    1.0f, 1.0f,
+    1.0f, 0.0f,
+    0.0f, 1.0f,
+    1.0f, 0.0f,
+    0.0f, 0.0f,
+};
 class Entity {
  public:
   virtual ~Entity() = default;
   virtual void Render(ShaderProgram *program) const = 0;
+ protected:
+  GLuint texture_id_;
 };
 
 class Background : public Entity {

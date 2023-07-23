@@ -78,6 +78,7 @@ class Dynamic : public Boxed {
   virtual void MoveLeft();
   virtual void MoveRight();
   virtual void StopHorizontal();
+  bool IsActive() const;
   Box box() const override {
     return Box{
         position_,
@@ -128,6 +129,9 @@ void Dynamic::Jump(float speed, const EntityManager &manager) {
 }
 void Dynamic::StopHorizontal() {
   velocity_.x = 0;
+}
+bool Dynamic::IsActive() const {
+  return is_active_;
 }
 enum class MobType {
   Patroller,
@@ -215,6 +219,9 @@ void Player::Update(float delta_t, EntityManager &manager) {
   }
   const auto player_box = this->box();
   for (auto &&mob : manager.mobs()) {
+    if (!mob->IsActive()) {
+      continue;
+    }
     const auto mob_box = mob->box();
     if (player_box.IsCollisionWith(mob_box)) {
       if (player_box.IsOnTopOf(mob_box)) {

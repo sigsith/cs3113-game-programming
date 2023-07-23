@@ -54,7 +54,6 @@ class EntityManager {
 constexpr float GRAVITY = -1.2;
 class Dynamic : public Boxed {
  private:
-  glm::vec3 velocity_{};
   glm::vec3 acceleration_{};
   float half_height_;
   float half_width_;
@@ -64,6 +63,7 @@ class Dynamic : public Boxed {
   uint collision_time_out = 0;
   bool grounded = false;
 
+  glm::vec3 velocity_{};
  protected:
   glm::vec3 position_;
   bool is_active_ = true;
@@ -170,6 +170,13 @@ void Mob::Update(float delta_t, EntityManager &manager) {
       }
       break;
     }
+    case MobType::Patroller: {
+      if (SDL_GetTicks() > timer_) {
+        timer_ = SDL_GetTicks() + 4000;
+        velocity_.x = -velocity_.x;
+      }
+      break;
+    }
     default:break;
   }
 }
@@ -207,6 +214,14 @@ Mob::Mob(glm::vec3 startpos, GLuint text_id, MobConfig config) :
     Dynamic(startpos, text_id, 0.3, 0.15), behavior_(config),
     state_(MobState::Idle) {
 
+  switch (config.mob_type) {
+    case MobType::Patroller: {
+      velocity_.x = -1.0;
+      timer_ = SDL_GetTicks() + 4000;
+      break;
+    }
+    default:break;
+  }
 }
 void Mob::Kill() {
   is_active_ = false;
@@ -356,7 +371,7 @@ void Initialize() {
   const auto mob0 = new Mob(glm::vec3(-3, 1, 0), mob0_id, mob0_config);
   const auto mob2_id = LoadTexture(std::string("mob2.png"));
   const auto mob2_config = MobConfig{MobType::Patroller};
-  const auto mob2 = new Mob(glm::vec3(1, 0, 0), mob2_id, mob2_config);
+  const auto mob2 = new Mob(glm::vec3(1, -1, 0), mob2_id, mob2_config);
 
   manager = std::make_unique<EntityManager>(background,
                                             map,

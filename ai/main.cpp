@@ -31,12 +31,15 @@ constexpr auto TOP_BOUNDARY = 3.75f;
 constexpr auto RIGHT_BOUNDARY = 5.0f;
 
 /* -------------------------  FORWARD DECLARATIONS ------------------------- */
+class Player;
+
 class EntityManager {
  private:
   Background background_;
   Map map_;
  public:
-  explicit EntityManager(Background background, Map map);
+  Player *player_;
+  explicit EntityManager(Background background, Map map, Player *player);
   void RenderAll(ShaderProgram *shader) const;
   const Map &map() const;
 };
@@ -95,9 +98,42 @@ void Dynamic::MoveRight() {
 class Player : public Dynamic {
  public:
   void Update(float delta_t, const EntityManager &manager) override;
+  void Render(ShaderProgram *shader) const override;
+  Player(glm::vec3 startpos, GLuint text_id);
 };
 void Player::Update(float delta_t, const EntityManager &manager) {
   Dynamic::Update(delta_t, manager);
+}
+Player::Player(glm::vec3 startpos, GLuint text_id) : Dynamic(startpos,
+                                                             text_id) {
+
+}
+void Player::Render(ShaderProgram *shader) const {
+  glBindTexture(GL_TEXTURE_2D, this->texture_id_);
+  glVertexAttribPointer(shader->positionAttribute,
+                        2,
+                        GL_FLOAT,
+                        false,
+                        0,
+                        SQUARE_VERTICES);
+  glEnableVertexAttribArray(shader->positionAttribute);
+  glVertexAttribPointer(shader->texCoordAttribute,
+                        2,
+                        GL_FLOAT,
+                        false,
+                        0,
+                        FULL_TEX_COORDS);
+  glEnableVertexAttribArray(shader->texCoordAttribute);
+  constexpr auto base_matrix = glm::mat4(1.0f);
+  constexpr auto scale_factor_x = 1.0;
+  constexpr auto scale_factor_y = 1.0f;
+  const auto model_matrix =
+      glm::scale(glm::translate(base_matrix, glm::vec3(0.0f, 0.0f, 0.0f)),
+                 glm::vec3(scale_factor_x, scale_factor_y, 1.0f));
+  shader->SetModelMatrix(model_matrix);
+  glDrawArrays(GL_TRIANGLES, 0, 6);
+  glDisableVertexAttribArray(shader->positionAttribute);
+  glDisableVertexAttribArray(shader->texCoordAttribute);
 }
 
 /* ---------------------------  GLOBAL VARIABLES --------------------------- */
@@ -169,7 +205,9 @@ void Initialize() {
   const auto tile_set = SpriteSheetMapping(10, 6, tile_set_id);
   const auto top_left = glm::vec3(-4, 0, 0);
   const auto map = Map(index_mapping, tile_set, 0.5, top_left);
-  manager = std::make_unique<EntityManager>(background, map);
+  const auto player_id = LoadTexture(std::string("player.png"));
+  const auto player = new Player(glm::vec3(0, 0, 0), player_id);
+  manager = std::make_unique<EntityManager>(background, map, player);
 }
 void ProcessInput() {
   SDL_Event event;
@@ -188,6 +226,12 @@ void ProcessInput() {
     }
   }
   const Uint8 *key_state = SDL_GetKeyboardState(nullptr);
+  if (key_state[SDL_SCANCODE_A]) {
+    manager->player_->MoveLeft();
+  }
+  if (key_state[SDL_SCANCODE_D]) {
+    manager->player_->MoveLeft();
+  }
 }
 void Update() {
   const auto ticks = static_cast<float>(SDL_GetTicks()) / 1000.0f;
@@ -198,6 +242,7 @@ void Update() {
        time_accumulator -= FIXED_TIMESTEP) {
     // Update things
   }
+
 }
 void DrawObject(glm::mat4 &object_model_matrix, GLuint &object_texture_id) {
   shader.SetModelMatrix(object_model_matrix);
@@ -210,14 +255,15 @@ void Render() {
   manager->RenderAll(&shader);
   SDL_GL_SwapWindow(display_window);
 }
-EntityManager::EntityManager(Background background, Map map)
+EntityManager::EntityManager(Background background, Map map, Player *player)
     : background_(std::move(
-    background)), map_(std::move(map)) {
+    background)), map_(std::move(map)), player_(player) {
 
 }
 void EntityManager::RenderAll(ShaderProgram *shader) const {
   background_.Render(shader);
   map_.Render(shader);
+  player_->Render(shader);
 }
 const Map &EntityManager::map() const {
   return map_;

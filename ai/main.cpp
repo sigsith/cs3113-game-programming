@@ -32,14 +32,19 @@ constexpr auto RIGHT_BOUNDARY = 5.0f;
 
 /* -------------------------  FORWARD DECLARATIONS ------------------------- */
 class Player;
+class Mob;
 
 class EntityManager {
  private:
   Background background_;
   Map map_;
+  std::vector<Mob *> mobs_;
  public:
   Player *player_;
-  explicit EntityManager(Background background, Map map, Player *player);
+  explicit EntityManager(Background background,
+                         Map map,
+                         Player *player,
+                         std::vector<Mob *> mobs);
   void RenderAll(ShaderProgram *shader) const;
   void UpdateAll(float delta_t) const;
   const Map &map() const;
@@ -148,7 +153,31 @@ void Mob::Update(float delta_t, const EntityManager &manager) {
   Dynamic::Update(delta_t, manager);
 }
 void Mob::Render(ShaderProgram *shader) const {
-
+  glBindTexture(GL_TEXTURE_2D, this->texture_id_);
+  glVertexAttribPointer(shader->positionAttribute,
+                        2,
+                        GL_FLOAT,
+                        false,
+                        0,
+                        SQUARE_VERTICES);
+  glEnableVertexAttribArray(shader->positionAttribute);
+  glVertexAttribPointer(shader->texCoordAttribute,
+                        2,
+                        GL_FLOAT,
+                        false,
+                        0,
+                        FULL_TEX_COORDS);
+  glEnableVertexAttribArray(shader->texCoordAttribute);
+  constexpr auto base_matrix = glm::mat4(1.0f);
+  constexpr auto scale_factor_x = 1.0;
+  constexpr auto scale_factor_y = 1.0f;
+  const auto model_matrix =
+      glm::scale(glm::translate(base_matrix, position_),
+                 glm::vec3(scale_factor_x, scale_factor_y, 1.0f));
+  shader->SetModelMatrix(model_matrix);
+  glDrawArrays(GL_TRIANGLES, 0, 6);
+  glDisableVertexAttribArray(shader->positionAttribute);
+  glDisableVertexAttribArray(shader->texCoordAttribute);
 }
 Mob::Mob(glm::vec3 startpos, GLuint text_id, MobConfig config) :
     Dynamic(startpos, text_id, 0.3, 0.15), behavior_(config),
@@ -269,7 +298,15 @@ void Initialize() {
   const auto map = Map(index_mapping, tile_set, 0.5, top_left);
   const auto player_id = LoadTexture(std::string("player.png"));
   const auto player = new Player(glm::vec3(0, 0, 0), player_id);
-  manager = std::make_unique<EntityManager>(background, map, player);
+  const auto mob0_id = LoadTexture(std::string("mob1.png"));
+  const auto mob0_config = MobConfig{MobType::Jumper};
+  const auto mob0 = new Mob(glm::vec3(-4, 1, 0), mob0_id, mob0_config);
+  manager = std::make_unique<EntityManager>(background,
+                                            map,
+                                            player,
+                                            std::vector<Mob *>{
+                                                mob0
+                                            });
 }
 void ProcessInput() {
   SDL_Event event;
@@ -320,14 +357,23 @@ void Render() {
   manager->RenderAll(&shader);
   SDL_GL_SwapWindow(display_window);
 }
-EntityManager::EntityManager(Background background, Map map, Player *player)
+EntityManager::EntityManager(Background background,
+                             Map map,
+                             Player *player,
+                             std::vector<Mob *> mobs)
     : background_(std::move(
-    background)), map_(std::move(map)), player_(player) {
+    background)),
+      map_(std::move(map)),
+      player_(player),
+      mobs_(std::move(mobs)) {
 
 }
 void EntityManager::RenderAll(ShaderProgram *shader) const {
   background_.Render(shader);
   map_.Render(shader);
+  for (auto &&mob : mobs_) {
+    mob->Render(shader);
+  }
   player_->Render(shader);
 }
 const Map &EntityManager::map() const {
@@ -335,4 +381,7 @@ const Map &EntityManager::map() const {
 }
 void EntityManager::UpdateAll(float delta_t) const {
   player_->Update(delta_t, *this);
+  for (auto &&mob : mobs_) {
+    mob->Update(delta_t, *this);
+  }
 }

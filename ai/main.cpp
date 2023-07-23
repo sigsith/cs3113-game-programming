@@ -164,6 +164,9 @@ void Mob::Update(float delta_t, EntityManager &manager) {
   }
 }
 void Mob::Render(ShaderProgram *shader) const {
+  if (!is_active_) {
+    return;
+  }
   glBindTexture(GL_TEXTURE_2D, this->texture_id_);
   glVertexAttribPointer(shader->positionAttribute,
                         2,
@@ -209,7 +212,10 @@ void Player::Update(float delta_t, EntityManager &manager) {
   const auto player_box = this->box();
   for (auto &&mob : manager.mobs()) {
     const auto mob_box = mob->box();
-    if (player_box.IsCollision(mob_box)) {
+    if (player_box.IsCollisionWith(mob_box)) {
+      if (player_box.IsOnTopOf(mob_box)) {
+        mob->Kill();
+      }
       std::cout << "Box hit!\n";
     }
   }

@@ -41,11 +41,27 @@ class Entity {
   GLuint texture_id_;
 };
 
-class Background : public Entity {
+struct Box {
+  glm::vec3 position;
+  float half_width;
+  float half_height;
+};
+
+class Collidable : public Entity {
+ protected:
+  Box box_;
+ public:
+  Box box() const;
+};
+
+//bool is_colliding_with(Collidable &rhs) const;
+//bool is_horizontal_contact(Collidable &rhs) const;
+//void vertical_clip(const Collidable &rhs);
+
+class Background : public Collidable {
  private:
  public:
   explicit Background(const std::string &texture_path);
   void Render(ShaderProgram *shader) const override;
 };
-
 #endif //CS3113_GAME_PROGRAMMING_AI_ENTITY_H_

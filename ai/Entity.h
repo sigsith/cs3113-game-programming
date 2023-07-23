@@ -7,6 +7,8 @@
 * NYU School of Engineering Policies and Procedures on
 * Academic Misconduct.
 **/
+#ifndef CS3113_GAME_PROGRAMMING_AI_ENTITY_H_
+#define CS3113_GAME_PROGRAMMING_AI_ENTITY_H_
 #include "Map.h"
 
 enum EntityType { PLATFORM, PLAYER, ENEMY  };
@@ -115,3 +117,4 @@ class Entity
   void const set_width(float new_width)                   { m_width         = new_width;            };
   void const set_height(float new_height)                 { m_height        = new_height;           };
 };
+#endif //CS3113_GAME_PROGRAMMING_AI_ENTITY_H_

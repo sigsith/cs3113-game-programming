@@ -55,7 +55,7 @@ class Map : public Entity {
  public:
   Map(LevelMapping level_mapping,
       SpriteSheetMapping sprite_sheet_mapping,
-      float tile_size);
+      float m_tile_size);
   void Render(ShaderProgram *shader) const override;
 };
 

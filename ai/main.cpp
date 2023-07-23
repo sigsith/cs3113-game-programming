@@ -105,7 +105,8 @@ void Dynamic::Update(float delta_t, EntityManager &manager) {
   velocity_ += acceleration_ * delta_t;
   position_ += velocity_ * delta_t;
   Box box = this->box();
-  if (SDL_GetTicks() > collision_time_out && manager.map().IsSolid(box).first) {
+  if (SDL_GetTicks() > collision_time_out && manager.map().IsSolid(box).first 
+                  && velocity_.y < 0) {
     velocity_.y = 0;
     acceleration_.y = 0;
     position_.y = manager.map().IsSolid(box).second;
@@ -466,7 +467,7 @@ void ProcessInput() {
     manager->player_->MoveRight();
   }
   if (key_state[SDL_SCANCODE_W] || key_state[SDL_SCANCODE_SPACE]) {
-    manager->player_->Jump(3.0, *manager);
+    manager->player_->Jump(2.3, *manager);
   }
 }
 void Update() {

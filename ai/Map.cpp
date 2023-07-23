@@ -108,7 +108,7 @@ std::pair<bool, float> Map::IsSolid(Box &box) const {
   for (int y = y_start; y < y_end; ++y) {
     for (int x = x_start; x < x_end; ++x) {
       if (levels_.index_mapping_[y * levels_.width_ + x] != NONE) {
-        if (box.position.y <  max_y_ - y * tile_size_) {
+        if (box.position.y <  max_y_ - y * tile_size_ + 0.5 * box.half_height) {
             return {false, 0};            
         }
         return {true, box.half_height + max_y_ - y * tile_size_};

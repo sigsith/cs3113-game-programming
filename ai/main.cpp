@@ -372,12 +372,15 @@ void Initialize() {
   const auto mob2_id = LoadTexture(std::string("mob2.png"));
   const auto mob2_config = MobConfig{MobType::Patroller};
   const auto mob2 = new Mob(glm::vec3(1, -1, 0), mob2_id, mob2_config);
+  const auto mob3_id = LoadTexture(std::string("mob3.png"));
+  const auto mob3_config = MobConfig{MobType::Spinner};
+  const auto mob3 = new Mob(glm::vec3(2, 2, 0), mob3_id, mob3_config);
 
   manager = std::make_unique<EntityManager>(background,
                                             map,
                                             player,
                                             std::vector<Mob *>{
-                                                mob0, mob2
+                                                mob0, mob2, mob3
                                             });
 }
 void ProcessInput() {

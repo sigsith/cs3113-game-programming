@@ -53,7 +53,6 @@ class EntityManager {
 
 class Dynamic : public Boxed {
  private:
-  glm::vec3 acceleration_{};
   float half_height_;
   float half_width_;
   float horizontal_speed_ = 1.2;
@@ -63,6 +62,7 @@ class Dynamic : public Boxed {
   bool grounded = false;
 
   glm::vec3 velocity_{};
+  glm::vec3 acceleration_{};
  protected:
   glm::vec3 position_;
   bool is_active_ = true;
@@ -157,6 +157,27 @@ class Mob : public Dynamic {
   Mob(glm::vec3 startpos, GLuint text_id, MobConfig config);
   void Kill();
 };
+class Player : public Dynamic {
+ public:
+  void Update(float delta_t, EntityManager &manager) override;
+  void Render(ShaderProgram *shader) const override;
+  void Die();
+  glm::vec3 position() const;
+  Player(glm::vec3 startpos, GLuint text_id);
+};
+float Length(glm::vec3 glm_vec) {
+  const auto x = glm_vec.x;
+  const auto y = glm_vec.y;
+  const auto z = glm_vec.z;
+  return std::sqrt(x * x + y * y + z * 2);
+}
+glm::vec3 Normalize(glm::vec3 glm_vec) {
+  const auto x = glm_vec.x;
+  const auto y = glm_vec.y;
+  const auto z = glm_vec.z;
+  const auto length = std::sqrt(x * x + y * y + z * 2);
+  return {x / length, y / length, z / length};
+}
 void Mob::Update(float delta_t, EntityManager &manager) {
   Dynamic::Update(delta_t, manager);
   if (!is_active_) {
@@ -174,6 +195,14 @@ void Mob::Update(float delta_t, EntityManager &manager) {
       if (SDL_GetTicks() > timer_) {
         timer_ = SDL_GetTicks() + 4000;
         velocity_.x = -velocity_.x;
+      }
+      break;
+    }
+    case MobType::Spinner: {
+      glm::vec3 direction = manager.player_->position() - this->position_;
+      this->acceleration_ = 1.0f * Normalize(direction);
+      if (Length(this->velocity_) > 2.0) {
+        this->velocity_ = Normalize(this->velocity_) * 2.0f;
       }
       break;
     }
@@ -230,13 +259,7 @@ Mob::Mob(glm::vec3 startpos, GLuint text_id, MobConfig config) :
 void Mob::Kill() {
   is_active_ = false;
 }
-class Player : public Dynamic {
- public:
-  void Update(float delta_t, EntityManager &manager) override;
-  void Render(ShaderProgram *shader) const override;
-  void Die();
-  Player(glm::vec3 startpos, GLuint text_id);
-};
+
 void Player::Update(float delta_t, EntityManager &manager) {
   Dynamic::Update(delta_t, manager);
   if (!is_active_) {
@@ -297,6 +320,9 @@ void Player::Render(ShaderProgram *shader) const {
 }
 void Player::Die() {
   is_active_ = false;
+}
+glm::vec3 Player::position() const {
+  return position_;
 }
 
 /* ---------------------------  GLOBAL VARIABLES --------------------------- */

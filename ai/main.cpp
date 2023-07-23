@@ -56,7 +56,10 @@ class Dynamic : public Boxed {
   float horizontal_velocity_ = 0.5;
 
  public:
-  Dynamic(glm::vec3 startpos, GLuint text_id);
+  Dynamic(glm::vec3 startpos,
+          GLuint text_id,
+          float half_height,
+          float half_width);
   virtual void Update(float delta_t, const EntityManager &manager);
   void Disable();
   virtual void MoveLeft();
@@ -85,8 +88,11 @@ void Dynamic::Update(float delta_t, const EntityManager &manager) {
 void Dynamic::Disable() {
   is_active_ = false;
 }
-Dynamic::Dynamic(glm::vec3 startpos, GLuint text_id) :
-    position_(startpos) {
+Dynamic::Dynamic(glm::vec3 startpos,
+                 GLuint text_id,
+                 float half_height,
+                 float half_width) :
+    position_(startpos), half_height_(half_height), half_width_(half_width) {
   texture_id_ = text_id;
 
 }
@@ -106,7 +112,9 @@ void Player::Update(float delta_t, const EntityManager &manager) {
   Dynamic::Update(delta_t, manager);
 }
 Player::Player(glm::vec3 startpos, GLuint text_id) : Dynamic(startpos,
-                                                             text_id) {
+                                                             text_id,
+                                                             0.5,
+                                                             0.5) {
 
 }
 void Player::Render(ShaderProgram *shader) const {
@@ -241,7 +249,7 @@ void Update() {
   constexpr auto FIXED_TIMESTEP = 1.0f / 60.0f;
   for (time_accumulator += delta_time; time_accumulator >= FIXED_TIMESTEP;
        time_accumulator -= FIXED_TIMESTEP) {
-    // Update things
+    manager->UpdateAll(FIXED_TIMESTEP);
   }
 
 }

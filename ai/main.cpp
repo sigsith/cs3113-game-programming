@@ -20,7 +20,7 @@
 #include "glm/mat4x4.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 #include "ShaderProgram.h"
-#include "stb_image.h"
+//#include "stb_image.h"
 #include "Entity.h"
 #include "Map.h"
 /* -----------------------------  STD INCLUDES ----------------------------- */
@@ -56,24 +56,6 @@ int main() {
   }
 }
 /* -----------------------  FUNCTION IMPLEMENTATIONS ----------------------- */
-GLuint LoadTexture(const char *filepath) {
-  int width, height, number_of_components;
-  unsigned char *image = stbi_load(filepath, &width, &height,
-                                   &number_of_components, STBI_rgb_alpha);
-  if (image == nullptr) {
-    throw std::runtime_error(
-        "Unable to load image. Make sure the path is correct.");
-  }
-  GLuint textureID;
-  glGenTextures(1, &textureID);
-  glBindTexture(GL_TEXTURE_2D, textureID);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height,
-               0, GL_RGBA, GL_UNSIGNED_BYTE, image);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-  stbi_image_free(image);
-  return textureID;
-}
 void Initialize() {
   constexpr int WINDOW_WIDTH = 640,
       WINDOW_HEIGHT = 480;

@@ -51,7 +51,6 @@ class EntityManager {
   std::vector<Mob *> &mobs();
 };
 
-constexpr float GRAVITY = -1.2;
 class Dynamic : public Boxed {
  private:
   glm::vec3 acceleration_{};
@@ -67,6 +66,7 @@ class Dynamic : public Boxed {
  protected:
   glm::vec3 position_;
   bool is_active_ = true;
+  float gravity_ = -1.2;
  public:
   Dynamic(glm::vec3 startpos,
           GLuint text_id,
@@ -99,7 +99,7 @@ void Dynamic::Update(float delta_t, EntityManager &manager) {
     position_.y = manager.map().IsSolid(box).second;
     grounded = true;
   } else {
-    acceleration_.y = GRAVITY;
+    acceleration_.y = gravity_;
   }
 }
 void Dynamic::Disable() {
@@ -218,6 +218,10 @@ Mob::Mob(glm::vec3 startpos, GLuint text_id, MobConfig config) :
     case MobType::Patroller: {
       velocity_.x = -1.0;
       timer_ = SDL_GetTicks() + 4000;
+      break;
+    }
+    case MobType::Spinner: {
+      gravity_ = 0;
       break;
     }
     default:break;

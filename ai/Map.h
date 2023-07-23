@@ -26,10 +26,20 @@
 
 #include "Entity.h"
 
-class Map : public Entity {
+class LevelMapping {
  private:
+  uint width_;
+  uint height_;
+  std::vector<uint> index_mapping_;
  public:
-  explicit Map(const std::string &tileset_path);
+  LevelMapping(uint width_,
+               uint height_,
+               std::vector<uint> index_mapping_);
+};
+
+class Map : public Entity {
+ public:
+  explicit Map(const std::string &tile_set_path, const LevelMapping &mapping);
   void Render(ShaderProgram *shader) const override;
 };
 

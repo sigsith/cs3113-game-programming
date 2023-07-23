@@ -25,6 +25,7 @@
 #include <memory>
 #include <iostream>
 #include <cmath>
+#include <utility>
 /* ---------------------  GLOBAL CONSTANTS AND DEFINES --------------------- */
 constexpr auto TOP_BOUNDARY = 3.75f;
 constexpr auto RIGHT_BOUNDARY = 5.0f;
@@ -35,8 +36,7 @@ class EntityManager {
   Background background_;
   Map map_;
  public:
-  explicit EntityManager(const std::string &background_path,
-                         const std::string &tileset_path);
+  explicit EntityManager(Background background, Map map);
   void RenderAll(ShaderProgram *shader) const;
 };
 
@@ -94,8 +94,10 @@ void Initialize() {
   glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-  const auto background = std::string("background.png");
-  const auto tileset = std::string("tileset.png");
+  const auto background = Background(std::string("background.png"));
+  const auto mapping = std::vector<uint>{0, 1, 0, 1};
+  const auto index_mapping = LevelMapping(2, 2, mapping);
+  const auto tileset = Map(std::string("tileset.png"), index_mapping);
   manager = std::make_unique<EntityManager>(background, tileset);
 }
 void ProcessInput() {
@@ -137,9 +139,9 @@ void Render() {
   manager->RenderAll(&shader);
   SDL_GL_SwapWindow(display_window);
 }
-EntityManager::EntityManager(const std::string &background_path,
-                             const std::string &tileset_path) : background_(
-    background_path), map_(tileset_path) {
+EntityManager::EntityManager(Background background, Map map)
+    : background_(std::move(
+    background)), map_(std::move(map)) {
 
 }
 void EntityManager::RenderAll(ShaderProgram *shader) const {

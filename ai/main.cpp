@@ -53,18 +53,19 @@ class EntityManager {
 constexpr float GRAVITY = -1.2;
 class Dynamic : public Boxed {
  private:
-  bool is_active_ = true;
   glm::vec3 velocity_{};
   glm::vec3 acceleration_{};
   float half_height_;
   float half_width_;
   float horizontal_speed_ = 1.2;
   float vertical_speed = 0.08;
+ protected:
   uint collision_time_out = 0;
   bool grounded = false;
 
  protected:
   glm::vec3 position_;
+  bool is_active_ = true;
  public:
   Dynamic(glm::vec3 startpos,
           GLuint text_id,
@@ -144,6 +145,7 @@ class Mob : public Dynamic {
  private:
   MobState state_;
   MobConfig behavior_;
+  uint timer_ = 0;
  public:
   void Update(float delta_t, const EntityManager &manager) override;
   void Render(ShaderProgram *shader) const override;
@@ -151,6 +153,13 @@ class Mob : public Dynamic {
 };
 void Mob::Update(float delta_t, const EntityManager &manager) {
   Dynamic::Update(delta_t, manager);
+  if (!is_active_) {
+    return;
+  }
+  if (behavior_.mob_type == MobType::Jumper && SDL_GetTicks() > timer_) {
+    timer_ = SDL_GetTicks() + 3000;
+    Jump(2.0, manager);
+  }
 }
 void Mob::Render(ShaderProgram *shader) const {
   glBindTexture(GL_TEXTURE_2D, this->texture_id_);
@@ -300,7 +309,7 @@ void Initialize() {
   const auto player = new Player(glm::vec3(0, 0, 0), player_id);
   const auto mob0_id = LoadTexture(std::string("mob1.png"));
   const auto mob0_config = MobConfig{MobType::Jumper};
-  const auto mob0 = new Mob(glm::vec3(-4, 1, 0), mob0_id, mob0_config);
+  const auto mob0 = new Mob(glm::vec3(-3, 1, 0), mob0_id, mob0_config);
   manager = std::make_unique<EntityManager>(background,
                                             map,
                                             player,

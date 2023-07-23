@@ -20,8 +20,6 @@
 #include "glm/mat4x4.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 #include "ShaderProgram.h"
-//#include "stb_image.h"
-#include "Entity.h"
 #include "Map.h"
 /* -----------------------------  STD INCLUDES ----------------------------- */
 #include <memory>
@@ -30,6 +28,18 @@
 /* ---------------------  GLOBAL CONSTANTS AND DEFINES --------------------- */
 constexpr auto TOP_BOUNDARY = 3.75f;
 constexpr auto RIGHT_BOUNDARY = 5.0f;
+
+/* -------------------------  FORWARD DECLARATIONS ------------------------- */
+class EntityManager {
+ private:
+  Background background_;
+  Map map_;
+ public:
+  explicit EntityManager(const std::string &background_path,
+                         const std::string &tileset_path);
+  void RenderAll(ShaderProgram *shader) const;
+};
+
 /* ---------------------------  GLOBAL VARIABLES --------------------------- */
 SDL_Window *display_window;
 bool is_game_running = true;
@@ -43,6 +53,7 @@ GLuint LoadTexture(const char *filepath);
 void ProcessInput();
 void Update();
 void Render();
+
 /* ---------------------------------  MAIN --------------------------------- */
 int main() {
   Initialize();
@@ -84,7 +95,8 @@ void Initialize() {
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   const auto background = std::string("background.png");
-  manager = std::make_unique<EntityManager>(background);
+  const auto tileset = std::string("tileset.png");
+  manager = std::make_unique<EntityManager>(background, tileset);
 }
 void ProcessInput() {
   SDL_Event event;
@@ -124,4 +136,12 @@ void Render() {
   // Render all
   manager->RenderAll(&shader);
   SDL_GL_SwapWindow(display_window);
+}
+EntityManager::EntityManager(const std::string &background_path,
+                             const std::string &tileset_path) : background_(
+    background_path), map_(tileset_path) {
+
+}
+void EntityManager::RenderAll(ShaderProgram *shader) const {
+  background_.Render(shader);
 }

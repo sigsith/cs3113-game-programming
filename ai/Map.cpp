@@ -9,3 +9,9 @@
 **/
 #include "Map.h"
 
+Map::Map(const std::string &texture_path) {
+
+}
+void Map::Render(ShaderProgram *shader) const {
+
+}

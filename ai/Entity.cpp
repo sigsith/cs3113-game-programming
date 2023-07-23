@@ -75,9 +75,3 @@ GLuint LoadTexture(const std::string &path) {
   stbi_image_free(data);
   return texture;
 }
-EntityManager::EntityManager(const std::string &background_path) : background_(
-    Background(background_path)) {
-}
-void EntityManager::RenderAll(ShaderProgram *shader) const {
-  background_.Render(shader);
-}

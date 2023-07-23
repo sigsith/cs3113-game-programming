@@ -13,8 +13,9 @@ class ShaderProgram;
 #include <SDL.h>
 #include <SDL_opengl.h>
 
-#include "Entity.h"
+//#include "Map.h"
 GLuint LoadTexture(const std::string &path);
+class Map;
 
 static constexpr float SQUARE_VERTICES[12] = {
     -0.5f, -0.5f,
@@ -46,14 +47,6 @@ class Background : public Entity {
  public:
   explicit Background(const std::string &texture_path);
   void Render(ShaderProgram *shader) const override;
-};
-
-class EntityManager {
- private:
-  Background background_;
- public:
-  explicit EntityManager(const std::string &background_path);
-  void RenderAll(ShaderProgram *shader) const;
 };
 
 #endif //CS3113_GAME_PROGRAMMING_AI_ENTITY_H_

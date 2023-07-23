@@ -26,5 +26,11 @@
 
 #include "Entity.h"
 
+class Map : public Entity {
+ private:
+ public:
+  explicit Map(const std::string &tileset_path);
+  void Render(ShaderProgram *shader) const override;
+};
 
 #endif //CS3113_GAME_PROGRAMMING_AI_MAP_H_

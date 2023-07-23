@@ -11,13 +11,13 @@
 
 Map::Map(LevelMapping level_mapping,
          SpriteSheetMapping sprite_sheet_mapping,
-         float tile_size) {
+         float tile_size, glm::vec3 top_left) {
   texture_id_ = sprite_sheet_mapping.texture_id_;
 
   const auto tile_height = 1.0f / (float) sprite_sheet_mapping.height_;
   const auto tile_width = 1.0f / (float) sprite_sheet_mapping.width_;
-  const auto x_offset = -(tile_size / 2); // From center of tile
-  const auto y_offset = (tile_size / 2); // From center of tile
+  const auto x_offset = top_left.x; // From center of tile
+  const auto y_offset = top_left.y; // From center of tile
 
   for (int y_coord = 0; y_coord < level_mapping.height_; y_coord++) {
     for (int x_coord = 0; x_coord < level_mapping.width_; x_coord++) {

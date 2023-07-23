@@ -95,11 +95,12 @@ void Initialize() {
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   const auto background = Background(std::string("background.png"));
-  const auto mapping = std::vector<uint>{0, 1, 0, 1};
-  const auto index_mapping = LevelMapping(2, 2, mapping);
+  const auto mapping = std::vector<uint>{6, 7, 8, 6, 7, 8};
+  const auto index_mapping = LevelMapping(6, 1, mapping);
   const auto tile_set_id = LoadTexture(std::string("tileset.png"));
   const auto tile_set = SpriteSheetMapping(10, 6, tile_set_id);
-  const auto map = Map(index_mapping, tile_set, 0.5);
+  const auto top_left = glm::vec3(-4, 0, 0);
+  const auto map = Map(index_mapping, tile_set, 0.5, top_left);
   manager = std::make_unique<EntityManager>(background, map);
 }
 void ProcessInput() {

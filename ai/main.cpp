@@ -53,7 +53,7 @@ class Dynamic : public Boxed {
   float half_height_;
   float half_width_;
   float horizontal_speed_ = 0.8;
-  float vertical_speed = 0.05;
+  float vertical_speed = 0.08;
 
  protected:
   glm::vec3 position_;
@@ -63,10 +63,11 @@ class Dynamic : public Boxed {
           float half_height,
           float half_width);
   virtual void Update(float delta_t, const EntityManager &manager);
-  virtual void Jump(const EntityManager &manager);
+  virtual void Jump(float speed, const EntityManager &manager);
   void Disable();
   virtual void MoveLeft();
   virtual void MoveRight();
+  virtual void StopHorizontal();
   Box box() const override {
     return Box{
         position_,
@@ -105,11 +106,14 @@ void Dynamic::MoveLeft() {
 void Dynamic::MoveRight() {
   velocity_.x = horizontal_speed_;
 }
-void Dynamic::Jump(const EntityManager &manager) {
+void Dynamic::Jump(float speed, const EntityManager &manager) {
   auto box = this->box();
   if (manager.map().IsSolid(box)) {
-    velocity_.y += vertical_speed;
+    velocity_.y += speed;
   }
+}
+void Dynamic::StopHorizontal() {
+  velocity_.x = 0;
 }
 class Player : public Dynamic {
  public:
@@ -250,8 +254,8 @@ void ProcessInput() {
   if (key_state[SDL_SCANCODE_D]) {
     manager->player_->MoveRight();
   }
-  if (key_state[SDL_SCANCODE_W]) {
-    manager->player_->Jump(*manager);
+  if (key_state[SDL_SCANCODE_W] || key_state[SDL_SCANCODE_SPACE]) {
+    manager->player_->Jump(0.08, *manager);
   }
 }
 void Update() {

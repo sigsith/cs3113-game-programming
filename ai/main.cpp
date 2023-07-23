@@ -45,6 +45,7 @@ class EntityManager {
   const Map &map() const;
 };
 
+constexpr float GRAVITY  = -1.2;
 class Dynamic : public Boxed {
  private:
   bool is_active_ = true;
@@ -52,7 +53,7 @@ class Dynamic : public Boxed {
   glm::vec3 acceleration_{};
   float half_height_;
   float half_width_;
-  float horizontal_speed_ = 0.8;
+  float horizontal_speed_ = 1.2;
   float vertical_speed = 0.08;
 
  protected:
@@ -86,7 +87,7 @@ void Dynamic::Update(float delta_t, const EntityManager &manager) {
     velocity_.y = 0;
     acceleration_.y = 0;
   } else {
-    acceleration_.y = -1.0;
+    acceleration_.y += GRAVITY;
   }
 }
 void Dynamic::Disable() {
@@ -126,8 +127,8 @@ void Player::Update(float delta_t, const EntityManager &manager) {
 }
 Player::Player(glm::vec3 startpos, GLuint text_id) : Dynamic(startpos,
                                                              text_id,
-                                                             0.5,
-                                                             0.5) {
+                                                             0.3,
+                                                             0.15) {
 
 }
 void Player::Render(ShaderProgram *shader) const {
@@ -255,7 +256,7 @@ void ProcessInput() {
     manager->player_->MoveRight();
   }
   if (key_state[SDL_SCANCODE_W] || key_state[SDL_SCANCODE_SPACE]) {
-    manager->player_->Jump(0.08, *manager);
+    manager->player_->Jump(0.085, *manager);
   }
 }
 void Update() {

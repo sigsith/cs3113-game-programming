@@ -58,6 +58,11 @@ class Map : public Entity {
   std::vector<float> vertices_;
   std::vector<float> tex_coords_;
   LevelMapping levels_;
+  float min_x_;
+  float max_x_;
+  float min_y_;
+  float max_y_;
+  float tile_size_;
  public:
   Map(LevelMapping level_mapping,
       SpriteSheetMapping sprite_sheet_mapping,

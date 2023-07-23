@@ -31,7 +31,6 @@ constexpr auto TOP_BOUNDARY = 3.75f;
 constexpr auto RIGHT_BOUNDARY = 5.0f;
 
 /* -------------------------  FORWARD DECLARATIONS ------------------------- */
-// These classes ought to have their own files.
 class EntityManager {
  private:
   Background background_;
@@ -41,16 +40,35 @@ class EntityManager {
   void RenderAll(ShaderProgram *shader) const;
 };
 
-class Dynamic : public Entity {
- protected:
+class Dynamic : public Boxed {
+ private:
+  bool is_active_ = true;
   glm::vec3 position_;
   glm::vec3 velocity_;
   glm::vec3 acceleration_;
-  bool is_active_;
- public:
-  virtual void Update(float delta_t, const EntityManager &manager) = 0;
-};
 
+ public:
+  virtual void Update(float delta_t, const EntityManager &manager);
+  void Disable();
+};
+void Dynamic::Update(float delta_t, const EntityManager &manager) {
+  if (!(is_active_)) {
+    return;
+  }
+  velocity_ += acceleration_ * delta_t;
+  position_ += velocity_ * delta_t;
+}
+void Dynamic::Disable() {
+  is_active_ = false;
+}
+class Player : public Dynamic {
+ public:
+  void Update(float delta_t, const EntityManager &manager) override;
+};
+void Player::Update(float delta_t, const EntityManager &manager) {
+  Dynamic::Update(delta_t, manager);
+
+}
 
 /* ---------------------------  GLOBAL VARIABLES --------------------------- */
 SDL_Window *display_window;

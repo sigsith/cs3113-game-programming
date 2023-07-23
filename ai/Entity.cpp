@@ -75,6 +75,15 @@ GLuint LoadTexture(const std::string &path) {
   stbi_image_free(data);
   return texture;
 }
-Box Boxed::box() const {
-  return box_;
+float Box::XMax() const {
+  return position.x + half_width;
+}
+float Box::XMin() const {
+  return position.x - half_width;
+}
+float Box::YMax() const {
+  return position.y + half_height;
+}
+float Box::YMin() const {
+  return position.y - half_height;
 }

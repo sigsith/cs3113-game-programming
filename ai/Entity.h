@@ -45,13 +45,15 @@ struct Box {
   glm::vec3 position;
   float half_width;
   float half_height;
+  float XMax() const;
+  float XMin() const;
+  float YMax() const;
+  float YMin() const;
 };
 
 class Boxed : public Entity {
- protected:
-  Box box_;
  public:
-  Box box() const;
+  virtual Box box() const = 0;
 };
 
 class Background : public Entity {

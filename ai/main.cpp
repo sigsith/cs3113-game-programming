@@ -162,9 +162,15 @@ void Mob::Update(float delta_t, EntityManager &manager) {
   if (!is_active_) {
     return;
   }
-  if (behavior_.mob_type == MobType::Jumper && SDL_GetTicks() > timer_) {
-    timer_ = SDL_GetTicks() + 3000;
-    Jump(2.0, manager);
+  switch (behavior_.mob_type) {
+    case MobType::Jumper: {
+      if (SDL_GetTicks() > timer_) {
+        timer_ = SDL_GetTicks() + 3000;
+        Jump(2.0, manager);
+      }
+      break;
+    }
+    default:break;
   }
 }
 void Mob::Render(ShaderProgram *shader) const {

@@ -45,7 +45,7 @@ class EntityManager {
   const Map &map() const;
 };
 
-constexpr float GRAVITY  = -1.2;
+constexpr float GRAVITY = -1.2;
 class Dynamic : public Boxed {
  private:
   bool is_active_ = true;
@@ -55,6 +55,7 @@ class Dynamic : public Boxed {
   float half_width_;
   float horizontal_speed_ = 1.2;
   float vertical_speed = 0.08;
+  uint collision_time_out = 0;
 
  protected:
   glm::vec3 position_;
@@ -83,7 +84,7 @@ void Dynamic::Update(float delta_t, const EntityManager &manager) {
   velocity_ += acceleration_ * delta_t;
   position_ += velocity_ * delta_t;
   Box box = this->box();
-  if (manager.map().IsSolid(box)) {
+  if (SDL_GetTicks() > collision_time_out && manager.map().IsSolid(box)) {
     velocity_.y = 0;
     acceleration_.y = 0;
   } else {
@@ -111,6 +112,7 @@ void Dynamic::Jump(float speed, const EntityManager &manager) {
   auto box = this->box();
   if (manager.map().IsSolid(box)) {
     velocity_.y += speed;
+    collision_time_out = SDL_GetTicks() + 100;
   }
 }
 void Dynamic::StopHorizontal() {

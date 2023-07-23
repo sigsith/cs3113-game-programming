@@ -44,7 +44,7 @@ class Entity {
 class Background : public Entity {
  private:
  public:
-  explicit Background(std::string &texture_path);
+  explicit Background(const std::string &texture_path);
   void Render(ShaderProgram *shader) const override;
 };
 
@@ -52,8 +52,8 @@ class EntityManager {
  private:
   Background background_;
  public:
-  explicit EntityManager(std::string &background_path);
-  void render_all(ShaderProgram *shader) const;
+  explicit EntityManager(const std::string &background_path);
+  void RenderAll(ShaderProgram *shader) const;
 };
 
 #endif //CS3113_GAME_PROGRAMMING_AI_ENTITY_H_

@@ -49,7 +49,7 @@ void Background::Render(ShaderProgram *shader) const {
   glDisableVertexAttribArray(shader->positionAttribute);
   glDisableVertexAttribArray(shader->texCoordAttribute);
 }
-Background::Background(std::string &texture_path) {
+Background::Background(const std::string &texture_path) {
   texture_id_ = LoadTexture((texture_path));
 }
 GLuint LoadTexture(const std::string &path) {
@@ -75,9 +75,9 @@ GLuint LoadTexture(const std::string &path) {
   stbi_image_free(data);
   return texture;
 }
-EntityManager::EntityManager(std::string &background_path) : background_(
+EntityManager::EntityManager(const std::string &background_path) : background_(
     Background(background_path)) {
 }
-void EntityManager::render_all(ShaderProgram *shader) const {
+void EntityManager::RenderAll(ShaderProgram *shader) const {
   background_.Render(shader);
 }

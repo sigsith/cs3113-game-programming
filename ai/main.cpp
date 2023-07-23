@@ -33,13 +33,10 @@ constexpr auto RIGHT_BOUNDARY = 5.0f;
 /* ---------------------------  GLOBAL VARIABLES --------------------------- */
 SDL_Window *display_window;
 bool is_game_running = true;
-bool quit_immediately = true;
-ShaderProgram program;
+ShaderProgram shader;
 float previous_ticks = 0.0f;
-GLuint saucer_texture_id;
 float time_accumulator = 0.0;
-enum Result { PREMATURE, SUCCESS, FAILURE };
-Result result = Result::PREMATURE;
+std::unique_ptr<EntityManager> manager;
 /* --------------------------  FUNCTION SIGNATURES -------------------------- */
 void Initialize();
 GLuint LoadTexture(const char *filepath);
@@ -75,17 +72,19 @@ void Initialize() {
   glewInit();
 #endif
   glViewport(VIEWPORT_X, VIEWPORT_Y, VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
-  program.Load("shaders/vertex_textured.glsl",
-               "shaders/fragment_textured.glsl");
+  shader.Load("shaders/vertex_textured.glsl",
+              "shaders/fragment_textured.glsl");
   const auto view_matrix = glm::mat4(1.0f);
   const auto
       projection_matrix = glm::ortho(-5.0f, 5.0f, -3.75f, 3.75f, -1.0f, 1.0f);
-  program.SetProjectionMatrix(projection_matrix);
-  program.SetViewMatrix(view_matrix);
-  glUseProgram(program.programID);
+  shader.SetProjectionMatrix(projection_matrix);
+  shader.SetViewMatrix(view_matrix);
+  glUseProgram(shader.programID);
   glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  const auto background = std::string("background.png");
+  manager = std::make_unique<EntityManager>(background);
 }
 void ProcessInput() {
   SDL_Event event;
@@ -121,12 +120,13 @@ void Update() {
   time_accumulator = epoch;
 }
 void DrawObject(glm::mat4 &object_model_matrix, GLuint &object_texture_id) {
-  program.SetModelMatrix(object_model_matrix);
+  shader.SetModelMatrix(object_model_matrix);
   glBindTexture(GL_TEXTURE_2D, object_texture_id);
   glDrawArrays(GL_TRIANGLES, 0, 6);
 }
 void Render() {
   glClear(GL_COLOR_BUFFER_BIT);
   // Render all
+  manager->RenderAll(&shader);
   SDL_GL_SwapWindow(display_window);
 }

@@ -69,7 +69,7 @@ float turn_cool_down = 0.0;
 bool is_going_left = true;
 const float FLOOR = -1.0f;
 
-ShaderProgram program;
+ShaderProgram shader;
 glm::mat4 view_matrix, cow_matrix, projection_matrix, trans_matrix,
     saucer_matrix;
 
@@ -137,7 +137,7 @@ void initialise() {
 
   glViewport(VIEWPORT_X, VIEWPORT_Y, VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
 
-  program.Load(V_SHADER_PATH, F_SHADER_PATH);
+  shader.Load(V_SHADER_PATH, F_SHADER_PATH);
 
   cow_matrix = glm::mat4(1.0f);
   saucer_matrix = glm::mat4(1.0f);
@@ -146,11 +146,11 @@ void initialise() {
   projection_matrix = glm::ortho(-5.0f, 5.0f, -3.75f, 3.75f, -1.0f,
                                  1.0f);  // Defines the characteristics of your camera, such as clip planes, field of view, projection method etc.
 
-  program.SetProjectionMatrix(projection_matrix);
-  program.SetViewMatrix(view_matrix);
+  shader.SetProjectionMatrix(projection_matrix);
+  shader.SetViewMatrix(view_matrix);
   // Notice we haven't set our model matrix yet!
 
-  glUseProgram(program.programID);
+  glUseProgram(shader.programID);
 
   glClearColor(BG_RED, BG_BLUE, BG_GREEN, BG_OPACITY);
 
@@ -290,7 +290,7 @@ void Update() {
 }
 
 void DrawObject(glm::mat4 &object_model_matrix, GLuint &object_texture_id) {
-  program.SetModelMatrix(object_model_matrix);
+  shader.SetModelMatrix(object_model_matrix);
   glBindTexture(GL_TEXTURE_2D, object_texture_id);
   glDrawArrays(GL_TRIANGLES, 0,
                6); // we are now drawing 2 triangles, so we use 6 instead of 3
@@ -311,21 +311,21 @@ void Render() {
       0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f,     // triangle 2
   };
 
-  glVertexAttribPointer(program.positionAttribute, 2, GL_FLOAT, false, 0,
+  glVertexAttribPointer(shader.positionAttribute, 2, GL_FLOAT, false, 0,
                         vertices);
-  glEnableVertexAttribArray(program.positionAttribute);
+  glEnableVertexAttribArray(shader.positionAttribute);
 
-  glVertexAttribPointer(program.texCoordAttribute, 2, GL_FLOAT, false, 0,
+  glVertexAttribPointer(shader.texCoordAttribute, 2, GL_FLOAT, false, 0,
                         texture_coordinates);
-  glEnableVertexAttribArray(program.texCoordAttribute);
+  glEnableVertexAttribArray(shader.texCoordAttribute);
 
   // Bind texture
   DrawObject(cow_matrix, cow_texture_id);
   DrawObject(saucer_matrix, saucer_texture_id);
 
   // We disable two attribute arrays now
-  glDisableVertexAttribArray(program.positionAttribute);
-  glDisableVertexAttribArray(program.texCoordAttribute);
+  glDisableVertexAttribArray(shader.positionAttribute);
+  glDisableVertexAttribArray(shader.texCoordAttribute);
 
   SDL_GL_SwapWindow(display_window);
 }

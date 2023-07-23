@@ -37,7 +37,7 @@ constexpr auto PADDLE_X_AXIS = 4.2f;
 // Shared states. Keep this as small as possible.
 SDL_Window *g_display_window;
 bool is_game_running = true;
-ShaderProgram program;
+ShaderProgram shader;
 glm::vec3 left_paddle_position = glm::vec3(-PADDLE_X_AXIS, 0.0f, 0.0f);
 glm::vec3 right_paddle_position = glm::vec3(PADDLE_X_AXIS, 0.0f, 0.0f);
 glm::vec3 left_paddle_velocity = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -74,15 +74,15 @@ void Initialize() {
   glewInit();
 #endif
   glViewport(VIEWPORT_X, VIEWPORT_Y, VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
-  program.Load(V_SHADER_PATH, F_SHADER_PATH);
+  shader.Load(V_SHADER_PATH, F_SHADER_PATH);
   auto view_matrix = glm::mat4(1.0f);
   const auto projection_matrix = glm::ortho(-5.0f, 5.0f, -3.75f, 3.75f, -1.0f,
                                             1.0f);
-  program.SetProjectionMatrix(projection_matrix);
-  program.SetViewMatrix(view_matrix);
-  program.SetColor(TRIANGLE_RED, TRIANGLE_BLUE, TRIANGLE_GREEN,
-                   TRIANGLE_OPACITY);
-  glUseProgram(program.programID);
+  shader.SetProjectionMatrix(projection_matrix);
+  shader.SetViewMatrix(view_matrix);
+  shader.SetColor(TRIANGLE_RED, TRIANGLE_BLUE, TRIANGLE_GREEN,
+                  TRIANGLE_OPACITY);
+  glUseProgram(shader.programID);
   glClearColor(BG_RED, BG_GREEN, BG_BLUE, BG_OPACITY);
 }
 
@@ -212,7 +212,7 @@ void
 render_rectangle(float half_width, float half_height, glm::vec3 position) {
   constexpr auto base_matrix = glm::mat4(1.0f);
   const auto model_matrix = glm::translate(base_matrix, position);
-  program.SetModelMatrix(model_matrix);
+  shader.SetModelMatrix(model_matrix);
   const float vertices[] =
       {
           -half_width, -half_height,
@@ -223,11 +223,11 @@ render_rectangle(float half_width, float half_height, glm::vec3 position) {
           -half_width, half_height,
       };
 
-  glVertexAttribPointer(program.positionAttribute, 2, GL_FLOAT, false, 0,
+  glVertexAttribPointer(shader.positionAttribute, 2, GL_FLOAT, false, 0,
                         vertices);
-  glEnableVertexAttribArray(program.positionAttribute);
+  glEnableVertexAttribArray(shader.positionAttribute);
   glDrawArrays(GL_TRIANGLES, 0, 6);
-  glDisableVertexAttribArray(program.positionAttribute);
+  glDisableVertexAttribArray(shader.positionAttribute);
 }
 
 void Render() {

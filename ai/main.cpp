@@ -48,11 +48,12 @@ class EntityManager {
 class Dynamic : public Boxed {
  private:
   bool is_active_ = true;
-  glm::vec3 velocity_;
-  glm::vec3 acceleration_;
+  glm::vec3 velocity_{};
+  glm::vec3 acceleration_{};
   float half_height_;
   float half_width_;
-  float horizontal_velocity_ = 0.5;
+  float horizontal_speed_ = 0.8;
+  float vertical_speed = 0.05;
 
  protected:
   glm::vec3 position_;
@@ -62,6 +63,7 @@ class Dynamic : public Boxed {
           float half_height,
           float half_width);
   virtual void Update(float delta_t, const EntityManager &manager);
+  virtual void Jump(const EntityManager &manager);
   void Disable();
   virtual void MoveLeft();
   virtual void MoveRight();
@@ -98,10 +100,16 @@ Dynamic::Dynamic(glm::vec3 startpos,
 
 }
 void Dynamic::MoveLeft() {
-  velocity_.x = -horizontal_velocity_;
+  velocity_.x = -horizontal_speed_;
 }
 void Dynamic::MoveRight() {
-  velocity_.x = horizontal_velocity_;
+  velocity_.x = horizontal_speed_;
+}
+void Dynamic::Jump(const EntityManager &manager) {
+  auto box = this->box();
+  if (manager.map().IsSolid(box)) {
+    velocity_.y += vertical_speed;
+  }
 }
 class Player : public Dynamic {
  public:
@@ -241,6 +249,9 @@ void ProcessInput() {
   }
   if (key_state[SDL_SCANCODE_D]) {
     manager->player_->MoveRight();
+  }
+  if (key_state[SDL_SCANCODE_W]) {
+    manager->player_->Jump(*manager);
   }
 }
 void Update() {

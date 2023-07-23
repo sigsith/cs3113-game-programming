@@ -423,9 +423,9 @@ void Initialize() {
       SpriteSheetMapping(16, 6, LoadTexture(std::string("font-sheet.png")));
 
   TextMap winning =
-      TextMap(std::string("You Lose"), font_mapping, 1.0, glm::vec3(-2, 2, 0));
+      TextMap(std::string("You Win"), font_mapping, 1.0, glm::vec3(-3.5, 2, 0));
   TextMap losing =
-      TextMap(std::string("You Win"), font_mapping, 1.0, glm::vec3(-2, 2, 0));
+      TextMap(std::string("You Lose"), font_mapping, 1.0, glm::vec3(-3.5, 2, 0));
   manager = std::make_unique<EntityManager>(background,
                                             map,
                                             player,

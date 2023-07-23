@@ -34,11 +34,18 @@ constexpr auto RIGHT_BOUNDARY = 5.0f;
 class Player;
 class Mob;
 
+enum class GameResult {
+  OnGoing,
+  Win,
+  Lose
+};
+
 class EntityManager {
  private:
   Background background_;
   Map map_;
   std::vector<Mob *> mobs_;
+  GameResult result = GameResult::OnGoing;
  public:
   Player *player_;
   explicit EntityManager(Background background,
@@ -486,8 +493,20 @@ const Map &EntityManager::map() const {
 }
 void EntityManager::UpdateAll(float delta_t) {
   player_->Update(delta_t, *this);
+  if (!player_->IsActive())  {
+    result = GameResult::Lose;
+    return;
+  }
+  bool all_killed = true;
   for (auto &&mob : mobs_) {
-    mob->Update(delta_t, *this);
+    if (mob->IsActive()) {
+      all_killed = false;
+      mob->Update(delta_t, *this);
+    }
+  }
+  if (all_killed) {
+    result = GameResult::Win;
+    return;
   }
 }
 std::vector<Mob *> &EntityManager::mobs() {

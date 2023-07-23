@@ -38,6 +38,7 @@ class EntityManager {
  public:
   explicit EntityManager(Background background, Map map);
   void RenderAll(ShaderProgram *shader) const;
+  const Map &map() const;
 };
 
 class Dynamic : public Boxed {
@@ -46,10 +47,19 @@ class Dynamic : public Boxed {
   glm::vec3 position_;
   glm::vec3 velocity_;
   glm::vec3 acceleration_;
+  float half_height_;
+  float half_width_;
 
  public:
+  Dynamic(glm::vec3 startpos, GLuint text_id);
   virtual void Update(float delta_t, const EntityManager &manager);
   void Disable();
+  Box box() const override {
+    return Box{
+        position_,
+        half_width_, half_height_
+    };
+  }
 };
 void Dynamic::Update(float delta_t, const EntityManager &manager) {
   if (!(is_active_)) {
@@ -57,9 +67,21 @@ void Dynamic::Update(float delta_t, const EntityManager &manager) {
   }
   velocity_ += acceleration_ * delta_t;
   position_ += velocity_ * delta_t;
+  Box box = this->box();
+  if (manager.map().IsSolid(box)) {
+    velocity_.y = 0;
+    acceleration_.y = 0;
+  } else {
+    acceleration_.y = -1.0;
+  }
 }
 void Dynamic::Disable() {
   is_active_ = false;
+}
+Dynamic::Dynamic(glm::vec3 startpos, GLuint text_id) :
+    position_(startpos) {
+  texture_id_ = text_id;
+
 }
 class Player : public Dynamic {
  public:
@@ -67,7 +89,6 @@ class Player : public Dynamic {
 };
 void Player::Update(float delta_t, const EntityManager &manager) {
   Dynamic::Update(delta_t, manager);
-
 }
 
 /* ---------------------------  GLOBAL VARIABLES --------------------------- */
@@ -188,4 +209,7 @@ EntityManager::EntityManager(Background background, Map map)
 void EntityManager::RenderAll(ShaderProgram *shader) const {
   background_.Render(shader);
   map_.Render(shader);
+}
+const Map &EntityManager::map() const {
+  return map_;
 }

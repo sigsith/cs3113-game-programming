@@ -88,7 +88,7 @@ void Map::Render(ShaderProgram *shader) const {
   glDisableVertexAttribArray(shader->positionAttribute);
   glDisableVertexAttribArray(shader->texCoordAttribute);
 }
-SolidStatus Map::CheckSolid(Box &box) {
+bool Map::IsSolid(Box &box) const {
   // 1. Check if box in range
   if (!(box.XMax() < min_x_ || box.XMin() > max_x_) || box.YMax() < min_y_
       || box.YMin() > max_y_) {

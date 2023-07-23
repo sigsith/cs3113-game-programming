@@ -72,7 +72,7 @@ void Initialize() {
       VIEWPORT_WIDTH = WINDOW_WIDTH,
       VIEWPORT_HEIGHT = WINDOW_HEIGHT;
   SDL_Init(SDL_INIT_VIDEO);
-  display_window = SDL_CreateWindow("Lunar Lander",
+  display_window = SDL_CreateWindow("Generic Platform Game",
                                     SDL_WINDOWPOS_CENTERED,
                                     SDL_WINDOWPOS_CENTERED,
                                     640, 480,
@@ -95,8 +95,13 @@ void Initialize() {
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   const auto background = Background(std::string("background.png"));
-  const auto mapping = std::vector<uint>{6, 7, 8, 6, 7, 8};
-  const auto index_mapping = LevelMapping(6, 1, mapping);
+  const auto mapping =
+      std::vector<uint>{6, 7, 8, 6, 7, 8, NONE, NONE, NONE, NONE, NONE, NONE,
+                        NONE, NONE, NONE, NONE, NONE, NONE, NONE, NONE, NONE, NONE, NONE, NONE,
+                        NONE, NONE, NONE, NONE, NONE, NONE, NONE, NONE, NONE, NONE, NONE, NONE,
+                        NONE, NONE, NONE, NONE, NONE, NONE, NONE, NONE, NONE, NONE, NONE, NONE,
+                        0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2};
+  const auto index_mapping = LevelMapping(12, 5, mapping);
   const auto tile_set_id = LoadTexture(std::string("tileset.png"));
   const auto tile_set = SpriteSheetMapping(10, 6, tile_set_id);
   const auto top_left = glm::vec3(-4, 0, 0);

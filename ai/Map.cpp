@@ -88,11 +88,11 @@ void Map::Render(ShaderProgram *shader) const {
   glDisableVertexAttribArray(shader->positionAttribute);
   glDisableVertexAttribArray(shader->texCoordAttribute);
 }
-bool Map::IsSolid(Box &box) const {
+std::pair<bool, float> Map::IsSolid(Box &box) const {
   // 1. Check if box in range
   if ((box.XMax() < min_x_ || box.XMin() > max_x_) || box.YMax() < min_y_
       || box.YMin() > max_y_) {
-    return false;
+    return {false, 0};
   }
   auto x_start =
       static_cast<int>(std::floor((box.XMin() - min_x_) / tile_size_));
@@ -109,11 +109,11 @@ bool Map::IsSolid(Box &box) const {
   for (int y = y_start; y < y_end; ++y) {
     for (int x = x_start; x < x_end; ++x) {
       if (levels_.index_mapping_[y * levels_.width_ + x] != NONE) {
-        return true;
+        return {true, box.half_height + max_y_ - y * tile_size_};
       }
     }
   }
-  return false;
+  return {false, 0};
 }
 LevelMapping::LevelMapping(uint width,
                            uint height,

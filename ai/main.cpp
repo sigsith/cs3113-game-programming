@@ -56,6 +56,7 @@ class Dynamic : public Boxed {
   float horizontal_speed_ = 1.2;
   float vertical_speed = 0.08;
   uint collision_time_out = 0;
+  bool grounded = false;
 
  protected:
   glm::vec3 position_;
@@ -84,11 +85,13 @@ void Dynamic::Update(float delta_t, const EntityManager &manager) {
   velocity_ += acceleration_ * delta_t;
   position_ += velocity_ * delta_t;
   Box box = this->box();
-  if (SDL_GetTicks() > collision_time_out && manager.map().IsSolid(box)) {
+  if (SDL_GetTicks() > collision_time_out && manager.map().IsSolid(box).first) {
     velocity_.y = 0;
     acceleration_.y = 0;
+    position_.y = manager.map().IsSolid(box).second;
+    grounded = true;
   } else {
-    acceleration_.y += GRAVITY;
+    acceleration_.y = GRAVITY;
   }
 }
 void Dynamic::Disable() {
@@ -110,9 +113,10 @@ void Dynamic::MoveRight() {
 }
 void Dynamic::Jump(float speed, const EntityManager &manager) {
   auto box = this->box();
-  if (manager.map().IsSolid(box)) {
+  if (grounded) {
     velocity_.y += speed;
-    collision_time_out = SDL_GetTicks() + 100;
+    collision_time_out = SDL_GetTicks() + 200;
+    grounded = false;
   }
 }
 void Dynamic::StopHorizontal() {
@@ -258,7 +262,7 @@ void ProcessInput() {
     manager->player_->MoveRight();
   }
   if (key_state[SDL_SCANCODE_W] || key_state[SDL_SCANCODE_SPACE]) {
-    manager->player_->Jump(0.085, *manager);
+    manager->player_->Jump(2.0, *manager);
   }
 }
 void Update() {

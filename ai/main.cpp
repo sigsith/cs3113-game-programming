@@ -122,6 +122,39 @@ void Dynamic::Jump(float speed, const EntityManager &manager) {
 void Dynamic::StopHorizontal() {
   velocity_.x = 0;
 }
+enum class MobType {
+  Patroller,
+  Jumper,
+  Spinner
+};
+enum class MobState {
+  Idle,
+  Aggro,
+  Attack,
+};
+struct MobConfig {
+  MobType mob_type;
+};
+class Mob : public Dynamic {
+ private:
+  MobState state_;
+  MobConfig behavior_;
+ public:
+  void Update(float delta_t, const EntityManager &manager) override;
+  void Render(ShaderProgram *shader) const override;
+  Mob(glm::vec3 startpos, GLuint text_id, MobConfig config);
+};
+void Mob::Update(float delta_t, const EntityManager &manager) {
+  Dynamic::Update(delta_t, manager);
+}
+void Mob::Render(ShaderProgram *shader) const {
+
+}
+Mob::Mob(glm::vec3 startpos, GLuint text_id, MobConfig config) :
+    Dynamic(startpos, text_id, 0.3, 0.15), behavior_(config),
+    state_(MobState::Idle) {
+
+}
 class Player : public Dynamic {
  public:
   void Update(float delta_t, const EntityManager &manager) override;

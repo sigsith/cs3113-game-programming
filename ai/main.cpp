@@ -99,7 +99,7 @@ void Initialize() {
   const auto index_mapping = LevelMapping(2, 2, mapping);
   const auto tile_set_id = LoadTexture(std::string("tileset.png"));
   const auto tile_set = SpriteSheetMapping(10, 6, tile_set_id);
-  const auto map = Map(index_mapping, tile_set);
+  const auto map = Map(index_mapping, tile_set, 0);
   manager = std::make_unique<EntityManager>(background, map);
 }
 void ProcessInput() {

@@ -26,6 +26,9 @@
 
 #include "Entity.h"
 
+
+const uint NONE = std::numeric_limits<uint>::max();
+
 struct LevelMapping {
   uint width_;
   uint height_;
@@ -46,9 +49,13 @@ struct SpriteSheetMapping {
 };
 
 class Map : public Entity {
+ private:
+  std::vector<float> vertices_;
+  std::vector<float> tex_coords_;
  public:
   Map(LevelMapping level_mapping,
-      SpriteSheetMapping sprite_sheet_mapping);
+      SpriteSheetMapping sprite_sheet_mapping,
+      float tile_size);
   void Render(ShaderProgram *shader) const override;
 };
 

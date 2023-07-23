@@ -9,8 +9,15 @@
 **/
 #include "Map.h"
 
-Map::Map(LevelMapping level_mapping, SpriteSheetMapping sprite_sheet_mapping) {
+Map::Map(LevelMapping level_mapping,
+         SpriteSheetMapping sprite_sheet_mapping,
+         float tile_size) {
   texture_id_ = sprite_sheet_mapping.texture_id_;
+
+  // Construct rendering vertices and texture coordinates.
+
+
+
 
 }
 void Map::Render(ShaderProgram *shader) const {

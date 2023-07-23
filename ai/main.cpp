@@ -435,11 +435,12 @@ void Initialize() {
                                                 mob0, mob2, mob3
                                             }, winning, losing);
   Mix_OpenAudio(
-        44100,        // the frequency to playback audio at (in Hz)
-        MIX_DEFAULT_FORMAT,  // audio format
-        2,      // number of channels (1 is mono, 2 is stereo, etc).
-        4096// audio buffer size in sample FRAMES (total samples divided by channel count)
+        44100,        
+        MIX_DEFAULT_FORMAT,         2,  4096
         );
+  const auto music = Mix_LoadMUS("background.mp3");
+  Mix_PlayMusic(music, -1);
+  Mix_VolumeMusic(MIX_MAX_VOLUME / 2);
 }
 void ProcessInput() {
   SDL_Event event;

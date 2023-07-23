@@ -47,18 +47,14 @@ struct Box {
   float half_height;
 };
 
-class Collidable : public Entity {
+class Boxed : public Entity {
  protected:
   Box box_;
  public:
   Box box() const;
 };
 
-//bool is_colliding_with(Collidable &rhs) const;
-//bool is_horizontal_contact(Collidable &rhs) const;
-//void vertical_clip(const Collidable &rhs);
-
-class Background : public Collidable {
+class Background : public Entity {
  private:
  public:
   explicit Background(const std::string &texture_path);

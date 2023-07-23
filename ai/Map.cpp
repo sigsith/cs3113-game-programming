@@ -84,7 +84,12 @@ void Map::Render(ShaderProgram *shader) const {
   glDisableVertexAttribArray(shader->positionAttribute);
   glDisableVertexAttribArray(shader->texCoordAttribute);
 }
-SolidStatus Map::CheckSolid(glm::vec3 position, float half_width) {
+SolidStatus Map::CheckSolid(Box &box) {
+  // 1. Check if box in range
+
+
+
+
   return Empty;
 }
 LevelMapping::LevelMapping(uint width,

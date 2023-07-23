@@ -75,6 +75,6 @@ GLuint LoadTexture(const std::string &path) {
   stbi_image_free(data);
   return texture;
 }
-Box Collidable::box() const {
+Box Boxed::box() const {
   return box_;
 }

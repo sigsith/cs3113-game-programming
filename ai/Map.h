@@ -63,7 +63,7 @@ class Map : public Entity {
       SpriteSheetMapping sprite_sheet_mapping,
       float m_tile_size, glm::vec3 top_left
   );
-  SolidStatus CheckSolid(glm::vec3 position, float half_width);
+  SolidStatus CheckSolid(Box& box);
   void Render(ShaderProgram *shader) const override;
 };
 

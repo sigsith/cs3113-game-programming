@@ -66,11 +66,4 @@ class Map : public Entity {
   void Render(ShaderProgram *shader) const override;
 };
 
-void draw_text(ShaderProgram *program,
-               GLuint font_texture_id,
-               std::string text,
-               float screen_size,
-               float spacing,
-               glm::vec3 position);
-
 #endif //CS3113_GAME_PROGRAMMING_AI_MAP_H_

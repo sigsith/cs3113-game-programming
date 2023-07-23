@@ -129,10 +129,8 @@ SpriteSheetMapping::SpriteSheetMapping(uint width,
 void draw_text(ShaderProgram *program,
                GLuint font_texture_id,
                std::string text,
-               float screen_size,
-               float spacing,
-               glm::vec3 position) {
-  constexpr auto FONTBANK_SIZE = 16;
+               float base_font_size) {
+  constexpr auto FONTBANK_SIZE = 16;  // Assuming the font sprite sheet is 16x16 grid.
   float width = 1.0f / FONTBANK_SIZE;
   float height = 1.0f / FONTBANK_SIZE;
 
@@ -140,25 +138,21 @@ void draw_text(ShaderProgram *program,
   std::vector<float> texture_coordinates;
 
   for (int i = 0; i < text.size(); i++) {
-    // 1. Get their index in the spritesheet, as well as their offset (i.e. their position
-    //    relative to the whole sentence)
-    int spritesheet_index = (int) text[i];  // ascii value of character
-    float offset = (screen_size + spacing) * i;
+    int spritesheet_index = (int) text[i] - 'A' + 33;
+    float offset = base_font_size * i;
 
-    // 2. Using the spritesheet index, we can calculate our U- and V-coordinates
     float u_coordinate =
         (float) (spritesheet_index % FONTBANK_SIZE) / FONTBANK_SIZE;
     float v_coordinate =
         (float) (spritesheet_index / FONTBANK_SIZE) / FONTBANK_SIZE;
 
-    // 3. Inset the current pair in both vectors
     vertices.insert(vertices.end(), {
-        offset + (-0.5f * screen_size), 0.5f * screen_size,
-        offset + (-0.5f * screen_size), -0.5f * screen_size,
-        offset + (0.5f * screen_size), 0.5f * screen_size,
-        offset + (0.5f * screen_size), -0.5f * screen_size,
-        offset + (0.5f * screen_size), 0.5f * screen_size,
-        offset + (-0.5f * screen_size), -0.5f * screen_size,
+        offset + (-0.5f * base_font_size), 0.5f * base_font_size,
+        offset + (-0.5f * base_font_size), -0.5f * base_font_size,
+        offset + (0.5f * base_font_size), 0.5f * base_font_size,
+        offset + (0.5f * base_font_size), -0.5f * base_font_size,
+        offset + (0.5f * base_font_size), 0.5f * base_font_size,
+        offset + (-0.5f * base_font_size), -0.5f * base_font_size,
     });
 
     texture_coordinates.insert(texture_coordinates.end(), {
@@ -171,7 +165,8 @@ void draw_text(ShaderProgram *program,
     });
   }
 
-  // 4. And render all of them using the pairs
+  // Use a fixed position for now
+  glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f);
   glm::mat4 model_matrix = glm::mat4(1.0f);
   model_matrix = glm::translate(model_matrix, position);
 

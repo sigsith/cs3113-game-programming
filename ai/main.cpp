@@ -339,6 +339,7 @@ ShaderProgram shader;
 float previous_ticks = 0.0f;
 float time_accumulator = 0.0;
 std::unique_ptr<EntityManager> manager;
+GLuint font_id;
 /* --------------------------  FUNCTION SIGNATURES -------------------------- */
 void Initialize();
 GLuint LoadTexture(const char *filepath);
@@ -412,7 +413,7 @@ void Initialize() {
   const auto mob3_id = LoadTexture(std::string("mob3.png"));
   const auto mob3_config = MobConfig{MobType::Chaser};
   const auto mob3 = new Mob(glm::vec3(2, 2, 0), mob3_id, mob3_config);
-
+  font_id = LoadTexture(std::string("font_sheet.png"));
   manager = std::make_unique<EntityManager>(background,
                                             map,
                                             player,
@@ -487,13 +488,27 @@ void EntityManager::RenderAll(ShaderProgram *shader) const {
     mob->Render(shader);
   }
   player_->Render(shader);
+  switch (result) {
+    case GameResult::OnGoing: {
+
+      break;
+    }
+    case GameResult::Win: {
+      break;
+    };
+
+    case GameResult::Lose: {
+      break;
+    };
+  }
+
 }
 const Map &EntityManager::map() const {
   return map_;
 }
 void EntityManager::UpdateAll(float delta_t) {
   player_->Update(delta_t, *this);
-  if (!player_->IsActive())  {
+  if (!player_->IsActive()) {
     result = GameResult::Lose;
     return;
   }

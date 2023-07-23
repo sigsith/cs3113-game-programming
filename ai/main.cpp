@@ -363,6 +363,7 @@ int main() {
 }
 /* -----------------------  FUNCTION IMPLEMENTATIONS ----------------------- */
 void Initialize() {
+  SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
   constexpr int WINDOW_WIDTH = 640,
       WINDOW_HEIGHT = 480;
   constexpr int VIEWPORT_X = 0,
@@ -418,7 +419,7 @@ void Initialize() {
   const auto mob3_id = LoadTexture(std::string("mob3.png"));
   const auto mob3_config = MobConfig{MobType::Chaser};
   const auto mob3 = new Mob(glm::vec3(2, 2, 0), mob3_id, mob3_config);
-  font_id = LoadTexture(std::string("font_sheet.png"));
+  font_id = LoadTexture(std::string("font-sheet.png"));
   const auto
       font_mapping =
       SpriteSheetMapping(16, 6, LoadTexture(std::string("font-sheet.png")));
@@ -433,6 +434,12 @@ void Initialize() {
                                             std::vector<Mob *>{
                                                 mob0, mob2, mob3
                                             }, winning, losing);
+  Mix_OpenAudio(
+        44100,        // the frequency to playback audio at (in Hz)
+        MIX_DEFAULT_FORMAT,  // audio format
+        2,      // number of channels (1 is mono, 2 is stereo, etc).
+        4096// audio buffer size in sample FRAMES (total samples divided by channel count)
+        );
 }
 void ProcessInput() {
   SDL_Event event;

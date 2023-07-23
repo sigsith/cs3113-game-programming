@@ -108,17 +108,11 @@ void Update() {
   const auto ticks = static_cast<float>(SDL_GetTicks()) / 1000.0f;
   const auto delta_time = static_cast<float>(ticks - previous_ticks);
   previous_ticks = ticks;
-  auto epoch = delta_time + time_accumulator;
   constexpr auto FIXED_TIMESTEP = 1.0f / 60.0f;
-  if (epoch < FIXED_TIMESTEP) {
-    time_accumulator = epoch;
-    return;
+  for (time_accumulator += delta_time; time_accumulator >= FIXED_TIMESTEP;
+       time_accumulator -= FIXED_TIMESTEP) {
+    // Update things
   }
-  while (epoch >= FIXED_TIMESTEP) {
-    epoch -= FIXED_TIMESTEP;
-    // Update all with fixed timestep
-  }
-  time_accumulator = epoch;
 }
 void DrawObject(glm::mat4 &object_model_matrix, GLuint &object_texture_id) {
   shader.SetModelMatrix(object_model_matrix);

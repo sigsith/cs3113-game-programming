@@ -9,8 +9,9 @@
 **/
 #include "Map.h"
 
-Map::Map(const std::string &tile_set_path, const LevelMapping &mapping) {
-  texture_id_ = LoadTexture(tile_set_path);
+Map::Map(LevelMapping level_mapping, SpriteSheetMapping sprite_sheet_mapping) {
+  texture_id_ = sprite_sheet_mapping.texture_id_;
+
 }
 void Map::Render(ShaderProgram *shader) const {
 
@@ -22,3 +23,7 @@ LevelMapping::LevelMapping(uint width,
     index_mapping_(std::move(index_mapping)) {
   assert(width_ * height_ == index_mapping_.size());
 }
+SpriteSheetMapping::SpriteSheetMapping(uint width,
+                                       uint height,
+                                       GLuint texture_id)
+    : width_(width), height_(height), texture_id_(texture_id) {}

@@ -47,8 +47,8 @@ struct SpriteSheetMapping {
 
 class Map : public Entity {
  public:
-  explicit Map(LevelMapping level_mapping,
-               SpriteSheetMapping sprite_sheet_mapping);
+  Map(LevelMapping level_mapping,
+      SpriteSheetMapping sprite_sheet_mapping);
   void Render(ShaderProgram *shader) const override;
 };
 

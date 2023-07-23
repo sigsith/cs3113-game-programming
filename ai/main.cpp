@@ -97,8 +97,10 @@ void Initialize() {
   const auto background = Background(std::string("background.png"));
   const auto mapping = std::vector<uint>{0, 1, 0, 1};
   const auto index_mapping = LevelMapping(2, 2, mapping);
-  const auto tileset = Map(std::string("tileset.png"), index_mapping);
-  manager = std::make_unique<EntityManager>(background, tileset);
+  const auto tile_set_id = LoadTexture(std::string("tileset.png"));
+  const auto tile_set = SpriteSheetMapping(10, 6, tile_set_id);
+  const auto map = Map(index_mapping, tile_set);
+  manager = std::make_unique<EntityManager>(background, map);
 }
 void ProcessInput() {
   SDL_Event event;

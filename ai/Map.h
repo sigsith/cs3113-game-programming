@@ -62,8 +62,15 @@ class Map : public Entity {
       SpriteSheetMapping sprite_sheet_mapping,
       float m_tile_size, glm::vec3 top_left
   );
-  std::pair<bool, float> IsSolid(Box& box) const;
+  std::pair<bool, float> IsSolid(Box &box) const;
   void Render(ShaderProgram *shader) const override;
 };
+
+void draw_text(ShaderProgram *program,
+               GLuint font_texture_id,
+               std::string text,
+               float screen_size,
+               float spacing,
+               glm::vec3 position);
 
 #endif //CS3113_GAME_PROGRAMMING_AI_MAP_H_

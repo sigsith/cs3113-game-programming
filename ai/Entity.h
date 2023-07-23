@@ -32,6 +32,7 @@ static constexpr float FULL_TEX_COORDS[12] = {
     1.0f, 0.0f,
     0.0f, 0.0f,
 };
+
 class Entity {
  public:
   virtual ~Entity() = default;
@@ -44,7 +45,15 @@ class Background : public Entity {
  private:
  public:
   explicit Background(std::string &texture_path);
-  void Render(ShaderProgram *program) const override;
+  void Render(ShaderProgram *shader) const override;
+};
+
+class EntityManager {
+ private:
+  Background background_;
+ public:
+  explicit EntityManager(std::string &background_path);
+  void render_all(ShaderProgram *shader) const;
 };
 
 #endif //CS3113_GAME_PROGRAMMING_AI_ENTITY_H_

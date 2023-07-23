@@ -41,6 +41,7 @@ class EntityManager {
   Player *player_;
   explicit EntityManager(Background background, Map map, Player *player);
   void RenderAll(ShaderProgram *shader) const;
+  void UpdateAll(float delta_t) const;
   const Map &map() const;
 };
 
@@ -267,4 +268,7 @@ void EntityManager::RenderAll(ShaderProgram *shader) const {
 }
 const Map &EntityManager::map() const {
   return map_;
+}
+void EntityManager::UpdateAll(float delta_t) const {
+  player_->Update(delta_t, *this);
 }

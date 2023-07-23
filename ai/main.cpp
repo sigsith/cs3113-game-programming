@@ -46,12 +46,16 @@ class EntityManager {
   Map map_;
   std::vector<Mob *> mobs_;
   GameResult result = GameResult::OnGoing;
+  TextMap winning_;
+  TextMap losing_;
  public:
   Player *player_;
   explicit EntityManager(Background background,
                          Map map,
                          Player *player,
-                         std::vector<Mob *> mobs);
+                         std::vector<Mob *> mobs,
+                         TextMap winning,
+                         TextMap losing);
   void RenderAll(ShaderProgram *shader) const;
   void UpdateAll(float delta_t);
   const Map &map() const;
@@ -414,12 +418,20 @@ void Initialize() {
   const auto mob3_config = MobConfig{MobType::Chaser};
   const auto mob3 = new Mob(glm::vec3(2, 2, 0), mob3_id, mob3_config);
   font_id = LoadTexture(std::string("font_sheet.png"));
+  const auto
+      font_mapping =
+      SpriteSheetMapping(16, 6, LoadTexture(std::string("font-sheet.png")));
+
+  TextMap winning =
+      TextMap(std::string("Winning"), font_mapping, 0.2, glm::vec3(-2, 2, 0));
+  TextMap losing =
+      TextMap(std::string("Losing"), font_mapping, 0.2, glm::vec3(-2, 2, 0));
   manager = std::make_unique<EntityManager>(background,
                                             map,
                                             player,
                                             std::vector<Mob *>{
                                                 mob0, mob2, mob3
-                                            });
+                                            }, winning, losing);
 }
 void ProcessInput() {
   SDL_Event event;
@@ -473,12 +485,16 @@ void Render() {
 EntityManager::EntityManager(Background background,
                              Map map,
                              Player *player,
-                             std::vector<Mob *> mobs)
+                             std::vector<Mob *> mobs,
+                             TextMap winning,
+                             TextMap losing)
     : background_(std::move(
     background)),
       map_(std::move(map)),
       player_(player),
-      mobs_(std::move(mobs)) {
+      mobs_(std::move(mobs)),
+      winning_(std::move(winning)),
+      losing_(std::move(losing)) {
 
 }
 void EntityManager::RenderAll(ShaderProgram *shader) const {
@@ -494,10 +510,12 @@ void EntityManager::RenderAll(ShaderProgram *shader) const {
       break;
     }
     case GameResult::Win: {
+      winning_.Render(shader);
       break;
     };
 
     case GameResult::Lose: {
+      losing_.Render(shader);
       break;
     };
   }

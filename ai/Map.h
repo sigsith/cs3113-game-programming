@@ -48,10 +48,11 @@ struct SpriteSheetMapping {
 };
 
 class Map : public Entity {
+ protected:
+  LevelMapping levels_;
  private:
   std::vector<float> vertices_;
   std::vector<float> tex_coords_;
-  LevelMapping levels_;
   float min_x_;
   float max_x_;
   float min_y_;
@@ -64,6 +65,32 @@ class Map : public Entity {
   );
   std::pair<bool, float> IsSolid(Box &box) const;
   void Render(ShaderProgram *shader) const override;
+};
+
+class TextMap : public Map {
+ public:
+  TextMap(const std::string &text,
+          SpriteSheetMapping sprite_sheet_mapping,
+          float m_tile_size, glm::vec3 top_left
+  ) : Map(LevelMappingFromText(text),
+          sprite_sheet_mapping,
+          m_tile_size,
+          top_left) {
+  }
+
+ private:
+  static LevelMapping LevelMappingFromText(const std::string &text) {
+    const auto width = text.size();
+    const auto height = 1;
+    std::vector<uint> index_mapping(width);
+    for (size_t i = 0; i < text.size(); ++i) {
+      // Ensure the character is not before 'A' in the ASCII table
+      char character = std::max(text[i], 'A');
+      // Assume 'A' is the first tile in the spritesheet
+      index_mapping[i] = static_cast<uint>(character - 'A');
+    }
+    return {static_cast<uint>(width), height, index_mapping};
+  }
 };
 
 #endif //CS3113_GAME_PROGRAMMING_AI_MAP_H_

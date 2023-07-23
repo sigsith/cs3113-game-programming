@@ -42,9 +42,15 @@ class EntityManager {
 };
 
 class Dynamic : public Entity {
+ protected:
+  glm::vec3 position_;
+  glm::vec3 velocity_;
+  glm::vec3 acceleration_;
+  bool is_active_;
  public:
   virtual void Update(float delta_t, const EntityManager &manager) = 0;
 };
+
 
 /* ---------------------------  GLOBAL VARIABLES --------------------------- */
 SDL_Window *display_window;

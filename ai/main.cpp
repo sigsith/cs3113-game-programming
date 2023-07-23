@@ -31,6 +31,7 @@ constexpr auto TOP_BOUNDARY = 3.75f;
 constexpr auto RIGHT_BOUNDARY = 5.0f;
 
 /* -------------------------  FORWARD DECLARATIONS ------------------------- */
+// These classes ought to have their own files.
 class EntityManager {
  private:
   Background background_;
@@ -38,6 +39,11 @@ class EntityManager {
  public:
   explicit EntityManager(Background background, Map map);
   void RenderAll(ShaderProgram *shader) const;
+};
+
+class Dynamic : public Entity {
+ public:
+  virtual void Update(float delta_t, const EntityManager &manager) = 0;
 };
 
 /* ---------------------------  GLOBAL VARIABLES --------------------------- */
@@ -97,9 +103,12 @@ void Initialize() {
   const auto background = Background(std::string("background.png"));
   const auto mapping =
       std::vector<uint>{6, 7, 8, 6, 7, 8, NONE, NONE, NONE, NONE, NONE, NONE,
-                        NONE, NONE, NONE, NONE, NONE, NONE, NONE, NONE, NONE, NONE, NONE, NONE,
-                        NONE, NONE, NONE, NONE, NONE, NONE, NONE, NONE, NONE, NONE, NONE, NONE,
-                        NONE, NONE, NONE, NONE, NONE, NONE, NONE, NONE, NONE, NONE, NONE, NONE,
+                        NONE, NONE, NONE, NONE, NONE, NONE, NONE, NONE, NONE,
+                        NONE, NONE, NONE,
+                        NONE, NONE, NONE, NONE, NONE, NONE, NONE, NONE, NONE,
+                        NONE, NONE, NONE,
+                        NONE, NONE, NONE, NONE, NONE, NONE, NONE, NONE, NONE,
+                        NONE, NONE, NONE,
                         0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2};
   const auto index_mapping = LevelMapping(12, 5, mapping);
   const auto tile_set_id = LoadTexture(std::string("tileset.png"));

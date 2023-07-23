@@ -46,8 +46,9 @@ class EntityManager {
                          Player *player,
                          std::vector<Mob *> mobs);
   void RenderAll(ShaderProgram *shader) const;
-  void UpdateAll(float delta_t) const;
+  void UpdateAll(float delta_t);
   const Map &map() const;
+  std::vector<Mob *> &mobs();
 };
 
 constexpr float GRAVITY = -1.2;
@@ -71,7 +72,7 @@ class Dynamic : public Boxed {
           GLuint text_id,
           float half_height,
           float half_width);
-  virtual void Update(float delta_t, const EntityManager &manager);
+  virtual void Update(float delta_t, EntityManager &manager);
   virtual void Jump(float speed, const EntityManager &manager);
   void Disable();
   virtual void MoveLeft();
@@ -84,7 +85,7 @@ class Dynamic : public Boxed {
     };
   }
 };
-void Dynamic::Update(float delta_t, const EntityManager &manager) {
+void Dynamic::Update(float delta_t, EntityManager &manager) {
   if (!(is_active_)) {
     return;
   }
@@ -147,11 +148,12 @@ class Mob : public Dynamic {
   MobConfig behavior_;
   uint timer_ = 0;
  public:
-  void Update(float delta_t, const EntityManager &manager) override;
+  void Update(float delta_t, EntityManager &manager) override;
   void Render(ShaderProgram *shader) const override;
   Mob(glm::vec3 startpos, GLuint text_id, MobConfig config);
+  void Kill();
 };
-void Mob::Update(float delta_t, const EntityManager &manager) {
+void Mob::Update(float delta_t, EntityManager &manager) {
   Dynamic::Update(delta_t, manager);
   if (!is_active_) {
     return;
@@ -193,14 +195,20 @@ Mob::Mob(glm::vec3 startpos, GLuint text_id, MobConfig config) :
     state_(MobState::Idle) {
 
 }
+void Mob::Kill() {
+  is_active_ = false;
+}
 class Player : public Dynamic {
  public:
-  void Update(float delta_t, const EntityManager &manager) override;
+  void Update(float delta_t, EntityManager &manager) override;
   void Render(ShaderProgram *shader) const override;
   Player(glm::vec3 startpos, GLuint text_id);
 };
-void Player::Update(float delta_t, const EntityManager &manager) {
+void Player::Update(float delta_t, EntityManager &manager) {
   Dynamic::Update(delta_t, manager);
+  for (auto &&mob : manager.mobs()) {
+
+  }
 }
 Player::Player(glm::vec3 startpos, GLuint text_id) : Dynamic(startpos,
                                                              text_id,
@@ -388,9 +396,12 @@ void EntityManager::RenderAll(ShaderProgram *shader) const {
 const Map &EntityManager::map() const {
   return map_;
 }
-void EntityManager::UpdateAll(float delta_t) const {
+void EntityManager::UpdateAll(float delta_t) {
   player_->Update(delta_t, *this);
   for (auto &&mob : mobs_) {
     mob->Update(delta_t, *this);
   }
+}
+std::vector<Mob *> &EntityManager::mobs() {
+  return mobs_;
 }

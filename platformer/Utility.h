@@ -31,6 +31,8 @@ void RenderText(const std::string &text,
                 ShaderProgram *shader,
                 float tile_size, glm::vec3 top_left
 );
+float Length(glm::vec3 glm_vec);
+glm::vec3 Normalize(glm::vec3 glm_vec);
 };
 
 #endif //CS3113_GAME_PROGRAMMING_PLATFORMER_UTILITY_H_

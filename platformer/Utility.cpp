@@ -10,6 +10,19 @@
 #include "Utility.h"
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
+#define GL_SILENCE_DEPRECATION
+#define STB_IMAGE_IMPLEMENTATION
+#define GL_GLEXT_PROTOTYPES 1
+#ifdef _WINDOWS
+#include <GL/glew.h>
+#endif
+
+#include <SDL.h>
+#include <SDL_opengl.h>
+#include <SDL_mixer.h>
+#include "glm/mat4x4.hpp"
+#include "glm/gtc/matrix_transform.hpp"
+#include "ShaderProgram.h"
 namespace utility {
 GLuint LoadTexture(const std::string &path) {
   int width, height, nrChannels;
@@ -47,4 +60,18 @@ void RenderText(const std::string &text,
       TextMap(text, font_mapping, tile_size, top_left);
   text_map.Render(shader);
 }
+float Length(glm::vec3 glm_vec) {
+  const auto x = glm_vec.x;
+  const auto y = glm_vec.y;
+  const auto z = glm_vec.z;
+  return std::sqrt(x * x + y * y + z * 2);
+}
+glm::vec3 Normalize(glm::vec3 glm_vec) {
+  const auto x = glm_vec.x;
+  const auto y = glm_vec.y;
+  const auto z = glm_vec.z;
+  const auto length = std::sqrt(x * x + y * y + z * 2);
+  return {x / length, y / length, z / length};
+}
+
 }

@@ -13,7 +13,6 @@ class ShaderProgram;
 #include <SDL.h>
 #include <SDL_opengl.h>
 
-GLuint LoadTexture(const std::string &path);
 class Map;
 
 static constexpr float SQUARE_VERTICES[12] = {

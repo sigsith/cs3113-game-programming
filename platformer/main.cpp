@@ -349,7 +349,6 @@ std::unique_ptr<EntityManager> manager;
 GLuint font_id;
 /* --------------------------  FUNCTION SIGNATURES -------------------------- */
 void Initialize();
-GLuint LoadTexture(const char *filepath);
 void ProcessInput();
 void Update();
 void Render();
@@ -406,25 +405,25 @@ void Initialize() {
                         NONE, NONE, NONE,
                         0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2};
   const auto index_mapping = LevelMapping(12, 5, mapping);
-  const auto tile_set_id = LoadTexture(std::string("tileset.png"));
+  const auto tile_set_id = utility::LoadTexture(std::string("tileset.png"));
   const auto tile_set = SpriteSheetMapping(10, 6, tile_set_id);
   const auto top_left = glm::vec3(-4, 0, 0);
   const auto map = Map(index_mapping, tile_set, 0.5, top_left);
-  const auto player_id = LoadTexture(std::string("player.png"));
+  const auto player_id = utility::LoadTexture(std::string("player.png"));
   const auto player = new Player(glm::vec3(0, 0, 0), player_id);
-  const auto mob0_id = LoadTexture(std::string("mob1.png"));
+  const auto mob0_id = utility::LoadTexture(std::string("mob1.png"));
   const auto mob0_config = MobConfig{MobType::Jumper};
   const auto mob0 = new Mob(glm::vec3(-3, 1, 0), mob0_id, mob0_config);
-  const auto mob2_id = LoadTexture(std::string("mob2.png"));
+  const auto mob2_id = utility::LoadTexture(std::string("mob2.png"));
   const auto mob2_config = MobConfig{MobType::Patroller};
   const auto mob2 = new Mob(glm::vec3(1, -1, 0), mob2_id, mob2_config);
-  const auto mob3_id = LoadTexture(std::string("mob3.png"));
+  const auto mob3_id = utility::LoadTexture(std::string("mob3.png"));
   const auto mob3_config = MobConfig{MobType::Chaser};
   const auto mob3 = new Mob(glm::vec3(2, 2, 0), mob3_id, mob3_config);
-  font_id = LoadTexture(std::string("font-sheet.png"));
+  font_id = utility::LoadTexture(std::string("font-sheet.png"));
   const auto
       font_mapping =
-      SpriteSheetMapping(16, 6, LoadTexture(std::string("font-sheet.png")));
+      SpriteSheetMapping(16, 6, utility::LoadTexture(std::string("font-sheet.png")));
 
   TextMap winning =
       TextMap(std::string("You Win"), font_mapping, 1.0, glm::vec3(-3.5, 2, 0));

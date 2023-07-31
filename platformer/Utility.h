@@ -25,7 +25,7 @@
 #include "ShaderProgram.h"
 
 namespace utility {
-GLuint load_texture(const char *filepath);
+GLuint LoadTexture(const std::string &path);
 };
 
 #endif //CS3113_GAME_PROGRAMMING_PLATFORMER_UTILITY_H_

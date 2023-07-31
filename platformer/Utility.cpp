@@ -8,6 +8,7 @@
 * Academic Misconduct.
 **/
 #include "Utility.h"
+#define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 namespace utility {
 GLuint LoadTexture(const std::string &path) {

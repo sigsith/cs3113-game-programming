@@ -417,11 +417,6 @@ void Initialize() {
   const auto mob3_config = MobConfig{MobType::Chaser};
   const auto mob3 = new Mob(glm::vec3(2, 2, 0), mob3_id, mob3_config);
   font_id = utility::LoadTexture(std::string("font-sheet.png"));
-  const auto
-      font_mapping =
-      SpriteSheetMapping(16,
-                         6,
-                         utility::LoadTexture(std::string("font-sheet.png")));
   manager = std::make_unique<EntityManager>(background,
                                             map,
                                             player,

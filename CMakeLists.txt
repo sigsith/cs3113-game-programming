@@ -6,7 +6,9 @@ find_package(SDL2 REQUIRED)
 find_package(SDL2_image REQUIRED)
 find_package(SDL2_mixer REQUIRED)
 find_library(OPENGL_LIBRARY OpenGL)
+find_library(SDL2_MIXER_LIBRARY SDL2_mixer)
 
+include_directories(/opt/homebrew/Cellar/sdl2_mixer/2.6.3_1/include/SDL2)
 include_directories(common/includes)
 
 function(add_executable_and_link name)
@@ -15,7 +17,7 @@ function(add_executable_and_link name)
         list(APPEND SOURCES ${name}/${src})
     endforeach ()
     add_executable(${name} ${SOURCES})
-    target_link_libraries(${name} ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES} ${SDL2_MIXER_LIBRARIES} /usr/local/Cellar/sdl2_mixer/2.6.3_1/lib/libSDL2_mixer.dylib ${OPENGL_LIBRARY})
+    target_link_libraries(${name} ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES} ${SDL2_MIXER_LIBRARY} ${OPENGL_LIBRARY})
 endfunction()
 
 add_executable_and_link(simple-2d-scene)

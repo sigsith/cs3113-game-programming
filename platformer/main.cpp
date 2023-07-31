@@ -29,14 +29,7 @@
 /* -----------------------------  STD INCLUDES ----------------------------- */
 #include <memory>
 #include <iostream>
-#include <cmath>
 #include <utility>
-/* ---------------------  GLOBAL CONSTANTS AND DEFINES --------------------- */
-constexpr auto TOP_BOUNDARY = 3.75f;
-constexpr auto RIGHT_BOUNDARY = 5.0f;
-
-/* -------------------------  FORWARD DECLARATIONS ------------------------- */
-
 /* ---------------------------  GLOBAL VARIABLES --------------------------- */
 SDL_Window *display_window;
 bool is_game_running = true;
@@ -44,12 +37,11 @@ ShaderProgram shader;
 float previous_ticks = 0.0f;
 float time_accumulator = 0.0;
 std::unique_ptr<EntityManager> manager;
-/* --------------------------  FUNCTION SIGNATURES -------------------------- */
+/* -------------------------  FORWARD DECLARATIONS ------------------------- */
 void Initialize();
 void ProcessInput();
 void Update();
 void Render();
-
 /* ---------------------------------  MAIN --------------------------------- */
 int main() {
   Initialize();
@@ -69,7 +61,7 @@ void Initialize() {
       VIEWPORT_WIDTH = WINDOW_WIDTH,
       VIEWPORT_HEIGHT = WINDOW_HEIGHT;
   SDL_Init(SDL_INIT_VIDEO);
-  display_window = SDL_CreateWindow("Generic Platform Game",
+  display_window = SDL_CreateWindow("Generic Platform Game2",
                                     SDL_WINDOWPOS_CENTERED,
                                     SDL_WINDOWPOS_CENTERED,
                                     640, 480,

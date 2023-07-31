@@ -22,6 +22,7 @@
 #include "glm/gtc/matrix_transform.hpp"
 #include "ShaderProgram.h"
 #include "Map.h"
+#include "Utility.h"
 /* -----------------------------  STD INCLUDES ----------------------------- */
 #include <memory>
 #include <iostream>

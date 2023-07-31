@@ -22,6 +22,7 @@
 #include "ShaderProgram.h"
 #include "Entity.h"
 #include "stb_image.h"
+#include "Utility.h"
 void Background::Render(ShaderProgram *shader) const {
   glBindTexture(GL_TEXTURE_2D, this->texture_id_);
   glVertexAttribPointer(shader->positionAttribute,

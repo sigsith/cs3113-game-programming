@@ -108,8 +108,8 @@ std::pair<bool, float> Map::IsSolid(Box &box) const {
   for (int y = y_start; y < y_end; ++y) {
     for (int x = x_start; x < x_end; ++x) {
       if (levels_.index_mapping_[y * levels_.width_ + x] != NONE) {
-        if (box.position.y <  max_y_ - y * tile_size_ + 0.5 * box.half_height) {
-            return {false, 0};            
+        if (box.position.y < max_y_ - y * tile_size_ + 0.5 * box.half_height) {
+          return {false, 0};
         }
         return {true, box.half_height + max_y_ - y * tile_size_};
       }
@@ -128,71 +128,3 @@ SpriteSheetMapping::SpriteSheetMapping(uint width,
                                        uint height,
                                        GLuint texture_id)
     : width_(width), height_(height), texture_id_(texture_id) {}
-void draw_text(ShaderProgram *program,
-               GLuint font_texture_id,
-               std::string text,
-               float base_font_size) {
-  constexpr auto FONTBANK_SIZE = 16;  // Assuming the font sprite sheet is 16x16 grid.
-  float width = 1.0f / FONTBANK_SIZE;
-  float height = 1.0f / FONTBANK_SIZE;
-
-  std::vector<float> vertices;
-  std::vector<float> texture_coordinates;
-
-  for (int i = 0; i < text.size(); i++) {
-    int spritesheet_index = (int) text[i] - 'A' + 33;
-    float offset = base_font_size * i;
-
-    float u_coordinate =
-        (float) (spritesheet_index % FONTBANK_SIZE) / FONTBANK_SIZE;
-    float v_coordinate =
-        (float) (spritesheet_index / FONTBANK_SIZE) / FONTBANK_SIZE;
-
-    vertices.insert(vertices.end(), {
-        offset + (-0.5f * base_font_size), 0.5f * base_font_size,
-        offset + (-0.5f * base_font_size), -0.5f * base_font_size,
-        offset + (0.5f * base_font_size), 0.5f * base_font_size,
-        offset + (0.5f * base_font_size), -0.5f * base_font_size,
-        offset + (0.5f * base_font_size), 0.5f * base_font_size,
-        offset + (-0.5f * base_font_size), -0.5f * base_font_size,
-    });
-
-    texture_coordinates.insert(texture_coordinates.end(), {
-        u_coordinate, v_coordinate,
-        u_coordinate, v_coordinate + height,
-        u_coordinate + width, v_coordinate,
-        u_coordinate + width, v_coordinate + height,
-        u_coordinate + width, v_coordinate,
-        u_coordinate, v_coordinate + height,
-    });
-  }
-
-  // Use a fixed position for now
-  glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f);
-  glm::mat4 model_matrix = glm::mat4(1.0f);
-  model_matrix = glm::translate(model_matrix, position);
-
-  program->SetModelMatrix(model_matrix);
-  glUseProgram(program->programID);
-
-  glVertexAttribPointer(program->positionAttribute,
-                        2,
-                        GL_FLOAT,
-                        false,
-                        0,
-                        vertices.data());
-  glEnableVertexAttribArray(program->positionAttribute);
-  glVertexAttribPointer(program->texCoordAttribute,
-                        2,
-                        GL_FLOAT,
-                        false,
-                        0,
-                        texture_coordinates.data());
-  glEnableVertexAttribArray(program->texCoordAttribute);
-
-  glBindTexture(GL_TEXTURE_2D, font_texture_id);
-  glDrawArrays(GL_TRIANGLES, 0, (int) (text.size() * 6));
-
-  glDisableVertexAttribArray(program->positionAttribute);
-  glDisableVertexAttribArray(program->texCoordAttribute);
-}

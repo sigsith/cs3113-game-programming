@@ -23,9 +23,14 @@
 #include "glm/mat4x4.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 #include "ShaderProgram.h"
+#include "Map.h"
 
 namespace utility {
 GLuint LoadTexture(const std::string &path);
+void RenderText(const std::string &text,
+                ShaderProgram *shader,
+                float tile_size, glm::vec3 top_left
+);
 };
 
 #endif //CS3113_GAME_PROGRAMMING_PLATFORMER_UTILITY_H_

@@ -48,16 +48,12 @@ class EntityManager {
   Map map_;
   std::vector<Mob *> mobs_;
   GameResult result = GameResult::OnGoing;
-  TextMap winning_;
-  TextMap losing_;
  public:
   Player *player_;
   explicit EntityManager(Background background,
                          Map map,
                          Player *player,
-                         std::vector<Mob *> mobs,
-                         TextMap winning,
-                         TextMap losing);
+                         std::vector<Mob *> mobs);
   void RenderAll(ShaderProgram *shader) const;
   void UpdateAll(float delta_t);
   const Map &map() const;
@@ -106,8 +102,8 @@ void Dynamic::Update(float delta_t, EntityManager &manager) {
   velocity_ += acceleration_ * delta_t;
   position_ += velocity_ * delta_t;
   Box box = this->box();
-  if (SDL_GetTicks() > collision_time_out && manager.map().IsSolid(box).first 
-                  && velocity_.y < 0) {
+  if (SDL_GetTicks() > collision_time_out && manager.map().IsSolid(box).first
+      && velocity_.y < 0) {
     velocity_.y = 0;
     acceleration_.y = 0;
     position_.y = manager.map().IsSolid(box).second;
@@ -423,22 +419,19 @@ void Initialize() {
   font_id = utility::LoadTexture(std::string("font-sheet.png"));
   const auto
       font_mapping =
-      SpriteSheetMapping(16, 6, utility::LoadTexture(std::string("font-sheet.png")));
-
-  TextMap winning =
-      TextMap(std::string("You Win"), font_mapping, 1.0, glm::vec3(-3.5, 2, 0));
-  TextMap losing =
-      TextMap(std::string("You Lose"), font_mapping, 1.0, glm::vec3(-3.5, 2, 0));
+      SpriteSheetMapping(16,
+                         6,
+                         utility::LoadTexture(std::string("font-sheet.png")));
   manager = std::make_unique<EntityManager>(background,
                                             map,
                                             player,
                                             std::vector<Mob *>{
                                                 mob0, mob2, mob3
-                                            }, winning, losing);
+                                            });
   Mix_OpenAudio(
-        44100,        
-        MIX_DEFAULT_FORMAT,         2,  4096
-        );
+      44100,
+      MIX_DEFAULT_FORMAT, 2, 4096
+  );
   const auto music = Mix_LoadMUS("background.mp3");
   Mix_PlayMusic(music, -1);
   Mix_VolumeMusic(MIX_MAX_VOLUME / 2);
@@ -495,16 +488,13 @@ void Render() {
 EntityManager::EntityManager(Background background,
                              Map map,
                              Player *player,
-                             std::vector<Mob *> mobs,
-                             TextMap winning,
-                             TextMap losing)
+                             std::vector<Mob *> mobs
+)
     : background_(std::move(
     background)),
       map_(std::move(map)),
       player_(player),
-      mobs_(std::move(mobs)),
-      winning_(std::move(winning)),
-      losing_(std::move(losing)) {
+      mobs_(std::move(mobs)) {
 
 }
 void EntityManager::RenderAll(ShaderProgram *shader) const {
@@ -520,12 +510,12 @@ void EntityManager::RenderAll(ShaderProgram *shader) const {
       break;
     }
     case GameResult::Win: {
-      winning_.Render(shader);
+      utility::RenderText("You win", shader, 1.0, glm::vec3(-3.5, 2, 0));
       break;
     };
 
     case GameResult::Lose: {
-      losing_.Render(shader);
+      utility::RenderText("You lose", shader, 1.0, glm::vec3(-3.5, 2, 0));
       break;
     };
   }

@@ -33,4 +33,17 @@ GLuint LoadTexture(const std::string &path) {
   stbi_image_free(data);
   return texture;
 }
+void RenderText(const std::string &text,
+                ShaderProgram *shader,
+                float tile_size,
+                glm::vec3 top_left) {
+  static const auto
+      font_mapping =
+      SpriteSheetMapping(16,
+                         6,
+                         utility::LoadTexture(std::string("font-sheet.png")));
+  const auto text_map =
+      TextMap(text, font_mapping, tile_size, top_left);
+  text_map.Render(shader);
+}
 }

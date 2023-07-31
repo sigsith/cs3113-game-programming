@@ -17,25 +17,25 @@ Game::Game() {
       VIEWPORT_WIDTH = WINDOW_WIDTH,
       VIEWPORT_HEIGHT = WINDOW_HEIGHT;
   SDL_Init(SDL_INIT_VIDEO);
-  display_window = SDL_CreateWindow("Generic Platform Game2",
-                                    SDL_WINDOWPOS_CENTERED,
-                                    SDL_WINDOWPOS_CENTERED,
-                                    640, 480,
-                                    SDL_WINDOW_OPENGL);
-  SDL_GLContext context = SDL_GL_CreateContext(display_window);
-  SDL_GL_MakeCurrent(display_window, context);
+  display_window_ = SDL_CreateWindow("Generic Platform Game2",
+                                     SDL_WINDOWPOS_CENTERED,
+                                     SDL_WINDOWPOS_CENTERED,
+                                     640, 480,
+                                     SDL_WINDOW_OPENGL);
+  SDL_GLContext context = SDL_GL_CreateContext(display_window_);
+  SDL_GL_MakeCurrent(display_window_, context);
 #ifdef _WINDOWS
   glewInit();
 #endif
   glViewport(VIEWPORT_X, VIEWPORT_Y, VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
-  shader.Load("shaders/vertex_textured.glsl",
-              "shaders/fragment_textured.glsl");
+  shader_.Load("shaders/vertex_textured.glsl",
+               "shaders/fragment_textured.glsl");
   const auto view_matrix = glm::mat4(1.0f);
   const auto
       projection_matrix = glm::ortho(-5.0f, 5.0f, -3.75f, 3.75f, -1.0f, 1.0f);
-  shader.SetProjectionMatrix(projection_matrix);
-  shader.SetViewMatrix(view_matrix);
-  glUseProgram(shader.programID);
+  shader_.SetProjectionMatrix(projection_matrix);
+  shader_.SetViewMatrix(view_matrix);
+  glUseProgram(shader_.programID);
   glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -65,10 +65,10 @@ Game::Game() {
   const auto mob3_id = utility::LoadTexture(std::string("mob3.png"));
   const auto mob3_config = MobConfig{MobType::Chaser};
   const auto mob3 = new Mob(glm::vec3(2, 2, 0), mob3_id, mob3_config);
-  manager = std::make_unique<EntityManager>(background,
-                                            map,
-                                            player,
-                                            std::vector<Mob *>{
+  manager_ = std::make_unique<EntityManager>(background,
+                                             map,
+                                             player,
+                                             std::vector<Mob *>{
                                                 mob0, mob2, mob3
                                             });
   Mix_OpenAudio(
@@ -84,11 +84,11 @@ void Game::ProcessInput() {
   while (SDL_PollEvent(&event)) {
     switch (event.type) {
       case SDL_QUIT:
-      case SDL_WINDOWEVENT_CLOSE:is_game_running = false;
+      case SDL_WINDOWEVENT_CLOSE:is_game_running_ = false;
         return;
       case SDL_KEYDOWN:
         switch (event.key.keysym.sym) {
-          case SDLK_q:is_game_running = false;
+          case SDLK_q:is_game_running_ = false;
             return;
           default:break;
         }
@@ -97,33 +97,33 @@ void Game::ProcessInput() {
   }
   const Uint8 *key_state = SDL_GetKeyboardState(nullptr);
   if (key_state[SDL_SCANCODE_A]) {
-    manager->player_->MoveLeft();
+    manager_->player_->MoveLeft();
   }
   if (key_state[SDL_SCANCODE_D]) {
-    manager->player_->MoveRight();
+    manager_->player_->MoveRight();
   }
   if (key_state[SDL_SCANCODE_W] || key_state[SDL_SCANCODE_SPACE]) {
-    manager->player_->Jump(2.3, *manager);
+    manager_->player_->Jump(2.3, *manager_);
   }
 }
 void Game::Update() {
   const auto ticks = static_cast<float>(SDL_GetTicks()) / 1000.0f;
-  const auto delta_time = static_cast<float>(ticks - previous_ticks);
-  previous_ticks = ticks;
+  const auto delta_time = static_cast<float>(ticks - previous_ticks_);
+  previous_ticks_ = ticks;
   constexpr auto FIXED_TIMESTEP = 1.0f / 60.0f;
-  for (time_accumulator += delta_time; time_accumulator >= FIXED_TIMESTEP;
-       time_accumulator -= FIXED_TIMESTEP) {
-    manager->UpdateAll(FIXED_TIMESTEP);
+  for (time_accumulator_ += delta_time; time_accumulator_ >= FIXED_TIMESTEP;
+       time_accumulator_ -= FIXED_TIMESTEP) {
+    manager_->UpdateAll(FIXED_TIMESTEP);
   }
 }
 void Game::Render() {
   glClear(GL_COLOR_BUFFER_BIT);
   // Render all
-  manager->RenderAll(&shader);
-  SDL_GL_SwapWindow(display_window);
+  manager_->RenderAll(&shader_);
+  SDL_GL_SwapWindow(display_window_);
 }
 void Game::Run() {
-  while (is_game_running) {
+  while (is_game_running_) {
     ProcessInput();
     Update();
     Render();

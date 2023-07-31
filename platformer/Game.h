@@ -29,15 +29,16 @@
 #include "EntityManager.h"
 #include "Player.h"
 #include "Mob.h"
+#include "Scene.h"
 
 class Game {
  private:
-  SDL_Window *display_window;
-  bool is_game_running = true;
-  ShaderProgram shader;
-  float previous_ticks = 0.0f;
-  float time_accumulator = 0.0;
-  std::unique_ptr<EntityManager> manager;
+  SDL_Window *display_window_;
+  bool is_game_running_ = true;
+  ShaderProgram shader_;
+  float previous_ticks_ = 0.0f;
+  float time_accumulator_ = 0.0;
+  std::unique_ptr<EntityManager> manager_;
  public:
   Game();
   void Run();

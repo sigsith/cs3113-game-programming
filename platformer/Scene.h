@@ -11,8 +11,21 @@
 #ifndef CS3113_GAME_PROGRAMMING_PLATFORMER_SCENE_H_
 #define CS3113_GAME_PROGRAMMING_PLATFORMER_SCENE_H_
 
-class Scene {
+#include "ShaderProgram.h"
+enum class SceneSwitch {
+  NoOp,
+  Menu,
+  L1,
+  L2,
+  L3,
+  Defeat,
+  Victory,
+};
 
+class Scene {
+ public:
+  virtual SceneSwitch update(float delta_time) = 0;
+  virtual void render(ShaderProgram *program) const = 0;
 };
 
 #endif //CS3113_GAME_PROGRAMMING_PLATFORMER_SCENE_H_

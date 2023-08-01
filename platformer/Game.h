@@ -37,7 +37,7 @@ class Game {
   ShaderProgram shader_;
   float previous_ticks_ = 0.0f;
   float time_accumulator_ = 0.0;
-  Scene *curr_scene_;
+  std::unique_ptr<Scene> curr_scene_;
   uint immune_time_out = 0;
   uint8_t life_ = 3;
  public:
@@ -48,6 +48,7 @@ class Game {
   void Render();
   void RenderMessage(const std::string &message);
   void RenderLife();
+  void GoNextLevel();
 };
 
 #endif //CS3113_GAME_PROGRAMMING_PLATFORMER_GAME_H_

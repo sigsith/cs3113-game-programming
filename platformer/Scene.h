@@ -24,6 +24,7 @@ class Scene {
   virtual void UpdateInput(const Uint8 *keyboard_state) = 0;
   virtual Feedback Update(float delta_time) = 0;
   virtual void Render(ShaderProgram *program) const = 0;
+  virtual int Id() const = 0;
 };
 
 #endif //CS3113_GAME_PROGRAMMING_PLATFORMER_SCENE_H_

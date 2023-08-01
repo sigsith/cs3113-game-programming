@@ -34,6 +34,7 @@ class Level0 : public Level {
   static Map BuildMap();
   static std::vector<Mob> BuildMobs();
   bool ShouldGoNext() const override;
+  int Id() const override;
 };
 
 #endif //CS3113_GAME_PROGRAMMING_PLATFORMER_LEVEL_H_

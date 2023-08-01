@@ -11,6 +11,7 @@
 void Menu::UpdateInput(const Uint8 *keyboard_state) {
   if (keyboard_state[SDLK_RETURN]) {
     go_next_ = true;
+    std::cout << "Enter entered\n";
   }
 }
 Feedback Menu::Update(float delta_time) {
@@ -23,9 +24,12 @@ void Menu::Render(ShaderProgram *shader) const {
   background_.Render(shader);
   utility::RenderText("Press enter to start",
                       shader,
-                      1.0,
-                      glm::vec3(-3.5, 2, 0));
+                      0.4,
+                      glm::vec3(-4.0, 2, 0));
 }
-Menu::Menu() : background_(Background(std::string("background1.png"))) {
+Menu::Menu() : background_(Background(std::string("menu_background.png"))) {
 
+}
+int Menu::Id() const {
+  return 0;
 }

@@ -92,3 +92,6 @@ std::vector<Mob> Level0::BuildMobs() {
 bool Level0::ShouldGoNext() const {
   return player_.position().y < -4;
 }
+int Level0::Id() const {
+  return 1;
+}

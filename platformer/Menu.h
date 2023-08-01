@@ -21,6 +21,7 @@ class Menu : public Scene {
   void UpdateInput(const Uint8 *keyboard_state) override;
   Feedback Update(float delta_time) override;
   void Render(ShaderProgram *program) const override;
+  int Id() const override;
 };
 
 #endif //CS3113_GAME_PROGRAMMING_PLATFORMER_MENU_H_

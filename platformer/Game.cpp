@@ -10,7 +10,8 @@
 #include "Game.h"
 #include "Level.h"
 #include <sstream>
-Game::Game() {
+#include "Menu.h"
+Game::Game() : curr_scene_(nullptr) {
   SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
   constexpr int WINDOW_WIDTH = 640,
       WINDOW_HEIGHT = 480;
@@ -38,10 +39,9 @@ Game::Game() {
   shader_.SetProjectionMatrix(projection_matrix);
   shader_.SetViewMatrix(view_matrix);
   glUseProgram(shader_.programID);
-  glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+  glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-  curr_scene_ = new Level0();
   Mix_OpenAudio(
       44100,
       MIX_DEFAULT_FORMAT, 2, 4096
@@ -49,6 +49,7 @@ Game::Game() {
   const auto music = Mix_LoadMUS("background.mp3");
   Mix_PlayMusic(music, -1);
   Mix_VolumeMusic(MIX_MAX_VOLUME / 2);
+  curr_scene_ = std::make_unique<Menu>();
 }
 void Game::ProcessInput() {
   SDL_Event event;
@@ -79,6 +80,7 @@ void Game::Update() {
       const auto feedback = curr_scene_->Update(FIXED_TIMESTEP);
       switch (feedback) {
         case Feedback::NextStage: {
+          GoNextLevel();
           break;
         }
         case Feedback::NoOp: {
@@ -120,4 +122,15 @@ void Game::RenderLife() {
   std::ostringstream oss;
   oss << "LIFE: " << static_cast<int>(life_);
   utility::RenderText(oss.str(), &shader_, 0.5, glm::vec3(-3.5, 3, 0));
+}
+void Game::GoNextLevel() {
+  switch (curr_scene_->Id()) {
+    case 0: {
+      curr_scene_ = std::make_unique<Level0>();
+      break;
+    }
+    default: {
+      throw std::runtime_error("Invalid scene id");
+    }
+  }
 }

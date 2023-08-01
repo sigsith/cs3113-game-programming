@@ -9,9 +9,9 @@
 **/
 #include "Menu.h"
 void Menu::UpdateInput(const Uint8 *keyboard_state) {
-  if (keyboard_state[SDLK_RETURN]) {
+  if (keyboard_state[SDL_SCANCODE_RETURN]
+      || keyboard_state[SDL_SCANCODE_KP_ENTER]) {
     go_next_ = true;
-    std::cout << "Enter entered\n";
   }
 }
 Feedback Menu::Update(float delta_time) {

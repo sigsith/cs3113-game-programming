@@ -13,8 +13,6 @@ class ShaderProgram;
 #include <SDL.h>
 #include <SDL_opengl.h>
 
-class Map;
-
 static constexpr float SQUARE_VERTICES[12] = {
     -0.5f, -0.5f,
     0.5f, -0.5f,
@@ -34,10 +32,9 @@ static constexpr float FULL_TEX_COORDS[12] = {
 
 class Entity {
  public:
-  virtual ~Entity() = default;
   virtual void Render(ShaderProgram *program) const = 0;
  protected:
-  GLuint texture_id_;
+  GLuint texture_id_{};
 };
 
 struct Box {

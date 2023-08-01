@@ -90,7 +90,7 @@ class Dynamic : public Boxed {
   virtual void MoveLeft();
   virtual void MoveRight();
   virtual void StopHorizontal();
-  bool IsActive() const;
+  bool IsAlive() const;
   Box box() const override {
     return Box{
         position_,
@@ -143,7 +143,7 @@ void Dynamic::Jump(float speed, const EntityManager &manager) {
 void Dynamic::StopHorizontal() {
   velocity_.x = 0;
 }
-bool Dynamic::IsActive() const {
+bool Dynamic::IsAlive() const {
   return is_active_;
 }
 enum class MobType {
@@ -280,7 +280,7 @@ void Player::Update(float delta_t, EntityManager &manager) {
   }
   const auto player_box = this->box();
   for (auto &&mob : manager.mobs()) {
-    if (!mob->IsActive()) {
+    if (!mob->IsAlive()) {
       continue;
     }
     const auto mob_box = mob->box();
@@ -536,13 +536,13 @@ const Map &EntityManager::map() const {
 }
 void EntityManager::UpdateAll(float delta_t) {
   player_->Update(delta_t, *this);
-  if (!player_->IsActive()) {
+  if (!player_->IsAlive()) {
     result = GameResult::Lose;
     return;
   }
   bool all_killed = true;
   for (auto &&mob : mobs_) {
-    if (mob->IsActive()) {
+    if (mob->IsAlive()) {
       all_killed = false;
       mob->Update(delta_t, *this);
     }

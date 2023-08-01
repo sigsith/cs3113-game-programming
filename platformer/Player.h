@@ -11,12 +11,17 @@
 #define CS3113_GAME_PROGRAMMING_PLATFORMER_PLAYER_H_
 
 #include "Dynamic.h"
-#include "EntityManager.h"
+#include "Mob.h"
+
+enum class PlayerFeedback {
+  NoOp,
+  TakeDamage
+};
+
 class Player : public Dynamic {
  public:
-  void Update(float delta_t, EntityManager &manager) override;
+  PlayerFeedback Update(float delta_t, const Map &map, std::vector<Mob> &mobs);
   void Render(ShaderProgram *shader) const override;
-  void Die();
   glm::vec3 position() const;
   Player(glm::vec3 startpos, GLuint text_id);
 };

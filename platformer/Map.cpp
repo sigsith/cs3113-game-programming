@@ -88,7 +88,7 @@ void Map::Render(ShaderProgram *shader) const {
   glDisableVertexAttribArray(shader->positionAttribute);
   glDisableVertexAttribArray(shader->texCoordAttribute);
 }
-std::pair<bool, float> Map::IsSolid(Box &box) const {
+std::pair<bool, float> Map::IsSolid(const Box &box) const {
   if ((box.XMax() < min_x_ || box.XMin() > max_x_) || box.YMax() < min_y_
       || box.YMin() > max_y_) {
     return {false, 0};

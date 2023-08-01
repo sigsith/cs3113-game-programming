@@ -8,27 +8,20 @@
 * Academic Misconduct.
 **/
 #include "Dynamic.h"
-#include "EntityManager.h"
 
-void Dynamic::Update(float delta_t, EntityManager &manager) {
-  if (!(is_active_)) {
-    return;
-  }
+void Dynamic::Update(float delta_t, const Map &map) {
   velocity_ += acceleration_ * delta_t;
   position_ += velocity_ * delta_t;
   Box box = this->box();
-  if (SDL_GetTicks() > collision_time_out && manager.map().IsSolid(box).first
+  if (SDL_GetTicks() > collision_time_out && map.IsSolid(box).first
       && velocity_.y < 0) {
     velocity_.y = 0;
     acceleration_.y = 0;
-    position_.y = manager.map().IsSolid(box).second;
+    position_.y = map.IsSolid(box).second;
     grounded = true;
   } else {
     acceleration_.y = gravity_;
   }
-}
-void Dynamic::Disable() {
-  is_active_ = false;
 }
 Dynamic::Dynamic(glm::vec3 startpos,
                  GLuint text_id,
@@ -44,7 +37,7 @@ void Dynamic::MoveLeft() {
 void Dynamic::MoveRight() {
   velocity_.x = horizontal_speed_;
 }
-void Dynamic::Jump(float speed, const EntityManager &manager) {
+void Dynamic::Jump(float speed) {
   auto box = this->box();
   if (grounded) {
     velocity_.y += speed;
@@ -54,7 +47,4 @@ void Dynamic::Jump(float speed, const EntityManager &manager) {
 }
 void Dynamic::StopHorizontal() {
   velocity_.x = 0;
-}
-bool Dynamic::IsActive() const {
-  return is_active_;
 }

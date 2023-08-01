@@ -11,7 +11,8 @@
 #define CS3113_GAME_PROGRAMMING_PLATFORMER_MOB_H_
 
 #include "Dynamic.h"
-#include "EntityManager.h"
+class Player;
+
 enum class MobType {
   Patroller,
   Jumper,
@@ -30,11 +31,13 @@ class Mob : public Dynamic {
   MobState state_;
   MobConfig behavior_;
   uint timer_ = 0;
+  bool is_alive_ = true;
  public:
-  void Update(float delta_t, EntityManager &manager) override;
+  void Update(float delta_t, const Map &map, const Player &player);
   void Render(ShaderProgram *shader) const override;
   Mob(glm::vec3 startpos, GLuint text_id, MobConfig config);
-  void Kill();
+  void Die();
+  bool IsAlive() const;
 };
 
 #endif //CS3113_GAME_PROGRAMMING_PLATFORMER_MOB_H_

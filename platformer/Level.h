@@ -12,12 +12,28 @@
 #define CS3113_GAME_PROGRAMMING_PLATFORMER_LEVEL_H_
 
 #include "Scene.h"
-class Level : Scene {
+#include "Mob.h"
+#include "Player.h"
+class Level : public Scene {
+ protected:
+  Level(Background background, Map map, std::vector<Mob> mobs, Player player);
+  Background background_;
+  Map map_;
+  std::vector<Mob> mobs_;
+  Player player_;
  public:
-  Level();
-  void UpdateInput(const Uint8 * keyboard_state) override;
-  FeedBack Update(float delta_time) override;
-  void Render(ShaderProgram *program) const override;
+  void UpdateInput(const Uint8 *keyboard_state) override;
+  Feedback Update(float delta_time) override;
+  void Render(ShaderProgram *shader) const override;
+  virtual bool ShouldGoNext() const = 0;
+};
+
+class Level0 : public Level {
+ public:
+  Level0();
+  static Map BuildMap();
+  static std::vector<Mob> BuildMobs();
+  bool ShouldGoNext() const override;
 };
 
 #endif //CS3113_GAME_PROGRAMMING_PLATFORMER_LEVEL_H_

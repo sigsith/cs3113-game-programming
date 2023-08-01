@@ -17,27 +17,26 @@
 #include "Player.h"
 #include "Mob.h"
 
-void Player::Update(float delta_t, EntityManager &manager) {
-  Dynamic::Update(delta_t, manager);
-  if (!is_active_) {
-    return;
-  }
+PlayerFeedback Player::Update(float delta_t,
+                              const Map &map,
+                              std::vector<Mob> &mobs) {
+  Dynamic::Update(delta_t, map);
   const auto player_box = this->box();
-  for (auto &&mob : manager.mobs()) {
-    if (!mob->IsActive()) {
+  for (auto &mob : mobs) {
+    if (!mob.IsAlive()) {
       continue;
     }
-    const auto mob_box = mob->box();
+    const auto mob_box = mob.box();
     if (player_box.IsCollisionWith(mob_box)) {
       if (player_box.IsOnTopOf(mob_box)) {
-        mob->Kill();
+        mob.Die();
       } else {
-        this->Die();
-        return;
+        return PlayerFeedback::TakeDamage;
       }
       std::cout << "Box hit!\n";
     }
   }
+  return PlayerFeedback::NoOp;
 }
 Player::Player(glm::vec3 startpos, GLuint text_id) : Dynamic(startpos,
                                                              text_id,
@@ -46,9 +45,6 @@ Player::Player(glm::vec3 startpos, GLuint text_id) : Dynamic(startpos,
 
 }
 void Player::Render(ShaderProgram *shader) const {
-  if (!is_active_) {
-    return;
-  }
   glBindTexture(GL_TEXTURE_2D, this->texture_id_);
   glVertexAttribPointer(shader->positionAttribute,
                         2,
@@ -74,9 +70,6 @@ void Player::Render(ShaderProgram *shader) const {
   glDrawArrays(GL_TRIANGLES, 0, 6);
   glDisableVertexAttribArray(shader->positionAttribute);
   glDisableVertexAttribArray(shader->texCoordAttribute);
-}
-void Player::Die() {
-  is_active_ = false;
 }
 glm::vec3 Player::position() const {
   return position_;

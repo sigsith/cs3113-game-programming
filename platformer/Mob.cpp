@@ -10,16 +10,16 @@
 #include "Mob.h"
 #include "Utility.h"
 #include "Player.h"
-void Mob::Update(float delta_t, EntityManager &manager) {
-  Dynamic::Update(delta_t, manager);
-  if (!is_active_) {
+void Mob::Update(float delta_t, const Map &map, const Player &player) {
+  Dynamic::Update(delta_t, map);
+  if (!is_alive_) {
     return;
   }
   switch (behavior_.mob_type) {
     case MobType::Jumper: {
       if (SDL_GetTicks() > timer_) {
         timer_ = SDL_GetTicks() + 3000;
-        Jump(2.0, manager);
+        Jump(2.0);
       }
       break;
     }
@@ -31,7 +31,7 @@ void Mob::Update(float delta_t, EntityManager &manager) {
       break;
     }
     case MobType::Chaser: {
-      glm::vec3 direction = manager.player_->position() - this->position_;
+      glm::vec3 direction = player.position() - this->position_;
       this->acceleration_ = 1.5f * utility::Normalize(direction);
       if (utility::Length(this->velocity_) > 2.0) {
         this->velocity_ = utility::Normalize(this->velocity_) * 2.0f;
@@ -42,7 +42,7 @@ void Mob::Update(float delta_t, EntityManager &manager) {
   }
 }
 void Mob::Render(ShaderProgram *shader) const {
-  if (!is_active_) {
+  if (!is_alive_) {
     return;
   }
   glBindTexture(GL_TEXTURE_2D, this->texture_id_);
@@ -88,6 +88,9 @@ Mob::Mob(glm::vec3 startpos, GLuint text_id, MobConfig config) :
     default:break;
   }
 }
-void Mob::Kill() {
-  is_active_ = false;
+bool Mob::IsAlive() const {
+  return is_alive_;
+}
+void Mob::Die() {
+  is_alive_ = false;
 }

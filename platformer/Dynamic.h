@@ -22,9 +22,8 @@
 #include "glm/mat4x4.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 #include "ShaderProgram.h"
-class EntityManager;
 #include "Entity.h"
-
+#include "Map.h"
 class Dynamic : public Boxed {
  private:
   float half_height_;
@@ -37,20 +36,17 @@ class Dynamic : public Boxed {
   glm::vec3 velocity_{};
   glm::vec3 acceleration_{};
   glm::vec3 position_;
-  bool is_active_ = true;
   float gravity_ = -1.2;
  public:
   Dynamic(glm::vec3 startpos,
           GLuint text_id,
           float half_height,
           float half_width);
-  virtual void Update(float delta_t, EntityManager &manager);
-  virtual void Jump(float speed, const EntityManager &manager);
-  void Disable();
+  void Update(float delta_t, const Map &map);
+  virtual void Jump(float speed);
   virtual void MoveLeft();
   virtual void MoveRight();
   virtual void StopHorizontal();
-  bool IsActive() const;
   Box box() const override {
     return Box{
         position_,

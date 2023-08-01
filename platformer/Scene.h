@@ -13,16 +13,16 @@
 
 #include "Utility.h"
 #include "ShaderProgram.h"
-enum class FeedBack {
+enum class Feedback {
   NoOp,
-  LifeDrop,
+  TakeDamage,
   NextStage,
 };
 
 class Scene {
  public:
-  virtual void UpdateInput(const Uint8 * keyboard_state) = 0;
-  virtual FeedBack Update(float delta_time) = 0;
+  virtual void UpdateInput(const Uint8 *keyboard_state) = 0;
+  virtual Feedback Update(float delta_time) = 0;
   virtual void Render(ShaderProgram *program) const = 0;
 };
 

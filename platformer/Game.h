@@ -26,7 +26,6 @@
 #include "ShaderProgram.h"
 #include "Map.h"
 #include "Utility.h"
-#include "EntityManager.h"
 #include "Player.h"
 #include "Mob.h"
 #include "Scene.h"
@@ -38,13 +37,15 @@ class Game {
   ShaderProgram shader_;
   float previous_ticks_ = 0.0f;
   float time_accumulator_ = 0.0;
-  std::unique_ptr<EntityManager> manager_;
+  Scene *curr_scene_;
+  Uint8 life_ = 3;
  public:
   Game();
   void Run();
   void ProcessInput();
   void Update();
   void Render();
+  void RenderMessage(const std::string &message);
 };
 
 #endif //CS3113_GAME_PROGRAMMING_PLATFORMER_GAME_H_

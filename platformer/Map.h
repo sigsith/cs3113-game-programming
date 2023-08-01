@@ -63,7 +63,7 @@ class Map : public Entity {
       SpriteSheetMapping sprite_sheet_mapping,
       float m_tile_size, glm::vec3 top_left
   );
-  std::pair<bool, float> IsSolid(Box &box) const;
+  std::pair<bool, float> IsSolid(const Box &box) const;
   void Render(ShaderProgram *shader) const override;
 };
 

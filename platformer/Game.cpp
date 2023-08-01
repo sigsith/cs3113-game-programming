@@ -82,7 +82,7 @@ void Game::Update() {
   constexpr auto FIXED_TIMESTEP = 1.0f / 60.0f;
   for (time_accumulator_ += delta_time; time_accumulator_ >= FIXED_TIMESTEP;
        time_accumulator_ -= FIXED_TIMESTEP) {
-    if (life_ != 0) {
+    if (life_ != 0 && !gg) {
       const auto feedback = curr_scene_->Update(FIXED_TIMESTEP);
       switch (feedback) {
         case Feedback::NextStage: {
@@ -114,6 +114,13 @@ void Game::Render() {
                         glm::vec3(-4.0, 2, 0)
                             + curr_scene_->GetPlayerPosition());
   }
+  if (gg) {
+    utility::RenderText("You WON!",
+                        &shader_,
+                        1.0,
+                        glm::vec3(-3.5, 2, 0)
+                            + curr_scene_->GetPlayerPosition());
+  }
   SDL_GL_SwapWindow(display_window_);
 }
 void Game::Run() {
@@ -138,11 +145,7 @@ void Game::GoNextLevel() {
       break;
     }
     case 3: {
-      utility::RenderText("You WON!",
-                          &shader_,
-                          1.0,
-                          glm::vec3(-3.5, 2, 0)
-                              + curr_scene_->GetPlayerPosition());
+      gg = true;
       break;
     }
     default: {

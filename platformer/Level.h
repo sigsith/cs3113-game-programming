@@ -8,15 +8,16 @@
 * Academic Misconduct.
 **/
 
-#ifndef CS3113_GAME_PROGRAMMING_PLATFORMER_LEVEL1_H_
-#define CS3113_GAME_PROGRAMMING_PLATFORMER_LEVEL1_H_
+#ifndef CS3113_GAME_PROGRAMMING_PLATFORMER_LEVEL_H_
+#define CS3113_GAME_PROGRAMMING_PLATFORMER_LEVEL_H_
 
 #include "Scene.h"
-class Level1 : Scene {
+class Level : Scene {
  public:
-  Level1();
-  SceneSwitch Update(float delta_time) override;
+  Level();
+  void UpdateInput(const Uint8 * keyboard_state) override;
+  FeedBack Update(float delta_time) override;
   void Render(ShaderProgram *program) const override;
 };
 
-#endif //CS3113_GAME_PROGRAMMING_PLATFORMER_LEVEL1_H_
+#endif //CS3113_GAME_PROGRAMMING_PLATFORMER_LEVEL_H_

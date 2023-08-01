@@ -11,20 +11,18 @@
 #ifndef CS3113_GAME_PROGRAMMING_PLATFORMER_SCENE_H_
 #define CS3113_GAME_PROGRAMMING_PLATFORMER_SCENE_H_
 
+#include "Utility.h"
 #include "ShaderProgram.h"
-enum class SceneSwitch {
+enum class FeedBack {
   NoOp,
-  Menu,
-  L1,
-  L2,
-  L3,
-  Defeat,
-  Victory,
+  LifeDrop,
+  NextStage,
 };
 
 class Scene {
  public:
-  virtual SceneSwitch Update(float delta_time) = 0;
+  virtual void UpdateInput(const Uint8 * keyboard_state) = 0;
+  virtual FeedBack Update(float delta_time) = 0;
   virtual void Render(ShaderProgram *program) const = 0;
 };
 

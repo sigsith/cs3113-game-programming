@@ -8,13 +8,17 @@
 * Academic Misconduct.
 **/
 
-#include "Level1.h"
-SceneSwitch Level1::Update(float delta_time) {
-  return SceneSwitch::L1;
-}
-void Level1::Render(ShaderProgram *program) const {
+#include "Level.h"
+
+Level::Level() {
 
 }
-Level1::Level1() {
+void Level::UpdateInput(const Uint8 *keyboard_state) {
+
+}
+FeedBack Level::Update(float delta_time) {
+  return FeedBack::LifeDrop;
+}
+void Level::Render(ShaderProgram *program) const {
 
 }

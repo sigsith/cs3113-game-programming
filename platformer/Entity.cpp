@@ -37,17 +37,17 @@ void Background::Render(ShaderProgram *shader) const {
                         FULL_TEX_COORDS);
   glEnableVertexAttribArray(shader->texCoordAttribute);
   constexpr auto base_matrix = glm::mat4(1.0f);
-  constexpr auto scale_factor_x = 10.0f;
-  constexpr auto scale_factor_y = 7.5f;
   const auto model_matrix =
       glm::scale(glm::translate(base_matrix, glm::vec3(0.0f, 0.0f, 0.0f)),
-                 glm::vec3(scale_factor_x, scale_factor_y, 1.0f));
+                 glm::vec3(scale_x_, scale_y_, 1.0f));
   shader->SetModelMatrix(model_matrix);
   glDrawArrays(GL_TRIANGLES, 0, 6);
   glDisableVertexAttribArray(shader->positionAttribute);
   glDisableVertexAttribArray(shader->texCoordAttribute);
 }
-Background::Background(const std::string &texture_path) {
+Background::Background(const std::string &texture_path,
+                       float scale_x,
+                       float scale_y) : scale_x_(scale_x), scale_y_(scale_y) {
   texture_id_ = utility::LoadTexture((texture_path));
 }
 float Box::XMax() const {

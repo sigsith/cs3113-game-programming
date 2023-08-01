@@ -56,8 +56,12 @@ class Boxed : public Entity {
 
 class Background : public Entity {
  private:
+  const float scale_x_;
+  const float scale_y_;
  public:
-  explicit Background(const std::string &texture_path);
+  explicit Background(const std::string &texture_path,
+                      float scale_x = 10.0,
+                      float scale_y = 7.5);
   void Render(ShaderProgram *shader) const override;
 };
 #endif //CS3113_GAME_PROGRAMMING_AI_ENTITY_H_

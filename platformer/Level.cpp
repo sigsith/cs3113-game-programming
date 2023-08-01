@@ -55,7 +55,7 @@ Level::Level(Background background,
       mobs_(std::move(mobs)),
       player_(std::move(player)) {
 }
-Level0::Level0() : Level(Background(std::string("background.png")),
+Level0::Level0() : Level(Background(std::string("background.png"), 20.0, 15.0),
                          BuildMap(),
                          BuildMobs(),
                          Player(glm::vec3(0, 0, 0),

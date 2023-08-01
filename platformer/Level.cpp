@@ -9,6 +9,7 @@
 **/
 
 #include "Level.h"
+#include <sstream>
 
 void Level::UpdateInput(const Uint8 *keyboard_state) {
   if (keyboard_state[SDL_SCANCODE_A]) {
@@ -36,7 +37,7 @@ Feedback Level::Update(float delta_time) {
   }
   return Feedback::NoOp;
 }
-void Level::Render(ShaderProgram *shader) const {
+void Level::Render(ShaderProgram *shader, int life) const {
   const auto view = glm::translate(glm::mat4(1.0f), -player_.position());
   shader->SetViewMatrix(view);
   background_.Render(shader);
@@ -44,6 +45,7 @@ void Level::Render(ShaderProgram *shader) const {
   for (auto &&mob : mobs_) {
     mob.Render(shader);
   }
+  RenderLife(shader, life);
   player_.Render(shader);
 }
 Level::Level(Background background,
@@ -54,6 +56,13 @@ Level::Level(Background background,
       map_(std::move(map)),
       mobs_(std::move(mobs)),
       player_(std::move(player)) {
+}
+void Level::RenderLife(ShaderProgram *shader, int life) const {
+  std::ostringstream oss;
+  oss << "LIFE: " << static_cast<int>(life);
+  const auto
+      top_left = player_.position() + glm::vec3(-3.0 , 3.5, 0);
+  utility::RenderText(oss.str(), shader, 0.5, top_left);
 }
 Level0::Level0() : Level(Background(std::string("background.png"), 20.0, 15.0),
                          BuildMap(),

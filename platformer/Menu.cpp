@@ -20,7 +20,7 @@ Feedback Menu::Update(float delta_time) {
   }
   return Feedback::NoOp;
 }
-void Menu::Render(ShaderProgram *shader) const {
+void Menu::Render(ShaderProgram *shader, int life) const {
   background_.Render(shader);
   utility::RenderText("Press enter to start",
                       shader,

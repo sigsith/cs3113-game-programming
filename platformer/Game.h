@@ -49,7 +49,6 @@ class Game {
   void Update();
   void Render();
   void RenderMessage(const std::string &message);
-  void RenderLife();
   void GoNextLevel();
 };
 

@@ -9,7 +9,6 @@
 **/
 #include "Game.h"
 #include "Level.h"
-#include <sstream>
 #include "Menu.h"
 Game::Game()
     : curr_scene_(nullptr),
@@ -107,11 +106,9 @@ void Game::Update() {
 }
 void Game::Render() {
   glClear(GL_COLOR_BUFFER_BIT);
-  curr_scene_->Render(&shader_);
+  curr_scene_->Render(&shader_, life_);
   if (life_ == 0) {
     RenderMessage("You Lost!");
-  } else {
-    RenderLife();
   }
   SDL_GL_SwapWindow(display_window_);
 }
@@ -124,11 +121,6 @@ void Game::Run() {
 }
 void Game::RenderMessage(const std::string &message) {
   utility::RenderText(message, &shader_, 1.0, glm::vec3(-3.5, 2, 0));
-}
-void Game::RenderLife() {
-  std::ostringstream oss;
-  oss << "LIFE: " << static_cast<int>(life_);
-  utility::RenderText(oss.str(), &shader_, 0.5, glm::vec3(-3.5, 3, 0));
 }
 void Game::GoNextLevel() {
   switch (curr_scene_->Id()) {

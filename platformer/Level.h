@@ -24,7 +24,8 @@ class Level : public Scene {
  public:
   void UpdateInput(const Uint8 *keyboard_state) override;
   Feedback Update(float delta_time) override;
-  void Render(ShaderProgram *shader) const override;
+  void Render(ShaderProgram *shader, int life) const override;
+  void RenderLife(ShaderProgram *shader, int life) const;
   virtual bool ShouldGoNext() const = 0;
 };
 

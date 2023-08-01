@@ -128,6 +128,18 @@ void Game::GoNextLevel() {
       curr_scene_ = std::make_unique<Level0>();
       break;
     }
+    case 1: {
+      curr_scene_ = std::make_unique<Level1>();
+      break;
+    }
+    case 2: {
+      curr_scene_ = std::make_unique<Level2>();
+      break;
+    }
+    case 3: {
+      RenderMessage("You WON!");
+      break;
+    }
     default: {
       throw std::runtime_error("Invalid scene id");
     }

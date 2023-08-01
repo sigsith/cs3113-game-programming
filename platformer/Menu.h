@@ -14,8 +14,10 @@
 #include "Scene.h"
 class Menu : public Scene {
  private:
+  Background background_;
   bool go_next_ = false;
  public:
+  Menu();
   void UpdateInput(const Uint8 *keyboard_state) override;
   Feedback Update(float delta_time) override;
   void Render(ShaderProgram *program) const override;

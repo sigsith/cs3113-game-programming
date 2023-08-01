@@ -20,8 +20,12 @@ Feedback Menu::Update(float delta_time) {
   return Feedback::NoOp;
 }
 void Menu::Render(ShaderProgram *shader) const {
+  background_.Render(shader);
   utility::RenderText("Press enter to start",
                       shader,
                       1.0,
                       glm::vec3(-3.5, 2, 0));
+}
+Menu::Menu() : background_(Background(std::string("background1.png"))) {
+
 }

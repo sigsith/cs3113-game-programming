@@ -116,8 +116,8 @@ Level1::Level1() : Level(Background(std::string("background1.png"), 20.0, 15.0),
                                 utility::LoadTexture(std::string("player.png")))) {}
 Map Level1::BuildMap() {
   const auto mapping =
-      std::vector<uint>{6, 7, 8, 6, 7, 8, NONE, NONE, NONE, NONE, NONE, NONE,
-                        NONE, NONE, NONE, NONE, NONE, NONE, NONE, NONE, NONE,
+      std::vector<uint>{NONE, NONE, NONE, NONE, NONE, NONE, NONE, NONE, NONE,
+                        NONE, NONE, NONE, 6, 7, 8, 6, 7, 8, 6, 7, 8,
                         NONE, NONE, NONE,
                         NONE, NONE, NONE, NONE, NONE, NONE, NONE, NONE, NONE,
                         NONE, NONE, NONE,
@@ -135,8 +135,8 @@ std::vector<Mob> Level1::BuildMobs() {
   const auto mob0_id = utility::LoadTexture(std::string("mob1.png"));
   const auto mob0_config = MobConfig{MobType::Jumper};
   const auto mob0 = Mob(glm::vec3(-3, 1, 0), mob0_id, mob0_config);
-  const auto mob2_id = utility::LoadTexture(std::string("mob2.png"));
-  const auto mob2_config = MobConfig{MobType::Patroller};
+  const auto mob2_id = utility::LoadTexture(std::string("mob3.png"));
+  const auto mob2_config = MobConfig{MobType::Chaser};
   const auto mob1 = Mob(glm::vec3(1, -1, 0), mob2_id, mob2_config);
   const auto mob3_id = utility::LoadTexture(std::string("mob3.png"));
   const auto mob3_config = MobConfig{MobType::Chaser};
@@ -159,8 +159,8 @@ Level2::Level2() : Level(Background(std::string("background2.png"), 20.0, 15.0),
 Map Level2::BuildMap() {
   const auto mapping =
       std::vector<uint>{6, 7, 8, 6, 7, 8, NONE, NONE, NONE, NONE, NONE, NONE,
-                        NONE, NONE, NONE, NONE, NONE, NONE, NONE, NONE, NONE,
                         NONE, NONE, NONE,
+                        0, 1, 1, 1, 1, 1, 1, 1, 2,
                         NONE, NONE, NONE, NONE, NONE, NONE, NONE, NONE, NONE,
                         NONE, NONE, NONE,
                         NONE, NONE, NONE, NONE, NONE, NONE, NONE, NONE, NONE,
@@ -183,8 +183,10 @@ std::vector<Mob> Level2::BuildMobs() {
   const auto mob3_id = utility::LoadTexture(std::string("mob3.png"));
   const auto mob3_config = MobConfig{MobType::Chaser};
   const auto mob2 = Mob(glm::vec3(2, 2, 0), mob3_id, mob3_config);
+  const auto mob3 = Mob(glm::vec3(-2, 2, 0), mob3_id, mob3_config);
+  const auto mob4 = Mob(glm::vec3(-2, -2, 0), mob3_id, mob3_config);
   return std::vector<Mob>{
-      mob0, mob1, mob2
+      mob0, mob1, mob2, mob3, mob4
   };
 }
 bool Level2::ShouldGoNext() const {

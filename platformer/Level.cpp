@@ -61,13 +61,13 @@ void Level::RenderLife(ShaderProgram *shader, int life) const {
   std::ostringstream oss;
   oss << "LIFE: " << static_cast<int>(life);
   const auto
-      top_left = player_.position() + glm::vec3(-3.0, 3.5, 0);
+      top_left = player_.position() + glm::vec3(-2.0, 3.5, 0);
   utility::RenderText(oss.str(), shader, 0.5, top_left);
 }
 glm::vec3 Level::GetPlayerPosition() const {
   return player_.position();
 }
-Level0::Level0() : Level(Background(std::string("background.png"), 20.0, 15.0),
+Level0::Level0() : Level(Background(std::string("background.png"), 30.0, 22.5),
                          BuildMap(),
                          BuildMobs(),
                          Player(glm::vec3(0, 0, 0),
@@ -109,7 +109,7 @@ bool Level0::ShouldGoNext() const {
 int Level0::Id() const {
   return 1;
 }
-Level1::Level1() : Level(Background(std::string("background1.png"), 20.0, 15.0),
+Level1::Level1() : Level(Background(std::string("background1.png"), 30.0, 22.5),
                          BuildMap(),
                          BuildMobs(),
                          Player(glm::vec3(0, 0, 0),
@@ -151,7 +151,7 @@ bool Level1::ShouldGoNext() const {
 int Level1::Id() const {
   return 2;
 }
-Level2::Level2() : Level(Background(std::string("background2.png"), 20.0, 15.0),
+Level2::Level2() : Level(Background(std::string("background2.png"), 30.0, 22.5),
                          BuildMap(),
                          BuildMobs(),
                          Player(glm::vec3(0, 0, 0),

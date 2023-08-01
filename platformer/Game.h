@@ -47,6 +47,7 @@ class Game {
   void Update();
   void Render();
   void RenderMessage(const std::string &message);
+  void RenderLife();
 };
 
 #endif //CS3113_GAME_PROGRAMMING_PLATFORMER_GAME_H_

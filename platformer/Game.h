@@ -40,6 +40,8 @@ class Game {
   std::unique_ptr<Scene> curr_scene_;
   uint immune_time_out = 0;
   uint8_t life_ = 3;
+  glm::mat4 view_matrix_;
+  glm::mat4 projection_matrix_;
  public:
   Game();
   void Run();

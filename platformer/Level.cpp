@@ -37,6 +37,8 @@ Feedback Level::Update(float delta_time) {
   return Feedback::NoOp;
 }
 void Level::Render(ShaderProgram *shader) const {
+  const auto view = glm::translate(glm::mat4(1.0f), -player_.position());
+  shader->SetViewMatrix(view);
   background_.Render(shader);
   map_.Render(shader);
   for (auto &&mob : mobs_) {

@@ -11,7 +11,11 @@
 #include "Level.h"
 #include <sstream>
 #include "Menu.h"
-Game::Game() : curr_scene_(nullptr) {
+Game::Game()
+    : curr_scene_(nullptr),
+      projection_matrix_(glm::ortho(-5.0f, 5.0f, -3.75f, 3.75f, -1.0f, 1.0f)),
+      view_matrix_(glm::mat4(1.0f)
+      ) {
   SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
   constexpr int WINDOW_WIDTH = 640,
       WINDOW_HEIGHT = 480;
@@ -26,19 +30,21 @@ Game::Game() : curr_scene_(nullptr) {
                                      640, 480,
                                      SDL_WINDOW_OPENGL);
   SDL_GLContext context = SDL_GL_CreateContext(display_window_);
-  SDL_GL_MakeCurrent(display_window_, context);
+  SDL_GL_MakeCurrent(display_window_, context
+  );
 #ifdef _WINDOWS
   glewInit();
 #endif
-  glViewport(VIEWPORT_X, VIEWPORT_Y, VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
+  glViewport(VIEWPORT_X, VIEWPORT_Y, VIEWPORT_WIDTH, VIEWPORT_HEIGHT
+  );
   shader_.Load("shaders/vertex_textured.glsl",
                "shaders/fragment_textured.glsl");
-  const auto view_matrix = glm::mat4(1.0f);
-  const auto
-      projection_matrix = glm::ortho(-5.0f, 5.0f, -3.75f, 3.75f, -1.0f, 1.0f);
-  shader_.SetProjectionMatrix(projection_matrix);
-  shader_.SetViewMatrix(view_matrix);
-  glUseProgram(shader_.programID);
+  shader_.
+      SetProjectionMatrix(projection_matrix_);
+  shader_.
+      SetViewMatrix(view_matrix_);
+  glUseProgram(shader_
+                   .programID);
   glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -47,7 +53,8 @@ Game::Game() : curr_scene_(nullptr) {
       MIX_DEFAULT_FORMAT, 2, 4096
   );
   const auto music = Mix_LoadMUS("background.mp3");
-  Mix_PlayMusic(music, -1);
+  Mix_PlayMusic(music,
+                -1);
   Mix_VolumeMusic(MIX_MAX_VOLUME / 2);
   curr_scene_ = std::make_unique<Menu>();
 }

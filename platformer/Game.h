@@ -48,7 +48,6 @@ class Game {
   void ProcessInput();
   void Update();
   void Render();
-  void RenderMessage(const std::string &message);
   void GoNextLevel();
 };
 

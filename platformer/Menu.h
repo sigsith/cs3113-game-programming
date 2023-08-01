@@ -22,6 +22,7 @@ class Menu : public Scene {
   Feedback Update(float delta_time) override;
   void Render(ShaderProgram *program, int life) const override;
   int Id() const override;
+  glm::vec3 GetPlayerPosition() const override;
 };
 
 #endif //CS3113_GAME_PROGRAMMING_PLATFORMER_MENU_H_

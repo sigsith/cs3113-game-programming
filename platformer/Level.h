@@ -27,6 +27,7 @@ class Level : public Scene {
   void Render(ShaderProgram *shader, int life) const override;
   void RenderLife(ShaderProgram *shader, int life) const;
   virtual bool ShouldGoNext() const = 0;
+  glm::vec3 GetPlayerPosition() const override;
 };
 
 class Level0 : public Level {

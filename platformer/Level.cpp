@@ -61,8 +61,11 @@ void Level::RenderLife(ShaderProgram *shader, int life) const {
   std::ostringstream oss;
   oss << "LIFE: " << static_cast<int>(life);
   const auto
-      top_left = player_.position() + glm::vec3(-3.0 , 3.5, 0);
+      top_left = player_.position() + glm::vec3(-3.0, 3.5, 0);
   utility::RenderText(oss.str(), shader, 0.5, top_left);
+}
+glm::vec3 Level::GetPlayerPosition() const {
+  return player_.position();
 }
 Level0::Level0() : Level(Background(std::string("background.png"), 20.0, 15.0),
                          BuildMap(),

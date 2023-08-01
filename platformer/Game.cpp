@@ -108,7 +108,11 @@ void Game::Render() {
   glClear(GL_COLOR_BUFFER_BIT);
   curr_scene_->Render(&shader_, life_);
   if (life_ == 0) {
-    RenderMessage("You Lost!");
+    utility::RenderText("You LOST!",
+                        &shader_,
+                        1.0,
+                        glm::vec3(-4.0, 2, 0)
+                            + curr_scene_->GetPlayerPosition());
   }
   SDL_GL_SwapWindow(display_window_);
 }
@@ -118,9 +122,6 @@ void Game::Run() {
     Update();
     Render();
   }
-}
-void Game::RenderMessage(const std::string &message) {
-  utility::RenderText(message, &shader_, 1.0, glm::vec3(-3.5, 2, 0));
 }
 void Game::GoNextLevel() {
   switch (curr_scene_->Id()) {
@@ -137,7 +138,11 @@ void Game::GoNextLevel() {
       break;
     }
     case 3: {
-      RenderMessage("You WON!");
+      utility::RenderText("You WON!",
+                          &shader_,
+                          1.0,
+                          glm::vec3(-3.5, 2, 0)
+                              + curr_scene_->GetPlayerPosition());
       break;
     }
     default: {

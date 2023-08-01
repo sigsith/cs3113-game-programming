@@ -33,3 +33,6 @@ Menu::Menu() : background_(Background(std::string("menu_background.png"))) {
 int Menu::Id() const {
   return 0;
 }
+glm::vec3 Menu::GetPlayerPosition() const {
+  return glm::vec3(0);
+}

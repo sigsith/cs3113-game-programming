@@ -74,3 +74,10 @@ void Player::Render(ShaderProgram *shader) const {
 glm::vec3 Player::position() const {
   return position_;
 }
+void Player::Jump(float speed) {
+  if (grounded) {
+    static const auto boing = Mix_LoadWAV("boing.wav");
+    Mix_PlayChannel(-1, boing, 0);
+  }
+  Dynamic::Jump(speed);
+}

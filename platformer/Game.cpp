@@ -9,6 +9,7 @@
 **/
 #include "Game.h"
 #include "Level.h"
+#include <sstream>
 Game::Game() {
   SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
   constexpr int WINDOW_WIDTH = 640,
@@ -84,7 +85,12 @@ void Game::Update() {
           break;
         }
         case Feedback::TakeDamage: {
-          life_ -= 1;
+          const auto curr_ticks = SDL_GetTicks();
+          if (curr_ticks > immune_time_out) {
+            life_ -= 1;
+            std::cout << "Take damage!\n";
+            immune_time_out = SDL_GetTicks() + 500;
+          }
         }
       }
     }
@@ -93,6 +99,13 @@ void Game::Update() {
 void Game::Render() {
   glClear(GL_COLOR_BUFFER_BIT);
   curr_scene_->Render(&shader_);
+  if (life_ == 0) {
+    RenderMessage("You Lost!");
+  } else {
+    std::ostringstream oss;
+    oss << "Life: " << static_cast<int>(life_);
+    RenderMessage(oss.str());
+  }
   SDL_GL_SwapWindow(display_window_);
 }
 void Game::Run() {

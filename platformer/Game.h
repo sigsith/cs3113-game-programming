@@ -38,7 +38,8 @@ class Game {
   float previous_ticks_ = 0.0f;
   float time_accumulator_ = 0.0;
   Scene *curr_scene_;
-  Uint8 life_ = 3;
+  uint immune_time_out = 0;
+  uint8_t life_ = 3;
  public:
   Game();
   void Run();

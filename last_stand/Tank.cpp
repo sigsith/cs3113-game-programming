@@ -51,6 +51,8 @@ void Tank::Fire(std::vector<std::unique_ptr<Projectile>> &short_lived) {
     std::cout << "Fire!\n";
     short_lived.push_back(std::make_unique<Projectile>(TextureObject(
                                                            "bulletBlue1"),
+                                                       TextureObject(
+                                                           "explosion2"),
                                                        turret_orientation_,
                                                        position_));
     fire_time_out = SDL_GetTicks() + 2000;

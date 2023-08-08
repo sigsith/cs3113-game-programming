@@ -4,10 +4,12 @@
 
 #include "Projectile.h"
 #include "Utility.h"
-Projectile::Projectile(TextureObject text_obj,
+Projectile::Projectile(TextureObject shell,
+                       TextureObject explosion,
                        float orientation,
                        glm::vec3 origin)
-    : text_obj_(text_obj),
+    : shell_(shell),
+      explosion_(explosion),
       orientation_(orientation),
       origin_(origin),
       curr_pos_(origin),
@@ -15,13 +17,36 @@ Projectile::Projectile(TextureObject text_obj,
       ) {
 }
 void Projectile::Render(ShaderProgram *program) const {
-  text_obj_.Render(curr_pos_, orientation_, 1.0, program);
+  switch (state_) {
+    case ProjState::Flying: {
+      shell_.Render(curr_pos_, orientation_, 1.0, program);
+      break;
+    }
+    case ProjState::Exploded: {
+      explosion_.Render(curr_pos_, 0.0, 1.0, program);
+      break;
+    }
+  }
 }
 bool Projectile::Update(float delta_t) {
-  curr_pos_ += velocity_ * delta_t;
-  const auto distance = utility::Length(curr_pos_ - origin_);
-  if (distance > 4.0) {
-    return false;
+  switch (state_) {
+    case ProjState::Flying: {
+      curr_pos_ += velocity_ * delta_t;
+      const auto distance = utility::Length(curr_pos_ - origin_);
+      if (distance > 4.0) {
+        Explode();
+      }
+      return true;
+    }
+    case ProjState::Exploded: {
+      if (SDL_GetTicks() > explosion_timeout_) {
+        return false;
+      }
+      return true;
+    }
   }
-  return true;
+}
+void Projectile::Explode() {
+  explosion_timeout_ = SDL_GetTicks() + 1000;
+  state_ = ProjState::Exploded;
 }

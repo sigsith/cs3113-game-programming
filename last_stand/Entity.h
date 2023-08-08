@@ -37,6 +37,11 @@ class Entity {
   GLuint texture_id_{};
 };
 
+class Ephemeral : public Entity {
+ public:
+  virtual bool Update(float delta_t) = 0;
+};
+
 struct Box {
   glm::vec3 position;
   float half_width;

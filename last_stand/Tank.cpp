@@ -18,16 +18,6 @@ void Tank::Update(float delta_t, const Map &map) {
   const auto
       diff = fmod((target_angle - turret_orientation_ + glm::pi<float>() * 2),
                   glm::pi<float>() * 2);
-  std::cout << "chassis orientation: " << orientation_ << "\n";
-  std::cout << "turret orientation: " << turret_orientation_ << "\n";
-  std::cout << "target_angle: " << target_angle << "\n";
-//  float orientation_{};
-//  float angular_velocity_{};
-//  float angular_acceleration_{};
-//  float turret_orientation_{};
-//  float turret_angular_velocity_{};
-//  float turret_angular_acceleration_{};
-//  float target_angle{};
   if (diff < glm::pi<float>()) {
     turret_angular_velocity_ = 0.5;
   } else {

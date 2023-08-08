@@ -35,9 +35,9 @@ PlayerFeedback Player::Update(float delta_t,
 
   int cursor_x, cursor_y;
   SDL_GetMouseState(&cursor_x, &cursor_y);
-  std::cout << "x: " << cursor_x << "  y: " << cursor_y << "\n";
-  const auto cursor_pos = glm::vec3(cursor_x, cursor_y, 0);
-  target_angle = utility::GetTargetAngle(position_, cursor_pos);
+  const auto
+      cursor_pos = glm::vec3(cursor_x - 1280 / 2, -(cursor_y - 960 / 2), 0);
+  target_angle = utility::GetTargetAngle(glm::vec3(0, 0, 0), cursor_pos);
 
   Tank::Update(delta_t, map);
   const auto player_box = this->box();

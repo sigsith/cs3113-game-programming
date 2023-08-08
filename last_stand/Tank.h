@@ -34,7 +34,7 @@ class Tank : public Boxed {
   glm::vec3 velocity_{};
   glm::vec3 acceleration_{};
   glm::vec3 position_;
-  float orientation_{};
+  float orientation_ = 0.0;
   float angular_velocity_{};
   float angular_acceleration_{};
   float turret_orientation_{};

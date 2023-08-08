@@ -58,7 +58,9 @@ PlayerFeedback Player::Update(float delta_t,
   return PlayerFeedback::NoOp;
 }
 Player::Player() : Tank(glm::vec3(0, 0, 0),
-                        0.5, "tankBody_blue", "tankBlue_barrel1") {
+                        glm::pi<float>() / 2,
+                        "tankBody_blue",
+                        "tankBlue_barrel1") {
 
 }
 glm::vec3 Player::position() const {

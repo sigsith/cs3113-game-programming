@@ -14,7 +14,16 @@ void Tank::Update(float delta_t, const Map &map) {
   velocity_ += acceleration_ * delta_t;
   position_ += velocity_ * delta_t;
   orientation_ += angular_velocity_ * delta_t;
-  angular_velocity_ += angular_acceleration_ * delta_t;
+  turret_orientation_ += turret_angular_velocity_ * delta_t;
+  const auto
+      diff = fmod((target_angle - turret_orientation_ + glm::pi<float>() * 2),
+                  glm::pi<float>() * 2);
+  std::cout << "angle: " << diff << "\n";
+  if (diff < glm::pi<float>()) {
+    turret_angular_velocity_ = 0.5;
+  } else {
+    turret_angular_velocity_ = -0.5;
+  }
   Box box = this->box();
 }
 Tank::Tank(glm::vec3 start_position,

@@ -40,6 +40,7 @@ class Tank : public Boxed {
   float turret_orientation_{};
   float turret_angular_velocity_{};
   float turret_angular_acceleration_{};
+  float target_angle{};
   TextureObject chassis_;
   TextureObject turret_;
  public:

@@ -32,6 +32,13 @@ PlayerFeedback Player::Update(float delta_t,
   const float backward_speed = keyboard_state[SDL_SCANCODE_S] ? 0.2 : 0.0f;
   const auto speed = forward_speed - backward_speed;
   velocity_ = utility::VectorByAngle(speed, orientation_);
+
+  int cursor_x, cursor_y;
+  SDL_GetMouseState(&cursor_x, &cursor_y);
+  std::cout << "x: " << cursor_x << "  y: " << cursor_y << "\n";
+  const auto cursor_pos = glm::vec3(cursor_x, cursor_y, 0);
+  target_angle = utility::GetTargetAngle(position_, cursor_pos);
+
   Tank::Update(delta_t, map);
   const auto player_box = this->box();
   for (auto &mob : mobs) {

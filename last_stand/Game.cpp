@@ -23,7 +23,7 @@ Game::Game()
       VIEWPORT_WIDTH = WINDOW_WIDTH,
       VIEWPORT_HEIGHT = WINDOW_HEIGHT;
   SDL_Init(SDL_INIT_VIDEO);
-  display_window_ = SDL_CreateWindow("Generic Platform Game2",
+  display_window_ = SDL_CreateWindow("LAST STAND",
                                      SDL_WINDOWPOS_CENTERED,
                                      SDL_WINDOWPOS_CENTERED,
                                      640, 480,
@@ -54,7 +54,7 @@ Game::Game()
   const auto music = Mix_LoadMUS("background.mp3");
   Mix_PlayMusic(music,
                 -1);
-  Mix_VolumeMusic(MIX_MAX_VOLUME / 2);
+  Mix_VolumeMusic(MIX_MAX_VOLUME / 10);
   curr_scene_ = std::make_unique<Menu>();
 }
 void Game::ProcessInput() {

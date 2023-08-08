@@ -16,11 +16,7 @@ void Tank::Update(float delta_t, const Map &map) {
   angular_velocity_ += angular_acceleration_ * delta_t;
   Box box = this->box();
 }
-Tank::Tank(glm::vec3 startpos,
-           GLuint text_id,
-           float half_height,
-           float half_width) :
-    position_(startpos), half_height_(half_height), half_width_(half_width) {
-  texture_id_ = text_id;
+Tank::Tank(glm::vec3 start_position, float start_orientation): position_(start_position),
+      orientation_(start_orientation){
 
 }

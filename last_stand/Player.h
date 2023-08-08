@@ -23,7 +23,7 @@ class Player : public Tank {
   PlayerFeedback Update(float delta_t, const Map &map, std::vector<Mob> &mobs);
   void Render(ShaderProgram *shader) const override;
   glm::vec3 position() const;
-  Player(glm::vec3 startpos, GLuint text_id);
+  Player();
 };
 
 #endif //CS3113_GAME_PROGRAMMING_PLATFORMER_PLAYER_H_

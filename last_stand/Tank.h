@@ -26,10 +26,7 @@
 #include "Map.h"
 class Tank : public Boxed {
  private:
-  float half_height_;
-  float half_width_;
   float horizontal_speed_ = 1.2;
-  float vertical_speed = 0.08;
  protected:
   uint collision_time_out = 0;
   bool grounded = false;
@@ -41,15 +38,12 @@ class Tank : public Boxed {
   float angular_velocity_{}; // In radian / second.
   float angular_acceleration_{}; // In radian / second^2;
  public:
-  Tank(glm::vec3 startpos,
-       GLuint text_id,
-       float half_height,
-       float half_width);
+  Tank(glm::vec3 start_position, float start_orientation);
   void Update(float delta_t, const Map &map);
   Box box() const override {
     return Box{
         position_,
-        half_width_, half_height_
+        0.5, 0.5
     };
   }
 };

@@ -70,11 +70,11 @@ void Mob::Render(ShaderProgram *shader) const {
   glDisableVertexAttribArray(shader->positionAttribute);
   glDisableVertexAttribArray(shader->texCoordAttribute);
 }
-Mob::Mob(glm::vec3 startpos, GLuint text_id, MobConfig config) :
-    Tank(startpos, text_id, 0.3, 0.15), behavior_(config),
+Mob::Mob(glm::vec3 startpos, float start_orient) :
+    Tank(startpos, start_orient), behavior_(MobConfig{}),
     state_(MobState::Idle) {
 
-  switch (config.mob_type) {
+  switch (behavior_.mob_type) {
     case MobType::Patroller: {
       velocity_.x = -1.0;
       timer_ = SDL_GetTicks() + 4000;

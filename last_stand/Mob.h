@@ -35,7 +35,7 @@ class Mob : public Tank {
  public:
   void Update(float delta_t, const Map &map, const Player &player);
   void Render(ShaderProgram *shader) const override;
-  Mob(glm::vec3 startpos, GLuint text_id, MobConfig config);
+  Mob(glm::vec3 startpos, float start_orient);
   void Die();
   bool IsAlive() const;
 };

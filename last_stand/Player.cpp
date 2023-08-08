@@ -50,10 +50,8 @@ PlayerFeedback Player::Update(float delta_t,
   }
   return PlayerFeedback::NoOp;
 }
-Player::Player(glm::vec3 startpos, GLuint text_id) : Tank(startpos,
-                                                          text_id,
-                                                          0.3,
-                                                          0.15) {
+Player::Player() : Tank(glm::vec3(0, 0, 0),
+                        0.5) {
 
 }
 void Player::Render(ShaderProgram *shader) const {
@@ -65,33 +63,6 @@ void Player::Render(ShaderProgram *shader) const {
                          orientation_,
                          1.0,
                          shader);
-//  glBindTexture(GL_TEXTURE_2D, this->texture_id_);
-//  glVertexAttribPointer(shader->positionAttribute,
-//                        2,
-//                        GL_FLOAT,
-//                        false,
-//                        0,
-//                        SQUARE_VERTICES);
-//  glEnableVertexAttribArray(shader->positionAttribute);
-//  glVertexAttribPointer(shader->texCoordAttribute,
-//                        2,
-//                        GL_FLOAT,
-//                        false,
-//                        0,
-//                        FULL_TEX_COORDS);
-//  glEnableVertexAttribArray(shader->texCoordAttribute);
-//  constexpr auto base_matrix = glm::mat4(1.0f);
-//  auto model_matrix = glm::translate(base_matrix, position_);
-//  model_matrix =
-//      glm::rotate(model_matrix,
-//                  orientation_ - glm::pi<float>() / 2,
-//                  glm::vec3(0.0f, 0.0f, 1.0f));
-//  model_matrix = glm::scale(model_matrix, glm::vec3(0.65f, 0.65f, 1.0f));
-//
-//  shader->SetModelMatrix(model_matrix);
-//  glDrawArrays(GL_TRIANGLES, 0, 6);
-//  glDisableVertexAttribArray(shader->positionAttribute);
-//  glDisableVertexAttribArray(shader->texCoordAttribute);
 }
 glm::vec3 Player::position() const {
   return position_;

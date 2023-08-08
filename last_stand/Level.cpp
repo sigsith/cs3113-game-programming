@@ -55,8 +55,7 @@ glm::vec3 Level::GetPlayerPosition() const {
 }
 Level::Level() : Level(BuildMap(),
                        BuildMobs(),
-                       Player(glm::vec3(0, 0, 0),
-                              utility::LoadTexture(std::string("player.png")))) {}
+                       Player()) {}
 Map Level::BuildMap() {
   const auto mapping =
       std::vector<uint>{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,

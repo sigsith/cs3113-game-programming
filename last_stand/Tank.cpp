@@ -46,7 +46,7 @@ void Tank::Render(ShaderProgram *shader) const {
                  1.0,
                  shader);
 }
-void Tank::Fire(std::vector<std::unique_ptr<Ephemeral>> &short_lived) {
+void Tank::Fire(std::vector<std::unique_ptr<Projectile>> &short_lived) {
   if (SDL_GetTicks() > fire_time_out) {
     std::cout << "Fire!\n";
     short_lived.push_back(std::make_unique<Projectile>(TextureObject(

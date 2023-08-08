@@ -25,6 +25,7 @@
 #include "Entity.h"
 #include "TextureObject.h"
 #include "Map.h"
+#include "Projectile.h"
 class Tank : public Boxed {
  private:
   float horizontal_speed_ = 1.2;
@@ -59,7 +60,7 @@ class Tank : public Boxed {
         0.5, 0.5
     };
   }
-  void Fire(std::vector<std::unique_ptr<Ephemeral>> &);
+  void Fire(std::vector<std::unique_ptr<Projectile>> &);
 };
 
 #endif //CS3113_GAME_PROGRAMMING_PLATFORMER_DYNAMIC_H_

@@ -12,6 +12,7 @@
 
 #include "Tank.h"
 #include "Mob.h"
+#include "Projectile.h"
 
 enum class PlayerFeedback {
   NoOp,
@@ -23,7 +24,7 @@ class Player : public Tank {
   PlayerFeedback Update(float delta_t,
                         const Map &map,
                         std::vector<Mob> &mobs,
-                        std::vector<std::unique_ptr<Ephemeral>> &);
+                        std::vector<std::unique_ptr<Projectile>> &);
   glm::vec3 position() const;
   Player();
 };

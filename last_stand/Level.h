@@ -14,13 +14,14 @@
 #include "Scene.h"
 #include "Mob.h"
 #include "Player.h"
+#include "Projectile.h"
 class Level : public Scene {
  private:
   Level(Map map, std::vector<Mob> mobs, Player player);
   Map map_;
   std::vector<Mob> mobs_;
   Player player_;
-  std::vector<std::unique_ptr<Ephemeral>> short_lived_;
+  std::vector<std::unique_ptr<Projectile>> short_lived_;
  public:
   Level();
   Feedback Update(float delta_time) override;

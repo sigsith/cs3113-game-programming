@@ -8,13 +8,12 @@
 * Academic Misconduct.
 **/
 #include "Menu.h"
-void Menu::UpdateInput(const Uint8 *keyboard_state) {
+Feedback Menu::Update(float delta_time) {
+  const auto keyboard_state = SDL_GetKeyboardState(nullptr);
   if (keyboard_state[SDL_SCANCODE_RETURN]
       || keyboard_state[SDL_SCANCODE_KP_ENTER]) {
     go_next_ = true;
   }
-}
-Feedback Menu::Update(float delta_time) {
   if (go_next_) {
     return Feedback::NextStage;
   }

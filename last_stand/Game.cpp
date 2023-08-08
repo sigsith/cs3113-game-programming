@@ -57,7 +57,7 @@ Game::Game()
   Mix_VolumeMusic(MIX_MAX_VOLUME / 10);
   curr_scene_ = std::make_unique<Menu>();
 }
-void Game::ProcessInput() {
+void Game::Update() {
   SDL_Event event;
   while (SDL_PollEvent(&event)) {
     switch (event.type) {
@@ -73,9 +73,6 @@ void Game::ProcessInput() {
       default:break;
     }
   }
-  curr_scene_->UpdateInput(SDL_GetKeyboardState(nullptr));
-}
-void Game::Update() {
   const auto ticks = static_cast<float>(SDL_GetTicks()) / 1000.0f;
   const auto delta_time = static_cast<float>(ticks - previous_ticks_);
   previous_ticks_ = ticks;
@@ -125,7 +122,6 @@ void Game::Render() {
 }
 void Game::Run() {
   while (is_game_running_) {
-    ProcessInput();
     Update();
     Render();
   }

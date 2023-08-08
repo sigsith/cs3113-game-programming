@@ -46,7 +46,6 @@ class Game {
  public:
   Game();
   void Run();
-  void ProcessInput();
   void Update();
   void Render();
   void GoNextLevel();

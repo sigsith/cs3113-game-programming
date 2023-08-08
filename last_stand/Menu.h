@@ -18,7 +18,6 @@ class Menu : public Scene {
   bool go_next_ = false;
  public:
   Menu();
-  void UpdateInput(const Uint8 *keyboard_state) override;
   Feedback Update(float delta_time) override;
   void Render(ShaderProgram *program, int life) const override;
   int Id() const override;

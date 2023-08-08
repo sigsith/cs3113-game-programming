@@ -26,5 +26,5 @@ add_executable_and_link(lunar_lander Entity.cpp)
 add_executable_and_link(ai Entity.cpp Map.cpp)
 add_executable_and_link(platformer Entity.cpp Map.cpp Utility.cpp Scene.cpp
         Dynamic.cpp Player.cpp Mob.cpp Game.cpp Level.cpp Menu.cpp)
-add_executable_and_link(last_stand Entity.cpp Map.cpp Utility.cpp Scene.cpp
+add_executable_and_link(last_stand Entity.cpp Map.cpp Utility.cpp
         Dynamic.cpp Player.cpp Mob.cpp Game.cpp Level.cpp Menu.cpp)

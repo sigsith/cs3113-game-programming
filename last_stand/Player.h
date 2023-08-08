@@ -10,7 +10,7 @@
 #ifndef CS3113_GAME_PROGRAMMING_PLATFORMER_PLAYER_H_
 #define CS3113_GAME_PROGRAMMING_PLATFORMER_PLAYER_H_
 
-#include "Dynamic.h"
+#include "Tank.h"
 #include "Mob.h"
 
 enum class PlayerFeedback {
@@ -18,7 +18,7 @@ enum class PlayerFeedback {
   TakeDamage
 };
 
-class Player : public Dynamic {
+class Player : public Tank {
  public:
   PlayerFeedback Update(float delta_t, const Map &map, std::vector<Mob> &mobs);
   void Render(ShaderProgram *shader) const override;

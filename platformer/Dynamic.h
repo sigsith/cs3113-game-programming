@@ -24,7 +24,7 @@
 #include "ShaderProgram.h"
 #include "Entity.h"
 #include "Map.h"
-class Dynamic : public Boxed {
+class Tank : public Boxed {
  private:
   float half_height_;
   float half_width_;
@@ -38,10 +38,10 @@ class Dynamic : public Boxed {
   glm::vec3 position_;
   float gravity_ = -1.2;
  public:
-  Dynamic(glm::vec3 startpos,
-          GLuint text_id,
-          float half_height,
-          float half_width);
+  Tank(glm::vec3 startpos,
+       GLuint text_id,
+       float half_height,
+       float half_width);
   void Update(float delta_t, const Map &map);
   virtual void Jump(float speed);
   virtual void MoveLeft();

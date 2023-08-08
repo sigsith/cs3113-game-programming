@@ -9,7 +9,7 @@
 **/
 #include "Dynamic.h"
 
-void Dynamic::Update(float delta_t, const Map &map) {
+void Tank::Update(float delta_t, const Map &map) {
   velocity_ += acceleration_ * delta_t;
   position_ += velocity_ * delta_t;
   Box box = this->box();
@@ -23,21 +23,21 @@ void Dynamic::Update(float delta_t, const Map &map) {
     acceleration_.y = gravity_;
   }
 }
-Dynamic::Dynamic(glm::vec3 startpos,
-                 GLuint text_id,
-                 float half_height,
-                 float half_width) :
+Tank::Tank(glm::vec3 startpos,
+           GLuint text_id,
+           float half_height,
+           float half_width) :
     position_(startpos), half_height_(half_height), half_width_(half_width) {
   texture_id_ = text_id;
 
 }
-void Dynamic::MoveLeft() {
+void Tank::MoveLeft() {
   velocity_.x = -horizontal_speed_;
 }
-void Dynamic::MoveRight() {
+void Tank::MoveRight() {
   velocity_.x = horizontal_speed_;
 }
-void Dynamic::Jump(float speed) {
+void Tank::Jump(float speed) {
   auto box = this->box();
   if (grounded) {
     velocity_.y += speed;
@@ -45,6 +45,6 @@ void Dynamic::Jump(float speed) {
     grounded = false;
   }
 }
-void Dynamic::StopHorizontal() {
+void Tank::StopHorizontal() {
   velocity_.x = 0;
 }

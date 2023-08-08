@@ -7,19 +7,19 @@
 * NYU School of Engineering Policies and Procedures on
 * Academic Misconduct.
 **/
-#include "Dynamic.h"
+#include "Tank.h"
 
-void Dynamic::Update(float delta_t, const Map &map) {
+void Tank::Update(float delta_t, const Map &map) {
   velocity_ += acceleration_ * delta_t;
   position_ += velocity_ * delta_t;
   orientation_ += angular_velocity_ * delta_t;
   angular_velocity_ += angular_acceleration_ * delta_t;
   Box box = this->box();
 }
-Dynamic::Dynamic(glm::vec3 startpos,
-                 GLuint text_id,
-                 float half_height,
-                 float half_width) :
+Tank::Tank(glm::vec3 startpos,
+           GLuint text_id,
+           float half_height,
+           float half_width) :
     position_(startpos), half_height_(half_height), half_width_(half_width) {
   texture_id_ = text_id;
 

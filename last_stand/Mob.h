@@ -10,7 +10,7 @@
 #ifndef CS3113_GAME_PROGRAMMING_PLATFORMER_MOB_H_
 #define CS3113_GAME_PROGRAMMING_PLATFORMER_MOB_H_
 
-#include "Dynamic.h"
+#include "Tank.h"
 class Player;
 
 enum class MobType {
@@ -26,7 +26,7 @@ enum class MobState {
 struct MobConfig {
   MobType mob_type;
 };
-class Mob : public Dynamic {
+class Mob : public Tank {
  private:
   MobState state_;
   MobConfig behavior_;

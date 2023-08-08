@@ -20,7 +20,7 @@
 PlayerFeedback Player::Update(float delta_t,
                               const Map &map,
                               std::vector<Mob> &mobs) {
-  Dynamic::Update(delta_t, map);
+  Tank::Update(delta_t, map);
   const auto player_box = this->box();
   for (auto &mob : mobs) {
     if (!mob.IsAlive()) {
@@ -38,10 +38,10 @@ PlayerFeedback Player::Update(float delta_t,
   }
   return PlayerFeedback::NoOp;
 }
-Player::Player(glm::vec3 startpos, GLuint text_id) : Dynamic(startpos,
-                                                             text_id,
-                                                             0.3,
-                                                             0.15) {
+Player::Player(glm::vec3 startpos, GLuint text_id) : Tank(startpos,
+                                                          text_id,
+                                                          0.3,
+                                                          0.15) {
 
 }
 void Player::Render(ShaderProgram *shader) const {
@@ -79,5 +79,5 @@ void Player::Jump(float speed) {
     static const auto boing = Mix_LoadWAV("boing.wav");
     Mix_PlayChannel(-1, boing, 0);
   }
-  Dynamic::Jump(speed);
+  Tank::Jump(speed);
 }

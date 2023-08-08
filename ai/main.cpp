@@ -63,7 +63,7 @@ class EntityManager {
   std::vector<Mob *> &mobs();
 };
 
-class Dynamic : public Boxed {
+class Tank : public Boxed {
  private:
   float half_height_;
   float half_width_;
@@ -80,10 +80,10 @@ class Dynamic : public Boxed {
   bool is_active_ = true;
   float gravity_ = -1.2;
  public:
-  Dynamic(glm::vec3 startpos,
-          GLuint text_id,
-          float half_height,
-          float half_width);
+  Tank(glm::vec3 startpos,
+       GLuint text_id,
+       float half_height,
+       float half_width);
   virtual void Update(float delta_t, EntityManager &manager);
   virtual void Jump(float speed, const EntityManager &manager);
   void Disable();
@@ -98,7 +98,7 @@ class Dynamic : public Boxed {
     };
   }
 };
-void Dynamic::Update(float delta_t, EntityManager &manager) {
+void Tank::Update(float delta_t, EntityManager &manager) {
   if (!(is_active_)) {
     return;
   }
@@ -115,24 +115,24 @@ void Dynamic::Update(float delta_t, EntityManager &manager) {
     acceleration_.y = gravity_;
   }
 }
-void Dynamic::Disable() {
+void Tank::Disable() {
   is_active_ = false;
 }
-Dynamic::Dynamic(glm::vec3 startpos,
-                 GLuint text_id,
-                 float half_height,
-                 float half_width) :
+Tank::Tank(glm::vec3 startpos,
+           GLuint text_id,
+           float half_height,
+           float half_width) :
     position_(startpos), half_height_(half_height), half_width_(half_width) {
   texture_id_ = text_id;
 
 }
-void Dynamic::MoveLeft() {
+void Tank::MoveLeft() {
   velocity_.x = -horizontal_speed_;
 }
-void Dynamic::MoveRight() {
+void Tank::MoveRight() {
   velocity_.x = horizontal_speed_;
 }
-void Dynamic::Jump(float speed, const EntityManager &manager) {
+void Tank::Jump(float speed, const EntityManager &manager) {
   auto box = this->box();
   if (grounded) {
     velocity_.y += speed;
@@ -140,10 +140,10 @@ void Dynamic::Jump(float speed, const EntityManager &manager) {
     grounded = false;
   }
 }
-void Dynamic::StopHorizontal() {
+void Tank::StopHorizontal() {
   velocity_.x = 0;
 }
-bool Dynamic::IsAlive() const {
+bool Tank::IsAlive() const {
   return is_active_;
 }
 enum class MobType {
@@ -159,7 +159,7 @@ enum class MobState {
 struct MobConfig {
   MobType mob_type;
 };
-class Mob : public Dynamic {
+class Mob : public Tank {
  private:
   MobState state_;
   MobConfig behavior_;
@@ -170,7 +170,7 @@ class Mob : public Dynamic {
   Mob(glm::vec3 startpos, GLuint text_id, MobConfig config);
   void Kill();
 };
-class Player : public Dynamic {
+class Player : public Tank {
  public:
   void Update(float delta_t, EntityManager &manager) override;
   void Render(ShaderProgram *shader) const override;
@@ -192,7 +192,7 @@ glm::vec3 Normalize(glm::vec3 glm_vec) {
   return {x / length, y / length, z / length};
 }
 void Mob::Update(float delta_t, EntityManager &manager) {
-  Dynamic::Update(delta_t, manager);
+  Tank::Update(delta_t, manager);
   if (!is_active_) {
     return;
   }
@@ -253,7 +253,7 @@ void Mob::Render(ShaderProgram *shader) const {
   glDisableVertexAttribArray(shader->texCoordAttribute);
 }
 Mob::Mob(glm::vec3 startpos, GLuint text_id, MobConfig config) :
-    Dynamic(startpos, text_id, 0.3, 0.15), behavior_(config),
+    Tank(startpos, text_id, 0.3, 0.15), behavior_(config),
     state_(MobState::Idle) {
 
   switch (config.mob_type) {
@@ -274,7 +274,7 @@ void Mob::Kill() {
 }
 
 void Player::Update(float delta_t, EntityManager &manager) {
-  Dynamic::Update(delta_t, manager);
+  Tank::Update(delta_t, manager);
   if (!is_active_) {
     return;
   }
@@ -295,10 +295,10 @@ void Player::Update(float delta_t, EntityManager &manager) {
     }
   }
 }
-Player::Player(glm::vec3 startpos, GLuint text_id) : Dynamic(startpos,
-                                                             text_id,
-                                                             0.3,
-                                                             0.15) {
+Player::Player(glm::vec3 startpos, GLuint text_id) : Tank(startpos,
+                                                          text_id,
+                                                          0.3,
+                                                          0.15) {
 
 }
 void Player::Render(ShaderProgram *shader) const {

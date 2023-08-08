@@ -32,7 +32,7 @@ PlayerFeedback Player::Update(float delta_t,
   const float backward_speed = keyboard_state[SDL_SCANCODE_S] ? 0.2 : 0.0f;
   const auto speed = forward_speed - backward_speed;
   velocity_ = utility::VectorByAngle(speed, orientation_);
-  Dynamic::Update(delta_t, map);
+  Tank::Update(delta_t, map);
   const auto player_box = this->box();
   for (auto &mob : mobs) {
     if (!mob.IsAlive()) {
@@ -50,10 +50,10 @@ PlayerFeedback Player::Update(float delta_t,
   }
   return PlayerFeedback::NoOp;
 }
-Player::Player(glm::vec3 startpos, GLuint text_id) : Dynamic(startpos,
-                                                             text_id,
-                                                             0.3,
-                                                             0.15) {
+Player::Player(glm::vec3 startpos, GLuint text_id) : Tank(startpos,
+                                                          text_id,
+                                                          0.3,
+                                                          0.15) {
 
 }
 void Player::Render(ShaderProgram *shader) const {

@@ -24,7 +24,7 @@
 #include "ShaderProgram.h"
 #include "Entity.h"
 #include "Map.h"
-class Dynamic : public Boxed {
+class Tank : public Boxed {
  private:
   float half_height_;
   float half_width_;
@@ -41,10 +41,10 @@ class Dynamic : public Boxed {
   float angular_velocity_{}; // In radian / second.
   float angular_acceleration_{}; // In radian / second^2;
  public:
-  Dynamic(glm::vec3 startpos,
-          GLuint text_id,
-          float half_height,
-          float half_width);
+  Tank(glm::vec3 startpos,
+       GLuint text_id,
+       float half_height,
+       float half_width);
   void Update(float delta_t, const Map &map);
   Box box() const override {
     return Box{

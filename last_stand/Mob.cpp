@@ -11,7 +11,7 @@
 #include "Utility.h"
 #include "Player.h"
 void Mob::Update(float delta_t, const Map &map, const Player &player) {
-  Dynamic::Update(delta_t, map);
+  Tank::Update(delta_t, map);
   if (!is_alive_) {
     return;
   }
@@ -71,7 +71,7 @@ void Mob::Render(ShaderProgram *shader) const {
   glDisableVertexAttribArray(shader->texCoordAttribute);
 }
 Mob::Mob(glm::vec3 startpos, GLuint text_id, MobConfig config) :
-    Dynamic(startpos, text_id, 0.3, 0.15), behavior_(config),
+    Tank(startpos, text_id, 0.3, 0.15), behavior_(config),
     state_(MobState::Idle) {
 
   switch (config.mob_type) {

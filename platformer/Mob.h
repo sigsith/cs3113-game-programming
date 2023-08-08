@@ -26,7 +26,7 @@ enum class MobState {
 struct MobConfig {
   MobType mob_type;
 };
-class Mob : public Dynamic {
+class Mob : public Tank {
  private:
   MobState state_;
   MobConfig behavior_;

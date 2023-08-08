@@ -50,9 +50,9 @@ void Mob::Update(float delta_t,
 Mob::Mob(glm::vec3 startpos, float start_orient) :
     Tank(startpos,
          start_orient,
-         "tankBody_blue",
-         "tankBlue_barrel1",
-         "bulletBlue1") {
+         "tankBody_red",
+         "tankRed_barrel1",
+         "bulletRed1") {
 }
 bool Mob::IsAlive() const {
   return is_alive_;

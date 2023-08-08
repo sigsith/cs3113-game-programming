@@ -48,6 +48,7 @@ class Tank : public Boxed {
        const std::string &chassis_name,
        const std::string &turret_name);
   void Update(float delta_t, const Map &map);
+  void Render(ShaderProgram *shader) const override;
   Box box() const override {
     return Box{
         position_,

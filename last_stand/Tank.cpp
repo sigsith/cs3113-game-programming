@@ -8,6 +8,7 @@
 * Academic Misconduct.
 **/
 #include "Tank.h"
+#include "Utility.h"
 
 void Tank::Update(float delta_t, const Map &map) {
   velocity_ += acceleration_ * delta_t;
@@ -24,4 +25,12 @@ Tank::Tank(glm::vec3 start_position,
                                               chassis_(chassis_name),
                                               turret_(turret_name){
 
+}
+void Tank::Render(ShaderProgram *shader) const {
+  chassis_.Render(position_, orientation_, 1.0, shader);
+  const auto offset = utility::VectorByAngle(0.2, orientation_);
+  turret_.Render(position_ + offset,
+                 utility::FlipAngle(orientation_),
+                 1.0,
+                 shader);
 }

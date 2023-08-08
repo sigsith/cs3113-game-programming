@@ -24,6 +24,7 @@
 #include "glm/gtc/matrix_transform.hpp"
 #include "ShaderProgram.h"
 #include "Map.h"
+#include <unordered_map>
 
 namespace utility {
 GLuint LoadTexture(const std::string &path);
@@ -39,6 +40,19 @@ void RenderTileObj(float x_px,
                    float orientation,
                    float scale,
                    ShaderProgram *shader);
+void RenderByName(const std::string &name, glm::vec3 position,
+                  float orientation,
+                  float scale,
+                  ShaderProgram *shader);
+struct ObjectSpec {
+  float x_px;
+  float y_px;
+  float width;
+  float height;
+};
+std::unordered_map<std::string,
+                   ObjectSpec> ParseMapping(const std::string &file);
+
 float Length(glm::vec3 glm_vec);
 glm::vec3 Normalize(glm::vec3 glm_vec);
 glm::vec3 VectorByAngle(float scalar, float angle_in_radians);

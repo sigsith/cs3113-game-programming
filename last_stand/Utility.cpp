@@ -123,4 +123,16 @@ void RenderTileObj(float x_px,
   glDisableVertexAttribArray(shader->positionAttribute);
   glDisableVertexAttribArray(shader->texCoordAttribute);
 }
+void RenderByName(const std::string &name,
+                  glm::vec3 position,
+                  float orientation,
+                  float scale,
+                  ShaderProgram *shader) {
+
+
+}
+std::unordered_map<std::string,
+                   ObjectSpec> ParseMapping(const std::string &file) {
+  return std::unordered_map<std::string, ObjectSpec>();
+}
 }

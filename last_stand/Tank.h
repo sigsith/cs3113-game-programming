@@ -33,10 +33,9 @@ class Tank : public Boxed {
   glm::vec3 velocity_{};
   glm::vec3 acceleration_{};
   glm::vec3 position_;
-  // Orientation in radian in the standard Cartesian convention.
   float orientation_{};
-  float angular_velocity_{}; // In radian / second.
-  float angular_acceleration_{}; // In radian / second^2;
+  float angular_velocity_{};
+  float angular_acceleration_{};
  public:
   Tank(glm::vec3 start_position, float start_orientation);
   void Update(float delta_t, const Map &map);

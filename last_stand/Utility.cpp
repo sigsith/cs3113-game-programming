@@ -23,6 +23,7 @@
 #include "glm/mat4x4.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 #include "ShaderProgram.h"
+#include <cmath>
 namespace utility {
 GLuint LoadTexture(const std::string &path) {
   int width, height, nrChannels;
@@ -128,5 +129,10 @@ void RenderTileObj(float x_px,
 }
 float FlipAngle(float scalar) {
   return (scalar + glm::pi<float>());
+}
+float GetTargetAngle(glm::vec3 source_pos, glm::vec3 target_pos) {
+  const auto angle_vec = target_pos - source_pos;
+  const auto angle = atan2(angle_vec.y, angle_vec.x);
+  return angle;
 }
 }

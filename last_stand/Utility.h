@@ -44,6 +44,7 @@ float Length(glm::vec3 glm_vec);
 glm::vec3 Normalize(glm::vec3 glm_vec);
 glm::vec3 VectorByAngle(float scalar, float angle_in_radians);
 float FlipAngle(float scalar);
+float GetTargetAngle(glm::vec3 source_pos, glm::vec3 target_pos);
 };
 
 #endif //CS3113_GAME_PROGRAMMING_PLATFORMER_UTILITY_H_

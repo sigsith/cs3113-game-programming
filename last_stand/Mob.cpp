@@ -71,7 +71,7 @@ void Mob::Render(ShaderProgram *shader) const {
   glDisableVertexAttribArray(shader->texCoordAttribute);
 }
 Mob::Mob(glm::vec3 startpos, float start_orient) :
-    Tank(startpos, start_orient), behavior_(MobConfig{}),
+    Tank(startpos, start_orient, "tankBody_blue"), behavior_(MobConfig{}),
     state_(MobState::Idle) {
 
   switch (behavior_.mob_type) {

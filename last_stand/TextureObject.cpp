@@ -15,7 +15,7 @@ TextureObject::TextureObject(const std::string &name) {
 void TextureObject::Render(glm::vec3 position,
                            float orientation,
                            float scale,
-                           ShaderProgram *shader) {
+                           ShaderProgram *shader) const {
   utility::RenderTileObj(x_px,
                          y_px,
                          width,

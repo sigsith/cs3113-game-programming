@@ -31,7 +31,7 @@ class TextureObject {
   void Render(glm::vec3 position,
               float orientation,
               float scale,
-              ShaderProgram *shader);
+              ShaderProgram *shader) const;
   TextureObject();
 };
 

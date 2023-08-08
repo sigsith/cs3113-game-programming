@@ -123,47 +123,4 @@ void RenderTileObj(float x_px,
   glDisableVertexAttribArray(shader->positionAttribute);
   glDisableVertexAttribArray(shader->texCoordAttribute);
 }
-void RenderByName(const std::string &name,
-                  glm::vec3 position,
-                  float orientation,
-                  float scale,
-                  ShaderProgram *shader) {
-  static const auto specs = ParseMapping("object_mapping.txt");
-  try {
-    ObjectSpec spec = specs.at(name);
-    RenderTileObj(spec.x_px,
-                  spec.y_px,
-                  spec.width,
-                  spec.height,
-                  position,
-                  orientation,
-                  scale,
-                  shader);
-  } catch (const std::out_of_range &e) {
-    std::cerr << "Key not found: " << e.what() << std::endl;
-  }
-
-}
-std::unordered_map<std::string,
-                   ObjectSpec> ParseMapping(const std::string &file) {
-  std::unordered_map<std::string, ObjectSpec> result_map;
-
-  std::ifstream infile(file);
-  if (!infile.is_open()) {
-    throw std::runtime_error("Failed to open file: " + file);
-  }
-  std::string line;
-  while (std::getline(infile, line)) {
-    std::istringstream iss(line);
-    std::string name;
-    ObjectSpec spec;
-    if (!(iss >> name >> spec.x_px >> spec.y_px >> spec.width >> spec.height)) {
-      throw std::runtime_error("Failed to parse line: " + line);
-    }
-    result_map[name] = spec;
-  }
-
-  infile.close();
-  return result_map;
-}
 }

@@ -16,7 +16,10 @@ void Tank::Update(float delta_t, const Map &map) {
   angular_velocity_ += angular_acceleration_ * delta_t;
   Box box = this->box();
 }
-Tank::Tank(glm::vec3 start_position, float start_orientation): position_(start_position),
-      orientation_(start_orientation){
+Tank::Tank(glm::vec3 start_position,
+           float start_orientation,
+           const std::string &chassis) : position_(start_position),
+                                         orientation_(start_orientation),
+                                         chassis_(chassis) {
 
 }

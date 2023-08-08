@@ -23,6 +23,7 @@
 #include "glm/gtc/matrix_transform.hpp"
 #include "ShaderProgram.h"
 #include "Entity.h"
+#include "TextureObject.h"
 #include "Map.h"
 class Tank : public Boxed {
  private:
@@ -36,8 +37,9 @@ class Tank : public Boxed {
   float orientation_{};
   float angular_velocity_{};
   float angular_acceleration_{};
+  TextureObject chassis_;
  public:
-  Tank(glm::vec3 start_position, float start_orientation);
+  Tank(glm::vec3 start_position, float start_orientation, const std::string& chassis);
   void Update(float delta_t, const Map &map);
   Box box() const override {
     return Box{

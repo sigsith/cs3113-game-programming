@@ -73,5 +73,9 @@ glm::vec3 Normalize(glm::vec3 glm_vec) {
   const auto length = std::sqrt(x * x + y * y + z * 2);
   return {x / length, y / length, z / length};
 }
-
+glm::vec3 VectorByAngle(float scalar, float angle_in_radians) {
+  float x = scalar * glm::cos(angle_in_radians);
+  float y = scalar * glm::sin(angle_in_radians);
+  return {x, y, 0.0f};
+}
 }

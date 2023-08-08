@@ -16,6 +16,7 @@
 #include "ShaderProgram.h"
 #include "Player.h"
 #include "Mob.h"
+#include "Utility.h"
 
 PlayerFeedback Player::Update(float delta_t,
                               const Map &map,
@@ -27,8 +28,10 @@ PlayerFeedback Player::Update(float delta_t,
   const float angular_v_right =
       (keyboard_state[SDL_SCANCODE_D]) ? -BASE_ROTATION_SPEED : 0.0f;
   angular_velocity_ = angular_v_left + angular_v_right;
-  if (keyboard_state[SDL_SCANCODE_W] || keyboard_state[SDL_SCANCODE_SPACE]) {
-  }
+  const float forward_speed = keyboard_state[SDL_SCANCODE_W] ? 0.5 : 0.0f;
+  const float backward_speed = keyboard_state[SDL_SCANCODE_S] ? 0.2 : 0.0f;
+  const auto speed = forward_speed - backward_speed;
+  velocity_ = utility::VectorByAngle(speed, orientation_);
   Dynamic::Update(delta_t, map);
   const auto player_box = this->box();
   for (auto &mob : mobs) {

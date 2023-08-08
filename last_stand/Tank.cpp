@@ -28,10 +28,12 @@ void Tank::Update(float delta_t, const Map &map) {
 Tank::Tank(glm::vec3 start_position,
            float start_orientation,
            const std::string &chassis_name,
-           const std::string &turret_name) : position_(start_position),
-                                             orientation_(start_orientation),
-                                             chassis_(chassis_name),
-                                             turret_(turret_name) {
+           const std::string &turret_name,
+           const std::string &shell_name) : position_(start_position),
+                                            orientation_(start_orientation),
+                                            chassis_(chassis_name),
+                                            turret_(turret_name),
+                                            shell_(shell_name) {
 
 }
 void Tank::Render(ShaderProgram *shader) const {

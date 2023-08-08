@@ -43,11 +43,13 @@ class Tank : public Boxed {
   float target_angle{};
   TextureObject chassis_;
   TextureObject turret_;
+  TextureObject shell_;
  public:
   Tank(glm::vec3 start_position,
        float start_orientation,
        const std::string &chassis_name,
-       const std::string &turret_name);
+       const std::string &turret_name,
+       const std::string &shell_name);
   void Update(float delta_t, const Map &map);
   void Render(ShaderProgram *shader) const override;
   Box box() const override {

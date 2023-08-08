@@ -22,6 +22,7 @@ class Projectile : public Ephemeral {
   glm::vec3 origin_;
   ProjState state_ = ProjState::Flying;
   uint explosion_timeout_ = 0;
+  uint prefly_timeout;
  public:
   Projectile(TextureObject shell,
              TextureObject explosion,
@@ -30,6 +31,7 @@ class Projectile : public Ephemeral {
   void Render(ShaderProgram *program) const override;
   bool Update(float delta_t) override;
   void Explode();
+  bool IsSafetyOn() const;
   glm::vec3 position() const;
   bool HasExploded();
 };

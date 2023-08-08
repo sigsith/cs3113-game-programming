@@ -61,8 +61,9 @@ PlayerFeedback Player::Update(float delta_t,
       std::cout << "Box hit!\n";
     }
   }
-  for (auto &proj: projectiles) {
-    if (!proj->HasExploded() && utility::Length(proj->position() - this->position()) < 0.5) {
+  for (auto &proj : projectiles) {
+    if (!proj->HasExploded() && !proj->IsSafetyOn()
+        && utility::Length(proj->position() - this->position()) < 0.5) {
       proj->Explode();
       return PlayerFeedback::TakeDamage;
     }

@@ -40,7 +40,9 @@ void Level::Render(ShaderProgram *shader, int life) const {
   shader->SetViewMatrix(view);
   map_.Render(shader);
   for (auto &&mob : mobs_) {
-    mob.Render(shader);
+    if (mob.IsAlive()) {
+      mob.Render(shader);
+    }
   }
   RenderLife(shader, life);
   player_.Render(shader);

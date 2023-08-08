@@ -13,8 +13,8 @@ Projectile::Projectile(TextureObject shell,
       orientation_(orientation),
       origin_(origin),
       curr_pos_(origin),
-      velocity_(utility::VectorByAngle(2.0, orientation)
-      ) {
+      velocity_(utility::VectorByAngle(2.0, orientation)),
+      prefly_timeout(SDL_GetTicks() + 500) {
 }
 void Projectile::Render(ShaderProgram *program) const {
   switch (state_) {
@@ -55,4 +55,7 @@ glm::vec3 Projectile::position() const {
 }
 bool Projectile::HasExploded() {
   return state_ == ProjState::Exploded;
+}
+bool Projectile::IsSafetyOn() const {
+  return SDL_GetTicks() < prefly_timeout;
 }

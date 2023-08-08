@@ -40,7 +40,7 @@ void Mob::Update(float delta_t,
     }
   }
   for (auto &proj : projectiles) {
-    if (!proj->HasExploded()
+    if (!proj->HasExploded() && !proj->IsSafetyOn()
         && utility::Length(proj->position() - position_) < 0.5) {
       Die();
       return;

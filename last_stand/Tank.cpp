@@ -20,9 +20,9 @@ void Tank::Update(float delta_t, const Map &map) {
       diff = fmod((target_angle - turret_orientation_ + glm::pi<float>() * 2),
                   glm::pi<float>() * 2);
   if (diff < glm::pi<float>()) {
-    turret_angular_velocity_ = 1.0;
+    turret_angular_velocity_ = 0.6;
   } else {
-    turret_angular_velocity_ = -1.0;
+    turret_angular_velocity_ = -0.6;
   }
   Box box = this->box();
 }
@@ -47,8 +47,12 @@ void Tank::Render(ShaderProgram *shader) const {
                  shader);
 }
 void Tank::Fire(std::vector<std::unique_ptr<Ephemeral>> &short_lived) {
-  std::cout << "Fire!\n";
-  short_lived.push_back(std::make_unique<Projectile>(TextureObject("bulletBlue1"),
-                                                     turret_orientation_,
-                                                     position_));
+  if (SDL_GetTicks() > fire_time_out) {
+    std::cout << "Fire!\n";
+    short_lived.push_back(std::make_unique<Projectile>(TextureObject(
+                                                           "bulletBlue1"),
+                                                       turret_orientation_,
+                                                       position_));
+    fire_time_out = SDL_GetTicks() + 2000;
+  }
 }

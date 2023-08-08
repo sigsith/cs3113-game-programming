@@ -11,7 +11,7 @@ Projectile::Projectile(TextureObject text_obj,
       orientation_(orientation),
       origin_(origin),
       curr_pos_(origin),
-      velocity_(utility::VectorByAngle(1.0, orientation)
+      velocity_(utility::VectorByAngle(2.0, orientation)
       ) {
 }
 void Projectile::Render(ShaderProgram *program) const {
@@ -20,7 +20,7 @@ void Projectile::Render(ShaderProgram *program) const {
 bool Projectile::Update(float delta_t) {
   curr_pos_ += velocity_ * delta_t;
   const auto distance = utility::Length(curr_pos_ - origin_);
-  if (distance > 10.0) {
+  if (distance > 4.0) {
     return false;
   }
   return true;

@@ -21,16 +21,16 @@ Tank::Tank(glm::vec3 start_position,
            float start_orientation,
            const std::string &chassis_name,
            const std::string &turret_name) : position_(start_position),
-                                              orientation_(start_orientation),
-                                              chassis_(chassis_name),
-                                              turret_(turret_name){
+                                             orientation_(start_orientation),
+                                             chassis_(chassis_name),
+                                             turret_(turret_name) {
 
 }
 void Tank::Render(ShaderProgram *shader) const {
   chassis_.Render(position_, orientation_, 1.0, shader);
   const auto offset = utility::VectorByAngle(0.2, orientation_);
   turret_.Render(position_ + offset,
-                 utility::FlipAngle(orientation_),
+                 utility::FlipAngle(turret_orientation_),
                  1.0,
                  shader);
 }

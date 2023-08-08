@@ -20,7 +20,8 @@
 
 PlayerFeedback Player::Update(float delta_t,
                               const Map &map,
-                              std::vector<Mob> &mobs) {
+                              std::vector<Mob> &mobs,
+                              std::vector<std::unique_ptr<Ephemeral>> &short_lived) {
   const auto keyboard_state = SDL_GetKeyboardState(nullptr);
   constexpr float BASE_ROTATION_SPEED = 0.5f;
   const float angular_v_left =

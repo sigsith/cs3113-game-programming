@@ -20,8 +20,10 @@ enum class PlayerFeedback {
 
 class Player : public Tank {
  public:
-  PlayerFeedback Update(float delta_t, const Map &map, std::vector<Mob> &mobs);
-//  void Render(ShaderProgram *shader) const override;
+  PlayerFeedback Update(float delta_t,
+                        const Map &map,
+                        std::vector<Mob> &mobs,
+                        std::vector<std::unique_ptr<Ephemeral>> &);
   glm::vec3 position() const;
   Player();
 };

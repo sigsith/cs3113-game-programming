@@ -12,7 +12,7 @@
 #include <sstream>
 
 Feedback Level::Update(float delta_time) {
-  const auto player_feedback = player_.Update(delta_time, map_, mobs_);
+  const auto player_feedback = player_.Update(delta_time, map_, mobs_, short_lived_);
   for (auto &&mob : mobs_) {
     if (mob.IsAlive()) {
       mob.Update(delta_time, map_, player_);

@@ -20,6 +20,7 @@ class Level : public Scene {
   Map map_;
   std::vector<Mob> mobs_;
   Player player_;
+  std::vector<std::unique_ptr<Ephemeral>> short_lived_;
  public:
   Level();
   Feedback Update(float delta_time) override;

@@ -9,6 +9,7 @@
 **/
 #include "Tank.h"
 #include "Utility.h"
+#include "Projectile.h"
 
 void Tank::Update(float delta_t, const Map &map) {
   velocity_ += acceleration_ * delta_t;
@@ -44,4 +45,9 @@ void Tank::Render(ShaderProgram *shader) const {
                  utility::FlipAngle(turret_orientation_),
                  1.0,
                  shader);
+}
+void Tank::Fire(std::vector<std::unique_ptr<Ephemeral>> &short_lived) {
+  short_lived.push_back(std::make_unique<Projectile>(TextureObject("bulletBlue1"),
+                                                     turret_orientation_,
+                                                     position_));
 }

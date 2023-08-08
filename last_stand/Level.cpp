@@ -86,18 +86,19 @@ Map Level0::BuildMap() {
   return map;
 }
 std::vector<Mob> Level0::BuildMobs() {
-  const auto mob0_id = utility::LoadTexture(std::string("mob1.png"));
-  const auto mob0_config = MobConfig{MobType::Jumper};
-  const auto mob0 = Mob(glm::vec3(-3, 1, 0), mob0_id, mob0_config);
-  const auto mob2_id = utility::LoadTexture(std::string("mob2.png"));
-  const auto mob2_config = MobConfig{MobType::Patroller};
-  const auto mob1 = Mob(glm::vec3(1, -1, 0), mob2_id, mob2_config);
-  const auto mob3_id = utility::LoadTexture(std::string("mob3.png"));
-  const auto mob3_config = MobConfig{MobType::Chaser};
-  const auto mob2 = Mob(glm::vec3(2, 2, 0), mob3_id, mob3_config);
-  return std::vector<Mob>{
-      mob0, mob1, mob2
-  };
+//  const auto mob0_id = utility::LoadTexture(std::string("mob1.png"));
+//  const auto mob0_config = MobConfig{MobType::Jumper};
+//  const auto mob0 = Mob(glm::vec3(-3, 1, 0), mob0_id, mob0_config);
+//  const auto mob2_id = utility::LoadTexture(std::string("mob2.png"));
+//  const auto mob2_config = MobConfig{MobType::Patroller};
+//  const auto mob1 = Mob(glm::vec3(1, -1, 0), mob2_id, mob2_config);
+//  const auto mob3_id = utility::LoadTexture(std::string("mob3.png"));
+//  const auto mob3_config = MobConfig{MobType::Chaser};
+//  const auto mob2 = Mob(glm::vec3(2, 2, 0), mob3_id, mob3_config);
+//  return std::vector<Mob>{
+//      mob0, mob1, mob2
+//  };
+  return std::vector<Mob>{};
 }
 bool Level0::ShouldGoNext() const {
   return player_.position().y < -4;

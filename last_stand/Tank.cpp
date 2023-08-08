@@ -28,9 +28,8 @@ Tank::Tank(glm::vec3 start_position,
 }
 void Tank::Render(ShaderProgram *shader) const {
   chassis_.Render(position_, orientation_, 1.0, shader);
-  const auto offset = utility::VectorByAngle(0.2, orientation_)
-      + utility::VectorByAngle(turret_.height() / 100.0 / 2.0,
-                               turret_orientation_);
+  const auto offset = utility::VectorByAngle(turret_.height() / 100.0 / 2.0,
+                                             turret_orientation_);
   turret_.Render(position_ + offset,
                  utility::FlipAngle(turret_orientation_),
                  1.0,

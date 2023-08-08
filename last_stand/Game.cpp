@@ -16,8 +16,8 @@ Game::Game()
       view_matrix_(glm::mat4(1.0f)
       ) {
   SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
-  constexpr int WINDOW_WIDTH = 640,
-      WINDOW_HEIGHT = 480;
+  constexpr int WINDOW_WIDTH = 1280,
+      WINDOW_HEIGHT = 960;
   constexpr int VIEWPORT_X = 0,
       VIEWPORT_Y = 0,
       VIEWPORT_WIDTH = WINDOW_WIDTH,
@@ -26,7 +26,7 @@ Game::Game()
   display_window_ = SDL_CreateWindow("LAST STAND",
                                      SDL_WINDOWPOS_CENTERED,
                                      SDL_WINDOWPOS_CENTERED,
-                                     640, 480,
+                                     WINDOW_WIDTH, WINDOW_HEIGHT,
                                      SDL_WINDOW_OPENGL);
   SDL_GLContext context = SDL_GL_CreateContext(display_window_);
   SDL_GL_MakeCurrent(display_window_, context

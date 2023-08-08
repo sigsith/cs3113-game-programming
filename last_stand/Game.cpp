@@ -137,14 +137,6 @@ void Game::GoNextLevel() {
       break;
     }
     case 1: {
-      curr_scene_ = std::make_unique<Level1>();
-      break;
-    }
-    case 2: {
-      curr_scene_ = std::make_unique<Level2>();
-      break;
-    }
-    case 3: {
       gg = true;
       break;
     }

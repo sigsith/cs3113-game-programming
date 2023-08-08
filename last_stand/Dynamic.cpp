@@ -12,6 +12,8 @@
 void Dynamic::Update(float delta_t, const Map &map) {
   velocity_ += acceleration_ * delta_t;
   position_ += velocity_ * delta_t;
+  orientation_ += angular_velocity_ * delta_t;
+  angular_velocity_ += angular_acceleration_ * delta_t;
   Box box = this->box();
 }
 Dynamic::Dynamic(glm::vec3 startpos,
@@ -21,13 +23,4 @@ Dynamic::Dynamic(glm::vec3 startpos,
     position_(startpos), half_height_(half_height), half_width_(half_width) {
   texture_id_ = text_id;
 
-}
-void Dynamic::MoveLeft() {
-  velocity_.x = -horizontal_speed_;
-}
-void Dynamic::MoveRight() {
-  velocity_.x = horizontal_speed_;
-}
-void Dynamic::StopHorizontal() {
-  velocity_.x = 0;
 }

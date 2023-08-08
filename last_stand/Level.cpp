@@ -12,15 +12,6 @@
 #include <sstream>
 
 Feedback Level::Update(float delta_time) {
-  const auto keyboard_state = SDL_GetKeyboardState(nullptr);
-  if (keyboard_state[SDL_SCANCODE_A]) {
-    player_.MoveLeft();
-  }
-  if (keyboard_state[SDL_SCANCODE_D]) {
-    player_.MoveRight();
-  }
-  if (keyboard_state[SDL_SCANCODE_W] || keyboard_state[SDL_SCANCODE_SPACE]) {
-  }
   const auto player_feedback = player_.Update(delta_time, map_, mobs_);
   for (auto &&mob : mobs_) {
     if (mob.IsAlive()) {

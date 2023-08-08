@@ -36,15 +36,16 @@ class Dynamic : public Boxed {
   glm::vec3 velocity_{};
   glm::vec3 acceleration_{};
   glm::vec3 position_;
+  // Orientation in radian in the standard Cartesian convention.
+  float orientation_{};
+  float angular_velocity_{}; // In radian / second.
+  float angular_acceleration_{}; // In radian / second^2;
  public:
   Dynamic(glm::vec3 startpos,
           GLuint text_id,
           float half_height,
           float half_width);
   void Update(float delta_t, const Map &map);
-  virtual void MoveLeft();
-  virtual void MoveRight();
-  virtual void StopHorizontal();
   Box box() const override {
     return Box{
         position_,

@@ -20,6 +20,15 @@
 PlayerFeedback Player::Update(float delta_t,
                               const Map &map,
                               std::vector<Mob> &mobs) {
+  const auto keyboard_state = SDL_GetKeyboardState(nullptr);
+  constexpr float BASE_ROTATION_SPEED = 0.5f;
+  const float angular_v_left =
+      (keyboard_state[SDL_SCANCODE_A]) ? BASE_ROTATION_SPEED : 0.0f;
+  const float angular_v_right =
+      (keyboard_state[SDL_SCANCODE_D]) ? -BASE_ROTATION_SPEED : 0.0f;
+  angular_velocity_ = angular_v_left + angular_v_right;
+  if (keyboard_state[SDL_SCANCODE_W] || keyboard_state[SDL_SCANCODE_SPACE]) {
+  }
   Dynamic::Update(delta_t, map);
   const auto player_box = this->box();
   for (auto &mob : mobs) {
@@ -63,9 +72,14 @@ void Player::Render(ShaderProgram *shader) const {
   constexpr auto base_matrix = glm::mat4(1.0f);
   constexpr auto scale_factor_x = 1.0;
   constexpr auto scale_factor_y = 1.0f;
-  const auto model_matrix =
-      glm::scale(glm::translate(base_matrix, position_),
-                 glm::vec3(scale_factor_x, scale_factor_y, 1.0f));
+
+  auto model_matrix = glm::translate(base_matrix, position_);
+  model_matrix =
+      glm::rotate(model_matrix,
+                  orientation_ - glm::pi<float>() / 2,
+                  glm::vec3(0.0f, 0.0f, 1.0f));
+  model_matrix = glm::scale(model_matrix, glm::vec3(0.65f, 0.65f, 1.0f));
+
   shader->SetModelMatrix(model_matrix);
   glDrawArrays(GL_TRIANGLES, 0, 6);
   glDisableVertexAttribArray(shader->positionAttribute);

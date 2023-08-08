@@ -51,19 +51,12 @@ PlayerFeedback Player::Update(float delta_t,
   return PlayerFeedback::NoOp;
 }
 Player::Player() : Tank(glm::vec3(0, 0, 0),
-                        0.5, "tankBody_blue") {
+                        0.5, "tankBody_blue", "tankBlue_barrel1") {
 
 }
 void Player::Render(ShaderProgram *shader) const {
-//  utility::RenderTileObj(344,
-//                         596,
-//                         96,
-//                         96,
-//                         position_,
-//                         orientation_,
-//                         1.0,
-//                         shader);
   chassis_.Render(position_, orientation_, 1.0, shader);
+  turret_.Render(position_, orientation_, 1.0, shader);
 }
 glm::vec3 Player::position() const {
   return position_;

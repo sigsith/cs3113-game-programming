@@ -37,9 +37,16 @@ class Tank : public Boxed {
   float orientation_{};
   float angular_velocity_{};
   float angular_acceleration_{};
+//  float turret_orientation_{};
+//  float turret_angular_velocity_{};
+//  float turret_angular_acceleration_{};
   TextureObject chassis_;
+  TextureObject turret_;
  public:
-  Tank(glm::vec3 start_position, float start_orientation, const std::string& chassis);
+  Tank(glm::vec3 start_position,
+       float start_orientation,
+       const std::string &chassis_name,
+       const std::string &turret_name);
   void Update(float delta_t, const Map &map);
   Box box() const override {
     return Box{

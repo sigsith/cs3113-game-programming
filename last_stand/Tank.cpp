@@ -18,8 +18,10 @@ void Tank::Update(float delta_t, const Map &map) {
 }
 Tank::Tank(glm::vec3 start_position,
            float start_orientation,
-           const std::string &chassis) : position_(start_position),
-                                         orientation_(start_orientation),
-                                         chassis_(chassis) {
+           const std::string &chassis_name,
+           const std::string &turret_name) : position_(start_position),
+                                              orientation_(start_orientation),
+                                              chassis_(chassis_name),
+                                              turret_(turret_name){
 
 }

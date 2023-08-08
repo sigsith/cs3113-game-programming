@@ -92,7 +92,22 @@ Map Level::BuildMap() {
   return map;
 }
 std::vector<Mob> Level::BuildMobs() {
-  return std::vector<Mob>{Mob(glm::vec3(-2, 2, 0), 0.0, "tankBody_red", "tankRed_barrel2", "bulletRed1")};
+  return std::vector<Mob>{
+      Mob(glm::vec3(-4, 4, 0),
+          0.0,
+          "tankBody_red",
+          "tankRed_barrel2",
+          "bulletRed1"),
+      Mob(glm::vec3(4, 5, 0),
+          0.0,
+          "tankBody_dark",
+          "tankDark_barrel3",
+          "bulletSand1"),
+      Mob(glm::vec3(-6, 1, 0),
+          0.0,
+          "tank_huge",
+          "specialBarrel1",
+          "bulletRed3")};
 }
 bool Level::ShouldGoNext() const {
   return player_.position().y < -4;

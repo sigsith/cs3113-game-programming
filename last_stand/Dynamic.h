@@ -36,7 +36,6 @@ class Dynamic : public Boxed {
   glm::vec3 velocity_{};
   glm::vec3 acceleration_{};
   glm::vec3 position_;
-  float gravity_ = -1.2;
  public:
   Dynamic(glm::vec3 startpos,
           GLuint text_id,

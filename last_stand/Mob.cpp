@@ -82,7 +82,6 @@ Mob::Mob(glm::vec3 startpos, GLuint text_id, MobConfig config) :
       break;
     }
     case MobType::Chaser: {
-      gravity_ = 0;
       break;
     }
     default:break;

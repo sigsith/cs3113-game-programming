@@ -13,15 +13,13 @@ void Dynamic::Update(float delta_t, const Map &map) {
   velocity_ += acceleration_ * delta_t;
   position_ += velocity_ * delta_t;
   Box box = this->box();
-  if (SDL_GetTicks() > collision_time_out && map.IsSolid(box).first
-      && velocity_.y < 0) {
-    velocity_.y = 0;
-    acceleration_.y = 0;
-    position_.y = map.IsSolid(box).second;
-    grounded = true;
-  } else {
-    acceleration_.y = gravity_;
-  }
+//  if (SDL_GetTicks() > collision_time_out && map.IsSolid(box).first
+//      && velocity_.y < 0) {
+//    velocity_.y = 0;
+//    acceleration_.y = 0;
+//    position_.y = map.IsSolid(box).second;
+//    grounded = true;
+//  }
 }
 Dynamic::Dynamic(glm::vec3 startpos,
                  GLuint text_id,

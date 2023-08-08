@@ -79,7 +79,7 @@ Map Level0::BuildMap() {
                         NONE, NONE, NONE,
                         0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2};
   const auto index_mapping = LevelMapping(12, 5, mapping);
-  const auto tile_set_id = utility::LoadTexture(std::string("tileset.png"));
+  const auto tile_set_id = utility::LoadTexture(std::string("objects.png"));
   const auto tile_set = SpriteSheetMapping(10, 6, tile_set_id);
   const auto top_left = glm::vec3(-4, 0, 0);
   auto map = Map(index_mapping, tile_set, 0.5, top_left);

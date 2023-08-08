@@ -16,10 +16,10 @@ void TextureObject::Render(glm::vec3 position,
                            float orientation,
                            float scale,
                            ShaderProgram *shader) const {
-  utility::RenderTileObj(x_px,
-                         y_px,
-                         width,
-                         height,
+  utility::RenderTileObj(x_px_,
+                         y_px_,
+                         width_,
+                         height_,
                          position,
                          orientation,
                          shader,
@@ -39,7 +39,8 @@ std::unordered_map<std::string,
     std::istringstream iss(line);
     std::string name;
     TextureObject spec;
-    if (!(iss >> name >> spec.x_px >> spec.y_px >> spec.width >> spec.height)) {
+    if (!(iss >> name >> spec.x_px_ >> spec.y_px_ >> spec.width_
+              >> spec.height_)) {
       throw std::runtime_error("Failed to parse line: " + line);
     }
     result_map[name] = spec;
@@ -47,4 +48,7 @@ std::unordered_map<std::string,
 
   infile.close();
   return result_map;
+}
+float TextureObject::height() const{
+  return height_;
 }

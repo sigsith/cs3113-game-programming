@@ -20,10 +20,10 @@
 #include <string>
 class TextureObject {
  private:
-  float x_px{};
-  float y_px{};
-  float width{};
-  float height{};
+  float x_px_{};
+  float y_px_{};
+  float width_{};
+  float height_{};
   std::unordered_map<std::string,
                      TextureObject> ParseMapping(const std::string &file);
  public:
@@ -33,7 +33,7 @@ class TextureObject {
               float scale,
               ShaderProgram *shader) const;
   TextureObject();
+  float height() const;
 };
-
 
 #endif //CS3113_GAME_PROGRAMMING_LAST_STAND_TEXTUREOBJECT_H_

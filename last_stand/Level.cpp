@@ -12,10 +12,19 @@
 #include <sstream>
 
 Feedback Level::Update(float delta_time) {
-  const auto player_feedback = player_.Update(delta_time, map_, mobs_, short_lived_);
+  const auto
+      player_feedback = player_.Update(delta_time, map_, mobs_, short_lived_);
   for (auto &&mob : mobs_) {
     if (mob.IsAlive()) {
       mob.Update(delta_time, map_, player_);
+    }
+  }
+  for (size_t i = 0; i < short_lived_.size(); /* no increment here */) {
+    if (!short_lived_[i]->Update(delta_time)) {
+      std::swap(short_lived_[i], short_lived_.back());
+      short_lived_.pop_back();
+    } else {
+      ++i;
     }
   }
   if (player_feedback == PlayerFeedback::TakeDamage) {
@@ -35,6 +44,9 @@ void Level::Render(ShaderProgram *shader, int life) const {
   }
   RenderLife(shader, life);
   player_.Render(shader);
+  for (auto &&item : short_lived_) {
+    item->Render(shader);
+  }
 }
 Level::Level(Map map,
              std::vector<Mob> mobs,

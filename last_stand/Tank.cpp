@@ -47,6 +47,7 @@ void Tank::Render(ShaderProgram *shader) const {
                  shader);
 }
 void Tank::Fire(std::vector<std::unique_ptr<Ephemeral>> &short_lived) {
+  std::cout << "Fire!\n";
   short_lived.push_back(std::make_unique<Projectile>(TextureObject("bulletBlue1"),
                                                      turret_orientation_,
                                                      position_));

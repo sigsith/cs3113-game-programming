@@ -34,6 +34,10 @@ PlayerFeedback Player::Update(float delta_t,
   const auto speed = forward_speed - backward_speed;
   velocity_ = utility::VectorByAngle(speed, orientation_);
 
+  if (keyboard_state[SDL_SCANCODE_SPACE]) {
+    this->Fire(short_lived);
+  }
+
   int cursor_x, cursor_y;
   SDL_GetMouseState(&cursor_x, &cursor_y);
   const auto

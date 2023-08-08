@@ -31,6 +31,14 @@ void RenderText(const std::string &text,
                 ShaderProgram *shader,
                 float tile_size, glm::vec3 top_left
 );
+void RenderTileObj(float x_px,
+                   float y_px,
+                   float width,
+                   float height,
+                   glm::vec3 position,
+                   float orientation,
+                   float scale,
+                   ShaderProgram *shader);
 float Length(glm::vec3 glm_vec);
 glm::vec3 Normalize(glm::vec3 glm_vec);
 glm::vec3 VectorByAngle(float scalar, float angle_in_radians);

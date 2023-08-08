@@ -78,4 +78,49 @@ glm::vec3 VectorByAngle(float scalar, float angle_in_radians) {
   float y = scalar * glm::sin(angle_in_radians);
   return {x, y, 0.0f};
 }
+void RenderTileObj(float x_px,
+                   float y_px,
+                   float width,
+                   float height,
+                   glm::vec3 position,
+                   float orientation,
+                   float scale,
+                   ShaderProgram *shader) {
+
+  static const auto tile_id = LoadTexture("objects.png");
+  constexpr float total_width = 782.0;
+  constexpr float total_height = 782.0;
+
+  constexpr float vertices[] = {
+      -0.5f, -0.5f, 0.5f, -0.5f, 0.5f, 0.5f,
+      -0.5f, -0.5f, 0.5f, 0.5f, -0.5f, 0.5f
+  };
+
+  const auto u_start = x_px / total_width;
+  const auto u_end = (x_px + width) / total_width;
+  const auto v_start = y_px / total_height;
+  const auto v_end = (y_px + height) / total_height;
+  const float texture_coordinates[] = {
+      u_start, v_end, u_end, v_end, u_end, v_start,
+      u_start, v_end, u_end, v_start, u_start, v_start
+  };
+  glVertexAttribPointer(shader->positionAttribute, 2, GL_FLOAT, false, 0,
+                        vertices);
+  glEnableVertexAttribArray(shader->positionAttribute);
+  glVertexAttribPointer(shader->texCoordAttribute, 2, GL_FLOAT, false, 0,
+                        texture_coordinates);
+  glEnableVertexAttribArray(shader->texCoordAttribute);
+  constexpr auto base_matrix = glm::mat4(1.0f);
+  auto model_matrix = glm::translate(base_matrix, position);
+  model_matrix =
+      glm::rotate(model_matrix,
+                  orientation - glm::pi<float>() / 2,
+                  glm::vec3(0.0f, 0.0f, 1.0f));
+  model_matrix = glm::scale(model_matrix, glm::vec3(scale, scale, 1.0f));
+  shader->SetModelMatrix(model_matrix);
+  glBindTexture(GL_TEXTURE_2D, tile_id);
+  glDrawArrays(GL_TRIANGLES, 0, 6);
+  glDisableVertexAttribArray(shader->positionAttribute);
+  glDisableVertexAttribArray(shader->texCoordAttribute);
+}
 }

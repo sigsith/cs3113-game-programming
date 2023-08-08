@@ -13,28 +13,17 @@
 #include "Tank.h"
 class Player;
 
-enum class MobType {
-  Patroller,
-  Jumper,
-  Chaser
-};
 enum class MobState {
-  Idle,
+  Roaming,
   Aggro,
-  Attack,
 };
-struct MobConfig {
-  MobType mob_type;
-};
+
 class Mob : public Tank {
  private:
-  MobState state_;
-  MobConfig behavior_;
-  uint timer_ = 0;
+  MobState state_ = MobState::Roaming;
   bool is_alive_ = true;
  public:
-  void Update(float delta_t, const Map &map, const Player &player);
-  void Render(ShaderProgram *shader) const override;
+  void Update(float delta_t, const Map &map, const Player &player,  std::vector<std::unique_ptr<Projectile>> &);
   Mob(glm::vec3 startpos, float start_orient);
   void Die();
   bool IsAlive() const;

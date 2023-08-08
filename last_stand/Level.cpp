@@ -16,7 +16,7 @@ Feedback Level::Update(float delta_time) {
       player_feedback = player_.Update(delta_time, map_, mobs_, short_lived_);
   for (auto &&mob : mobs_) {
     if (mob.IsAlive()) {
-      mob.Update(delta_time, map_, player_);
+      mob.Update(delta_time, map_, player_, short_lived_);
     }
   }
   for (size_t i = 0; i < short_lived_.size(); /* no increment here */) {
@@ -90,7 +90,7 @@ Map Level::BuildMap() {
   return map;
 }
 std::vector<Mob> Level::BuildMobs() {
-  return std::vector<Mob>{};
+  return std::vector<Mob>{Mob(glm::vec3(-2, 2, 0), 0.0)};
 }
 bool Level::ShouldGoNext() const {
   return player_.position().y < -4;

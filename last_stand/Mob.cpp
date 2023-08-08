@@ -10,82 +10,41 @@
 #include "Mob.h"
 #include "Utility.h"
 #include "Player.h"
-void Mob::Update(float delta_t, const Map &map, const Player &player) {
+void Mob::Update(float delta_t,
+                 const Map &map,
+                 const Player &player,
+                 std::vector<std::unique_ptr<Projectile>> &projectiles) {
   Tank::Update(delta_t, map);
-  if (!is_alive_) {
-    return;
-  }
-  switch (behavior_.mob_type) {
-    case MobType::Jumper: {
-      if (SDL_GetTicks() > timer_) {
-        timer_ = SDL_GetTicks() + 3000;
+  glm::vec3 direction = player.position() - this->position_;
+  const auto distance = utility::Length(direction);
+  switch (state_) {
+    case MobState::Roaming: {
+      if (distance < 6.0) {
+        state_ = MobState::Aggro;
       }
       break;
     }
-    case MobType::Patroller: {
-      if (SDL_GetTicks() > timer_) {
-        timer_ = SDL_GetTicks() + 4000;
-        velocity_.x = -velocity_.x;
+    case MobState::Aggro: {
+      if (distance > 7.0) {
+        state_ = MobState::Roaming;
+        break;
+      }
+      const auto
+          angle = utility::GetTargetAngle(this->position_, player.position());
+      if (abs(angle - turret_orientation_) < 0.2) {
+        Fire(projectiles);
       }
       break;
     }
-    case MobType::Chaser: {
-      glm::vec3 direction = player.position() - this->position_;
-      this->acceleration_ = 1.5f * utility::Normalize(direction);
-      if (utility::Length(this->velocity_) > 2.0) {
-        this->velocity_ = utility::Normalize(this->velocity_) * 2.0f;
-      }
-      break;
-    }
-    default:break;
   }
-}
-void Mob::Render(ShaderProgram *shader) const {
-  if (!is_alive_) {
-    return;
-  }
-  glBindTexture(GL_TEXTURE_2D, this->texture_id_);
-  glVertexAttribPointer(shader->positionAttribute,
-                        2,
-                        GL_FLOAT,
-                        false,
-                        0,
-                        SQUARE_VERTICES);
-  glEnableVertexAttribArray(shader->positionAttribute);
-  glVertexAttribPointer(shader->texCoordAttribute,
-                        2,
-                        GL_FLOAT,
-                        false,
-                        0,
-                        FULL_TEX_COORDS);
-  glEnableVertexAttribArray(shader->texCoordAttribute);
-  constexpr auto base_matrix = glm::mat4(1.0f);
-  constexpr auto scale_factor_x = 1.0;
-  constexpr auto scale_factor_y = 1.0f;
-  const auto model_matrix =
-      glm::scale(glm::translate(base_matrix, position_),
-                 glm::vec3(scale_factor_x, scale_factor_y, 1.0f));
-  shader->SetModelMatrix(model_matrix);
-  glDrawArrays(GL_TRIANGLES, 0, 6);
-  glDisableVertexAttribArray(shader->positionAttribute);
-  glDisableVertexAttribArray(shader->texCoordAttribute);
+
 }
 Mob::Mob(glm::vec3 startpos, float start_orient) :
-    Tank(startpos, start_orient, "tankBody_blue", "tankBlue_barrel1", "bulletBlue1"),
-    behavior_(MobConfig{}),
-    state_(MobState::Idle) {
-
-  switch (behavior_.mob_type) {
-    case MobType::Patroller: {
-      velocity_.x = -1.0;
-      timer_ = SDL_GetTicks() + 4000;
-      break;
-    }
-    case MobType::Chaser: {
-      break;
-    }
-    default:break;
-  }
+    Tank(startpos,
+         start_orient,
+         "tankBody_blue",
+         "tankBlue_barrel1",
+         "bulletBlue1") {
 }
 bool Mob::IsAlive() const {
   return is_alive_;

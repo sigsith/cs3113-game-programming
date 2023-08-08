@@ -54,24 +54,28 @@ glm::vec3 Level::GetPlayerPosition() const {
   return player_.position();
 }
 Level::Level() : Level(BuildMap(),
-                         BuildMobs(),
-                         Player(glm::vec3(0, 0, 0),
-                                utility::LoadTexture(std::string("player.png")))) {}
+                       BuildMobs(),
+                       Player(glm::vec3(0, 0, 0),
+                              utility::LoadTexture(std::string("player.png")))) {}
 Map Level::BuildMap() {
   const auto mapping =
-      std::vector<uint>{6, 7, 8, 6, 7, 8, NONE, NONE, NONE, NONE, NONE, NONE,
-                        NONE, NONE, NONE, NONE, NONE, NONE, NONE, NONE, NONE,
-                        NONE, NONE, NONE,
-                        NONE, NONE, NONE, NONE, NONE, NONE, NONE, NONE, NONE,
-                        NONE, NONE, NONE,
-                        NONE, NONE, NONE, NONE, NONE, NONE, NONE, NONE, NONE,
-                        NONE, NONE, NONE,
-                        0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2};
-  const auto index_mapping = LevelMapping(12, 5, mapping);
-  const auto tile_set_id = utility::LoadTexture(std::string("objects.png"));
-  const auto tile_set = SpriteSheetMapping(10, 6, tile_set_id);
-  const auto top_left = glm::vec3(-4, 0, 0);
-  auto map = Map(index_mapping, tile_set, 0.5, top_left);
+      std::vector<uint>{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+  const auto index_mapping = LevelMapping(12, 12, mapping);
+  const auto tile_set_id = utility::LoadTexture(std::string("terrain.png"));
+  const auto tile_set = SpriteSheetMapping(10, 4, tile_set_id);
+  const auto top_left = glm::vec3(-7, 8, 0);
+  auto map = Map(index_mapping, tile_set, 1.0, top_left);
   return map;
 }
 std::vector<Mob> Level::BuildMobs() {

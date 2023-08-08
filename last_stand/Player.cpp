@@ -55,14 +55,15 @@ Player::Player() : Tank(glm::vec3(0, 0, 0),
 
 }
 void Player::Render(ShaderProgram *shader) const {
-  utility::RenderTileObj(344,
-                         596,
-                         96,
-                         96,
-                         position_,
-                         orientation_,
-                         1.0,
-                         shader);
+//  utility::RenderTileObj(344,
+//                         596,
+//                         96,
+//                         96,
+//                         position_,
+//                         orientation_,
+//                         1.0,
+//                         shader);
+  utility::RenderByName("tankBody_blue", position_, orientation_, 1.0, shader);
 }
 glm::vec3 Player::position() const {
   return position_;

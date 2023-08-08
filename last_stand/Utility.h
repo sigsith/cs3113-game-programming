@@ -45,10 +45,10 @@ void RenderByName(const std::string &name, glm::vec3 position,
                   float scale,
                   ShaderProgram *shader);
 struct ObjectSpec {
-  float x_px;
-  float y_px;
-  float width;
-  float height;
+  float x_px{};
+  float y_px{};
+  float width{};
+  float height{};
 };
 std::unordered_map<std::string,
                    ObjectSpec> ParseMapping(const std::string &file);

@@ -19,7 +19,7 @@ Feedback Level::Update(float delta_time) {
       mob.Update(delta_time, map_, player_, short_lived_);
     }
   }
-  for (size_t i = 0; i < short_lived_.size(); /* no increment here */) {
+  for (size_t i = 0; i < short_lived_.size();) {
     if (!short_lived_[i]->Update(delta_time)) {
       std::swap(short_lived_[i], short_lived_.back());
       short_lived_.pop_back();

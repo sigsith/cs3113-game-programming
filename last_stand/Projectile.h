@@ -23,10 +23,15 @@ class Projectile : public Ephemeral {
   ProjState state_ = ProjState::Flying;
   uint explosion_timeout_ = 0;
  public:
-  Projectile(TextureObject shell, TextureObject explosion, float orientation, glm::vec3 origin);
+  Projectile(TextureObject shell,
+             TextureObject explosion,
+             float orientation,
+             glm::vec3 origin);
   void Render(ShaderProgram *program) const override;
   bool Update(float delta_t) override;
   void Explode();
+  glm::vec3 position() const;
+  bool HasExploded();
 };
 
 #endif //CS3113_GAME_PROGRAMMING_LAST_STAND_PROJECTILE_H_

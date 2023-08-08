@@ -50,3 +50,9 @@ void Projectile::Explode() {
   explosion_timeout_ = SDL_GetTicks() + 1000;
   state_ = ProjState::Exploded;
 }
+glm::vec3 Projectile::position() const {
+  return curr_pos_;
+}
+bool Projectile::HasExploded() {
+  return state_ == ProjState::Exploded;
+}

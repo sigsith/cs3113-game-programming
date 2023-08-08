@@ -22,7 +22,7 @@
 PlayerFeedback Player::Update(float delta_t,
                               const Map &map,
                               std::vector<Mob> &mobs,
-                              std::vector<std::unique_ptr<Projectile>> &short_lived) {
+                              std::vector<std::unique_ptr<Projectile>> &projectiles) {
   const auto keyboard_state = SDL_GetKeyboardState(nullptr);
   constexpr float BASE_ROTATION_SPEED = 0.5f;
   const float angular_v_left =
@@ -36,7 +36,7 @@ PlayerFeedback Player::Update(float delta_t,
   velocity_ = utility::VectorByAngle(speed, orientation_);
 
   if (keyboard_state[SDL_SCANCODE_SPACE]) {
-    this->Fire(short_lived);
+    this->Fire(projectiles);
   }
 
   int cursor_x, cursor_y;
@@ -59,6 +59,12 @@ PlayerFeedback Player::Update(float delta_t,
         return PlayerFeedback::TakeDamage;
       }
       std::cout << "Box hit!\n";
+    }
+  }
+  for (auto &proj: projectiles) {
+    if (!proj->HasExploded() && utility::Length(proj->position() - this->position()) < 0.5) {
+      proj->Explode();
+      return PlayerFeedback::TakeDamage;
     }
   }
   return PlayerFeedback::NoOp;

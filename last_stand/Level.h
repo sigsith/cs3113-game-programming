@@ -16,8 +16,7 @@
 #include "Player.h"
 class Level : public Scene {
  protected:
-  Level(Background background, Map map, std::vector<Mob> mobs, Player player);
-  Background background_;
+  Level(Map map, std::vector<Mob> mobs, Player player);
   Map map_;
   std::vector<Mob> mobs_;
   Player player_;

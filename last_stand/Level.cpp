@@ -40,7 +40,6 @@ Feedback Level::Update(float delta_time) {
 void Level::Render(ShaderProgram *shader, int life) const {
   const auto view = glm::translate(glm::mat4(1.0f), -player_.position());
   shader->SetViewMatrix(view);
-  background_.Render(shader);
   map_.Render(shader);
   for (auto &&mob : mobs_) {
     mob.Render(shader);
@@ -48,12 +47,10 @@ void Level::Render(ShaderProgram *shader, int life) const {
   RenderLife(shader, life);
   player_.Render(shader);
 }
-Level::Level(Background background,
-             Map map,
+Level::Level(Map map,
              std::vector<Mob> mobs,
              Player player)
-    : background_(std::move(background)),
-      map_(std::move(map)),
+    : map_(std::move(map)),
       mobs_(std::move(mobs)),
       player_(std::move(player)) {
 }
@@ -67,8 +64,7 @@ void Level::RenderLife(ShaderProgram *shader, int life) const {
 glm::vec3 Level::GetPlayerPosition() const {
   return player_.position();
 }
-Level0::Level0() : Level(Background(std::string("background.png"), 30.0, 22.5),
-                         BuildMap(),
+Level0::Level0() : Level(BuildMap(),
                          BuildMobs(),
                          Player(glm::vec3(0, 0, 0),
                                 utility::LoadTexture(std::string("player.png")))) {}
@@ -109,8 +105,7 @@ bool Level0::ShouldGoNext() const {
 int Level0::Id() const {
   return 1;
 }
-Level1::Level1() : Level(Background(std::string("background1.png"), 30.0, 22.5),
-                         BuildMap(),
+Level1::Level1() : Level(BuildMap(),
                          BuildMobs(),
                          Player(glm::vec3(0, 0, 0),
                                 utility::LoadTexture(std::string("player.png")))) {}
@@ -151,8 +146,7 @@ bool Level1::ShouldGoNext() const {
 int Level1::Id() const {
   return 2;
 }
-Level2::Level2() : Level(Background(std::string("background2.png"), 30.0, 22.5),
-                         BuildMap(),
+Level2::Level2() : Level(BuildMap(),
                          BuildMobs(),
                          Player(glm::vec3(0, 0, 0),
                                 utility::LoadTexture(std::string("player.png")))) {}

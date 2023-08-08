@@ -39,6 +39,7 @@ class Entity {
 
 class Ephemeral : public Entity {
  public:
+  virtual ~Ephemeral() = default;
   virtual bool Update(float delta_t) = 0;
 };
 

@@ -38,8 +38,8 @@ void RenderTileObj(float x_px,
                    float height,
                    glm::vec3 position,
                    float orientation,
-                   float scale,
-                   ShaderProgram *shader);
+                   ShaderProgram *shader,
+                   float scale = 1.0);
 float Length(glm::vec3 glm_vec);
 glm::vec3 Normalize(glm::vec3 glm_vec);
 glm::vec3 VectorByAngle(float scalar, float angle_in_radians);

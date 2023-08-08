@@ -22,8 +22,8 @@ void TextureObject::Render(glm::vec3 position,
                          height,
                          position,
                          orientation,
-                         scale,
-                         shader);
+                         shader,
+                         scale);
 }
 TextureObject::TextureObject() = default;
 std::unordered_map<std::string,

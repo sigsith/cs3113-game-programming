@@ -84,8 +84,8 @@ void RenderTileObj(float x_px,
                    float height,
                    glm::vec3 position,
                    float orientation,
-                   float scale,
-                   ShaderProgram *shader) {
+                   ShaderProgram *shader,
+                   float scale) {
 
   static const auto tile_id = LoadTexture("objects.png");
   constexpr float total_width = 782.0;
@@ -116,7 +116,10 @@ void RenderTileObj(float x_px,
       glm::rotate(model_matrix,
                   orientation - glm::pi<float>() / 2,
                   glm::vec3(0.0f, 0.0f, 1.0f));
-  model_matrix = glm::scale(model_matrix, glm::vec3(scale, scale, 1.0f));
+  model_matrix = glm::scale(model_matrix,
+                            glm::vec3(width / 100.0 * scale,
+                                      height / 100.0 * scale,
+                                      1.0f));
   shader->SetModelMatrix(model_matrix);
   glBindTexture(GL_TEXTURE_2D, tile_id);
   glDrawArrays(GL_TRIANGLES, 0, 6);

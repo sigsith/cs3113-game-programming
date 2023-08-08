@@ -19,7 +19,6 @@ void Mob::Update(float delta_t, const Map &map, const Player &player) {
     case MobType::Jumper: {
       if (SDL_GetTicks() > timer_) {
         timer_ = SDL_GetTicks() + 3000;
-        Jump(2.0);
       }
       break;
     }

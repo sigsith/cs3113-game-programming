@@ -28,14 +28,6 @@ void Dynamic::MoveLeft() {
 void Dynamic::MoveRight() {
   velocity_.x = horizontal_speed_;
 }
-void Dynamic::Jump(float speed) {
-  auto box = this->box();
-  if (grounded) {
-    velocity_.y += speed;
-    collision_time_out = SDL_GetTicks() + 200;
-    grounded = false;
-  }
-}
 void Dynamic::StopHorizontal() {
   velocity_.x = 0;
 }

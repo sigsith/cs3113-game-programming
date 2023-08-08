@@ -20,7 +20,6 @@ Feedback Level::Update(float delta_time) {
     player_.MoveRight();
   }
   if (keyboard_state[SDL_SCANCODE_W] || keyboard_state[SDL_SCANCODE_SPACE]) {
-    player_.Jump(2.3);
   }
   const auto player_feedback = player_.Update(delta_time, map_, mobs_);
   for (auto &&mob : mobs_) {

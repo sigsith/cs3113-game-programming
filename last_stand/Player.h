@@ -24,7 +24,6 @@ class Player : public Dynamic {
   void Render(ShaderProgram *shader) const override;
   glm::vec3 position() const;
   Player(glm::vec3 startpos, GLuint text_id);
-  virtual void Jump(float speed) override;
 };
 
 #endif //CS3113_GAME_PROGRAMMING_PLATFORMER_PLAYER_H_

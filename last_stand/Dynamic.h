@@ -42,7 +42,6 @@ class Dynamic : public Boxed {
           float half_height,
           float half_width);
   void Update(float delta_t, const Map &map);
-  virtual void Jump(float speed);
   virtual void MoveLeft();
   virtual void MoveRight();
   virtual void StopHorizontal();

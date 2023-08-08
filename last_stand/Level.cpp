@@ -63,11 +63,11 @@ void Level::RenderLife(ShaderProgram *shader, int life) const {
 glm::vec3 Level::GetPlayerPosition() const {
   return player_.position();
 }
-Level0::Level0() : Level(BuildMap(),
+Level::Level() : Level(BuildMap(),
                          BuildMobs(),
                          Player(glm::vec3(0, 0, 0),
                                 utility::LoadTexture(std::string("player.png")))) {}
-Map Level0::BuildMap() {
+Map Level::BuildMap() {
   const auto mapping =
       std::vector<uint>{6, 7, 8, 6, 7, 8, NONE, NONE, NONE, NONE, NONE, NONE,
                         NONE, NONE, NONE, NONE, NONE, NONE, NONE, NONE, NONE,
@@ -84,12 +84,12 @@ Map Level0::BuildMap() {
   auto map = Map(index_mapping, tile_set, 0.5, top_left);
   return map;
 }
-std::vector<Mob> Level0::BuildMobs() {
+std::vector<Mob> Level::BuildMobs() {
   return std::vector<Mob>{};
 }
-bool Level0::ShouldGoNext() const {
+bool Level::ShouldGoNext() const {
   return player_.position().y < -4;
 }
-int Level0::Id() const {
+int Level::Id() const {
   return 1;
 }

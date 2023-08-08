@@ -129,7 +129,7 @@ void Game::Run() {
 void Game::GoNextLevel() {
   switch (curr_scene_->Id()) {
     case 0: {
-      curr_scene_ = std::make_unique<Level0>();
+      curr_scene_ = std::make_unique<Level>();
       break;
     }
     case 1: {

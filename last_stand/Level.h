@@ -15,25 +15,20 @@
 #include "Mob.h"
 #include "Player.h"
 class Level : public Scene {
- protected:
+ private:
   Level(Map map, std::vector<Mob> mobs, Player player);
   Map map_;
   std::vector<Mob> mobs_;
   Player player_;
  public:
+  Level();
   Feedback Update(float delta_time) override;
   void Render(ShaderProgram *shader, int life) const override;
   void RenderLife(ShaderProgram *shader, int life) const;
-  virtual bool ShouldGoNext() const = 0;
   glm::vec3 GetPlayerPosition() const override;
-};
-
-class Level0 : public Level {
- public:
-  Level0();
   static Map BuildMap();
   static std::vector<Mob> BuildMobs();
-  bool ShouldGoNext() const override;
+  bool ShouldGoNext() const;
   int Id() const override;
 };
 

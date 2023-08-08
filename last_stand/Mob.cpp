@@ -39,7 +39,13 @@ void Mob::Update(float delta_t,
       break;
     }
   }
-
+  for (auto &proj : projectiles) {
+    if (!proj->HasExploded()
+        && utility::Length(proj->position() - position_) < 0.5) {
+      Die();
+      return;
+    }
+  }
 }
 Mob::Mob(glm::vec3 startpos, float start_orient) :
     Tank(startpos,

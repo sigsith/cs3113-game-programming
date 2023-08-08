@@ -56,7 +56,11 @@ Player::Player() : Tank(glm::vec3(0, 0, 0),
 }
 void Player::Render(ShaderProgram *shader) const {
   chassis_.Render(position_, orientation_, 1.0, shader);
-  turret_.Render(position_, orientation_, 1.0, shader);
+  const auto offset = utility::VectorByAngle(0.2, orientation_);
+  turret_.Render(position_ + offset,
+                 utility::FlipAngle(orientation_),
+                 1.0,
+                 shader);
 }
 glm::vec3 Player::position() const {
   return position_;

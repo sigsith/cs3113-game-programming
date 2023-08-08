@@ -126,4 +126,7 @@ void RenderTileObj(float x_px,
   glDisableVertexAttribArray(shader->positionAttribute);
   glDisableVertexAttribArray(shader->texCoordAttribute);
 }
+float FlipAngle(float scalar) {
+  return (scalar + glm::pi<float>());
+}
 }

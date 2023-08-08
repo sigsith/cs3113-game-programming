@@ -43,6 +43,7 @@ void RenderTileObj(float x_px,
 float Length(glm::vec3 glm_vec);
 glm::vec3 Normalize(glm::vec3 glm_vec);
 glm::vec3 VectorByAngle(float scalar, float angle_in_radians);
+float FlipAngle(float scalar);
 };
 
 #endif //CS3113_GAME_PROGRAMMING_PLATFORMER_UTILITY_H_

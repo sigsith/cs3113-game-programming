@@ -33,6 +33,8 @@ void Mob::Update(float delta_t,
           angle = utility::GetTargetAngle(this->position_, player.position());
       if (abs(angle - turret_orientation_) < 0.2) {
         Fire(projectiles);
+      } else {
+        target_angle = angle;
       }
       break;
     }

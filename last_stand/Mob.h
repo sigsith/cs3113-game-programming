@@ -24,7 +24,8 @@ class Mob : public Tank {
   bool is_alive_ = true;
  public:
   void Update(float delta_t, const Map &map, const Player &player,  std::vector<std::unique_ptr<Projectile>> &);
-  Mob(glm::vec3 startpos, float start_orient);
+  Mob(glm::vec3 startpos, float start_orient, const std::string& chassis_name,
+      const std::string& turret_name, const std::string& bullet_name);
   void Die();
   bool IsAlive() const;
 };

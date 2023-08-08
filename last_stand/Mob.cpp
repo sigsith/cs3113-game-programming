@@ -47,12 +47,16 @@ void Mob::Update(float delta_t,
     }
   }
 }
-Mob::Mob(glm::vec3 startpos, float start_orient) :
+Mob::Mob(glm::vec3 startpos,
+         float start_orient,
+         const std::string &chassis_name,
+         const std::string &turret_name,
+         const std::string &bullet_name) :
     Tank(startpos,
          start_orient,
-         "tankBody_red",
-         "tankRed_barrel1",
-         "bulletRed1") {
+         chassis_name,
+         turret_name,
+         bullet_name) {
 }
 bool Mob::IsAlive() const {
   return is_alive_;

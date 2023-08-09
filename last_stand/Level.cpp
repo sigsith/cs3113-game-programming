@@ -78,8 +78,16 @@ Level::Level() : Level(BuildMap(),
                        Player()) {
 
   // Add some trees
-  static_entities_.emplace_back(TextureObject("treeBrown_large"),
-                                glm::vec3(-6, 6, 0));
+  for (int i = -6; i <= 6; i += 2) {
+    static_entities_.emplace_back(TextureObject("treeGreen_large"),
+                                  glm::vec3(-6, i, 0));
+    static_entities_.emplace_back(TextureObject("treeGreen_large"),
+                                  glm::vec3(6, i, 0));
+    static_entities_.emplace_back(TextureObject("treeGreen_large"),
+                                  glm::vec3(i, 6, 0));
+    static_entities_.emplace_back(TextureObject("treeGreen_large"),
+                                  glm::vec3(i, -6, 0));
+  }
 
 }
 Map Level::BuildMap() {

@@ -27,7 +27,6 @@ class Player : public Tank {
                         const Map &map,
                         std::vector<Mob> &mobs,
                         std::vector<std::unique_ptr<Projectile>> &);
-  glm::vec3 position() const;
   Player();
 };
 

@@ -25,26 +25,36 @@ PlayerFeedback Player::Update(float delta_t, const EventFrame &event_frame,
                               std::vector<Mob> &mobs,
                               std::vector<std::unique_ptr<Projectile>> &projectiles) {
   const auto keyboard_state = SDL_GetKeyboardState(nullptr);
-  constexpr float BASE_ROTATION_SPEED = 0.5f;
-  const float angular_v_left =
-      (keyboard_state[SDL_SCANCODE_A]) ? BASE_ROTATION_SPEED : 0.0f;
-  const float angular_v_right =
-      (keyboard_state[SDL_SCANCODE_D]) ? -BASE_ROTATION_SPEED : 0.0f;
-  angular_velocity_ = angular_v_left + angular_v_right;
-  const float forward_speed = keyboard_state[SDL_SCANCODE_W] ? 0.5 : 0.0f;
-  const float backward_speed = keyboard_state[SDL_SCANCODE_S] ? 0.2 : 0.0f;
-  const auto speed = forward_speed - backward_speed;
-  velocity_ = utility::VectorByAngle(speed, orientation_);
-
-  if (event_frame.space_key_down() || event_frame.left_mouse_down()) {
-    this->Fire(projectiles);
+  Steering steering = Steering::None;
+  if (keyboard_state[SDL_SCANCODE_A] && !keyboard_state[SDL_SCANCODE_D]) {
+    steering = Steering::Left;
   }
+  if (keyboard_state[SDL_SCANCODE_D] && !keyboard_state[SDL_SCANCODE_A]) {
+    steering = Steering::Right;
+  }
+  Mode mode = Mode::Halt;
+  if (keyboard_state[SDL_SCANCODE_W] && !keyboard_state[SDL_SCANCODE_S]) {
+    mode = Mode::Forward;
+  }
+  if (keyboard_state[SDL_SCANCODE_S] && !keyboard_state[SDL_SCANCODE_W]) {
+    mode = Mode::Reverse;
+  }
+  SetGear(mode, steering);
 
   int cursor_x, cursor_y;
   SDL_GetMouseState(&cursor_x, &cursor_y);
   const auto
       cursor_pos = glm::vec3(cursor_x - 1280 / 2, -(cursor_y - 960 / 2), 0);
-  target_angle = utility::GetTargetAngle(glm::vec3(0, 0, 0), cursor_pos);
+  const auto
+      target_angle = utility::GetTargetAngle(glm::vec3(0, 0, 0), cursor_pos);
+  SetTurretTarget(target_angle);
+
+  if (event_frame.space_key_down() || event_frame.left_mouse_down()) {
+    auto projectile = this->TryFire();
+    if (projectile) {
+      projectiles.push_back(std::move(projectile));
+    }
+  }
 
   Tank::Update(delta_t, map);
   const auto player_box = this->box();
@@ -71,12 +81,13 @@ PlayerFeedback Player::Update(float delta_t, const EventFrame &event_frame,
   }
   return PlayerFeedback::NoOp;
 }
+
+constexpr Specs PLAYER_SPECS = {
+    3.0, 1.0, 1.0, 1.0, 1.0, 1.0,};
 Player::Player() : Tank(glm::vec3(0, 0, 0),
                         glm::pi<float>() / 2,
-                        "tankBody_blue",
-                        "tankBlue_barrel1", "bulletBlue1") {
+                        PLAYER_SPECS,
+                        Paint{"tankBody_blue",
+                              "tankBlue_barrel1", "bulletBlue1"}) {
 
-}
-glm::vec3 Player::position() const {
-  return position_;
 }

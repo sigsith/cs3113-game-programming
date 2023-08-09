@@ -10,12 +10,41 @@
 #include "Tank.h"
 #include "Utility.h"
 #include "Projectile.h"
+#include <cmath>
 
 void Tank::Update(float delta_t, const Map &map) {
-  velocity_ += acceleration_ * delta_t;
+  // Apply inertia
   position_ += velocity_ * delta_t;
+  velocity_ += acceleration_ * delta_t;
   orientation_ += angular_velocity_ * delta_t;
   turret_orientation_ += turret_angular_velocity_ * delta_t;
+  // Update control
+  // Update gear
+  const auto direction_vec = utility::VectorByAngle(1.0, orientation_);
+  const auto speed_in_direction = glm::dot(velocity_, direction_vec);
+  switch (mode_) {
+    case Mode::Forward: {
+      const auto real_acceleration =
+          specs_.base_acceleration_forward_
+              * std::min((specs_.top_speed_forward - speed_in_direction)
+                             / specs_.top_speed_forward, 1.2f);
+      acceleration_ = direction_vec * real_acceleration;
+      break;
+    }
+    case Mode::Reverse: {
+      const auto real_acceleration =
+          specs_.base_acceleration_reverse_
+              * std::min((specs_.top_speed_backward + speed_in_direction)
+                             / specs_.top_speed_backward, 1.2f);
+      acceleration_ = -direction_vec * real_acceleration;
+      break;
+    }
+    case Mode::Halt: {
+      acceleration_ = -specs_.cruising_friction * velocity_;
+      break;
+    }
+  }
+  // Update turret
   auto
       diff = fmod((target_angle - turret_orientation_),
                   glm::pi<float>() * 2);
@@ -49,14 +78,38 @@ void Tank::Render(ShaderProgram *shader) const {
                  1.0,
                  shader);
 }
-void Tank::Fire(std::vector<std::unique_ptr<Projectile>> &short_lived) {
+Tank::Tank(glm::vec3 start_position,
+           float start_orientation,
+           Specs specs,
+           const Paint &paint) : position_(start_position),
+                                 orientation_(start_orientation),
+                                 specs_(specs),
+                                 chassis_(paint.chassis_name),
+                                 turret_(paint.turret_name),
+                                 shell_(paint.shell_name) {
+
+}
+void Tank::SetTurretTarget(float target_orientation) {
+  target_angle = target_orientation;
+}
+std::unique_ptr<Projectile> Tank::TryFire() {
   if (SDL_GetTicks() > fire_time_out) {
     std::cout << "Fire!\n";
-    short_lived.push_back(std::make_unique<Projectile>(shell_,
-                                                       TextureObject(
-                                                           "explosion2"),
-                                                       turret_orientation_,
-                                                       position_));
     fire_time_out = SDL_GetTicks() + 2000;
+    return std::make_unique<Projectile>(shell_,
+                                        TextureObject("explosion2"),
+                                        turret_orientation_,
+                                        position_);
   }
+  return nullptr;//use optional in C++17+
+}
+void Tank::SetGear(Mode mode, Steering steering) {
+  mode_ = mode;
+  steering_ = steering;
+}
+glm::vec3 Tank::position() const {
+  return position_;
+}
+float Tank::turret_orientation() const {
+  return turret_orientation_;
 }

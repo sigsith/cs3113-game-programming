@@ -15,7 +15,7 @@ void Mob::Update(float delta_t,
                  const Player &player,
                  std::vector<std::unique_ptr<Projectile>> &projectiles) {
   Tank::Update(delta_t, map);
-  glm::vec3 direction = player.position() - this->position_;
+  glm::vec3 direction = player.position() - position();
   const auto distance = utility::Length(direction);
   switch (state_) {
     case MobState::Roaming: {
@@ -30,18 +30,21 @@ void Mob::Update(float delta_t,
         break;
       }
       const auto
-          angle = utility::GetTargetAngle(this->position_, player.position());
-      if (abs(angle - turret_orientation_) < 0.2) {
-        Fire(projectiles);
+          angle = utility::GetTargetAngle(position(), player.position());
+      if (abs(angle - turret_orientation()) < 0.2) {
+        auto projectile = TryFire();
+        if (projectile) {
+          projectiles.push_back(std::move(projectile));
+        }
       } else {
-        target_angle = angle;
+        SetTurretTarget(angle);
       }
       break;
     }
   }
   for (auto &proj : projectiles) {
     if (!proj->HasExploded() && !proj->IsSafetyOn()
-        && utility::Length(proj->position() - position_) < 0.5) {
+        && utility::Length(proj->position() - position()) < 0.5) {
       Die();
       return;
     }
@@ -57,7 +60,7 @@ Mob::Mob(glm::vec3 startpos,
          chassis_name,
          turret_name,
          bullet_name) {
-  velocity_ = utility::VectorByAngle(0.5, orientation_);
+  SetGear(Mode::Forward, Steering::None);
 }
 bool Mob::IsAlive() const {
   return is_alive_;

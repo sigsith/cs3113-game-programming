@@ -22,26 +22,31 @@ void Tank::Update(float delta_t, const Map &map) {
   // Update control
   // Update gear
   const auto direction_vec = utility::VectorByAngle(1.0, orientation_);
-  const auto speed_in_direction = glm::dot(velocity_, direction_vec);
+  const auto speed_parallel = glm::dot(velocity_, direction_vec);
+  const auto velocity_parallel = speed_parallel * direction_vec;
+  const auto velocity_perpendicular = velocity_ - velocity_parallel;
   switch (mode_) {
     case Mode::Forward: {
       const auto real_acceleration =
           specs_.base_acceleration_forward_
-              * std::min((specs_.top_speed_forward - speed_in_direction)
+              * std::min((specs_.top_speed_forward - speed_parallel)
                              / specs_.top_speed_forward, 1.2f);
-      acceleration_ = direction_vec * real_acceleration;
+      acceleration_ = direction_vec * real_acceleration
+          - specs_.lateral_friction * velocity_perpendicular;
       break;
     }
     case Mode::Reverse: {
       const auto real_acceleration =
           specs_.base_acceleration_reverse_
-              * std::min((specs_.top_speed_backward + speed_in_direction)
+              * std::min((specs_.top_speed_backward + speed_parallel)
                              / specs_.top_speed_backward, 1.2f);
-      acceleration_ = -direction_vec * real_acceleration;
+      acceleration_ = -direction_vec * real_acceleration
+          - specs_.lateral_friction * velocity_perpendicular;
       break;
     }
     case Mode::Halt: {
-      acceleration_ = -specs_.cruising_friction * velocity_;
+      acceleration_ = -specs_.forward_friction * velocity_parallel
+          - specs_.lateral_friction * velocity_perpendicular;
       break;
     }
   }

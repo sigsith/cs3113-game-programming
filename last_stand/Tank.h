@@ -27,12 +27,15 @@
 #include "Map.h"
 #include "Projectile.h"
 
+
+
 struct Specs {
   const float top_speed_forward = 1.0;
   const float base_acceleration_forward_ = 1.0;
   const float base_acceleration_reverse_ = 1.0;
   const float top_speed_backward = 1.0;
-  const float cruising_friction = 1.0;
+  const float forward_friction = 2.0;
+  const float lateral_friction = 1.0;
   const float rotation_friction = 1.0;
   const float base_angular_acceleration = 1.0;
   const float top_rotation_speed = 1.0;

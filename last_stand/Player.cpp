@@ -96,7 +96,7 @@ uint Player::Update(float delta_t, const EventFrame &event_frame,
 //const float fire_rate = 1.0;
 constexpr Specs
     PLAYER_SPECS =
-    {2.0, 1.5, 1.0,
+    {2.5, 1.875, 1.0,
      1.0, 2.0, 3.0,
      2.5, 2.25, 1.5,
      2.5, 6.0, 1.0};

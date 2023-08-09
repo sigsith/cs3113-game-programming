@@ -156,3 +156,6 @@ glm::vec3 Tank::position() const {
 float Tank::turret_orientation() const {
   return turret_orientation_;
 }
+float Tank::chassis_orientation() const {
+  return orientation_;
+}

@@ -98,6 +98,7 @@ class Tank : public Boxed {
   std::unique_ptr<Projectile> TryFire();
   glm::vec3 position() const;
   float turret_orientation() const;
+  float chassis_orientation() const;
 
   Box box() const override {
     return Box{

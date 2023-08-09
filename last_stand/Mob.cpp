@@ -29,6 +29,7 @@ void Mob::Update(float delta_t,
         state_ = MobState::Roaming;
         break;
       }
+      MoveTowards(player.position());
       const auto
           angle = utility::GetTargetAngle(position(), player.position());
       if (abs(angle - turret_orientation()) < 0.2) {
@@ -67,4 +68,24 @@ bool Mob::IsAlive() const {
 }
 void Mob::Die() {
   is_alive_ = false;
+}
+void Mob::MoveTowards(glm::vec3 target) {
+  // Move towards a target.
+  // 1. Adjust orientation. (similar to turret)
+  const auto target_angle = utility::GetTargetAngle(position(), target);
+
+  auto
+      diff = fmod((target_angle - chassis_orientation()),
+                  glm::pi<float>() * 2);
+  if (diff < 0) {
+    diff += glm::pi<float>() * 2;
+  }
+  auto steer = Steering::None;
+  if (diff < glm::pi<float>()) {
+    steer = Steering::Left;
+  } else {
+    steer = Steering::Right;
+  }
+  // 2. Move
+  SetGear(Mode::Forward, steer);
 }

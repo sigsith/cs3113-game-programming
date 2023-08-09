@@ -22,12 +22,18 @@ class Mob : public Tank {
  private:
   MobState state_ = MobState::Roaming;
   bool is_alive_ = true;
+  std::vector<glm::vec3> waypoints_;
+  size_t current_waypoint_;
  public:
-  void Update(float delta_t, const Map &map, const Player &player,  std::vector<std::unique_ptr<Projectile>> &);
-  Mob(glm::vec3 startpos, float start_orient, const std::string& chassis_name,
-      const std::string& turret_name, const std::string& bullet_name);
+  void Update(float delta_t,
+              const Map &map,
+              const Player &player,
+              std::vector<std::unique_ptr<Projectile>> &);
+  Mob(glm::vec3 startpos, float start_orient, const std::string &chassis_name,
+      const std::string &turret_name, const std::string &bullet_name);
   void Die();
   bool IsAlive() const;
+  void MoveTowards(glm::vec3 target);
 };
 
 #endif //CS3113_GAME_PROGRAMMING_PLATFORMER_MOB_H_

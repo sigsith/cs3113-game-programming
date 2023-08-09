@@ -81,8 +81,24 @@ PlayerFeedback Player::Update(float delta_t, const EventFrame &event_frame,
   }
   return PlayerFeedback::NoOp;
 }
-
-constexpr Specs PLAYER_SPECS = {};
+//const float top_speed_forward = 2.0;
+//const float base_acceleration_forward_ = 1.5;
+//const float base_acceleration_reverse_ = 1.0;
+//const float top_speed_backward = 1.0;
+//const float forward_friction = 2.0;
+//const float lateral_friction = 3.0;
+//const float rotation_friction = 2.5;
+//const float base_angular_acceleration = 1.5;
+//const float top_rotation_speed = 1.0;
+//const float turret_turn_rate = 2.0;
+//const float projectile_speed = 6.0;
+//const float fire_rate = 1.0;
+constexpr Specs
+    PLAYER_SPECS =
+    {2.0, 1.5, 1.0,
+     1.0, 2.0, 3.0,
+     2.5, 2.25, 1.5,
+     2.5, 6.0, 1.0};
 Player::Player() : Tank(glm::vec3(0, 0, 0),
                         glm::pi<float>() / 2,
                         PLAYER_SPECS,

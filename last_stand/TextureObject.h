@@ -33,6 +33,7 @@ class TextureObject {
               float scale,
               ShaderProgram *shader) const;
   TextureObject();
+  float width() const;
   float height() const;
 };
 

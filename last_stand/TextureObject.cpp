@@ -49,6 +49,9 @@ std::unordered_map<std::string,
   infile.close();
   return result_map;
 }
-float TextureObject::height() const{
+float TextureObject::height() const {
   return height_;
+}
+float TextureObject::width() const {
+  return width_;
 }

@@ -96,17 +96,6 @@ void Tank::Update(float delta_t, const Map &map) {
   }
   Box box = this->box();
 }
-Tank::Tank(glm::vec3 start_position,
-           float start_orientation,
-           const std::string &chassis_name,
-           const std::string &turret_name,
-           const std::string &shell_name) : position_(start_position),
-                                            orientation_(start_orientation),
-                                            chassis_(chassis_name),
-                                            turret_(turret_name),
-                                            shell_(shell_name) {
-
-}
 void Tank::Render(ShaderProgram *shader) const {
   chassis_.Render(position_, orientation_, 1.0, shader);
   const auto offset = utility::VectorByAngle(turret_.height() / 100.0 / 2.0,
@@ -125,7 +114,8 @@ Tank::Tank(glm::vec3 start_position,
                                  chassis_(paint.chassis_name),
                                  turret_(paint.turret_name),
                                  shell_(paint.shell_name) {
-
+  half_width = chassis_.width() / 100.0f / 2.0;
+  half_height = chassis_.height() / 100.0f / 2.0;
 }
 void Tank::SetTurretTarget(float target_orientation) {
   target_angle = target_orientation;

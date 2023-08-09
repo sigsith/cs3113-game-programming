@@ -74,7 +74,7 @@ PlayerFeedback Player::Update(float delta_t, const EventFrame &event_frame,
 //  }
   for (auto &proj : projectiles) {
     if (!proj->HasExploded() && !proj->IsSafetyOn()
-        && utility::Length(proj->position() - this->position()) < 0.3) {
+        && box().IsCollisionWith(proj->position())) {
       proj->Explode();
       return PlayerFeedback::TakeDamage;
     }

@@ -28,11 +28,8 @@
 #include "Projectile.h"
 class Tank : public Boxed {
  private:
-  float horizontal_speed_ = 1.2;
  protected:
-  uint collision_time_out = 0;
   uint fire_time_out = 0;
-  bool grounded = false;
   glm::vec3 velocity_{};
   glm::vec3 acceleration_{};
   glm::vec3 position_;

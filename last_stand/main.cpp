@@ -10,6 +10,5 @@
 #include "Game.h"
 #include <iostream>
 int main() {
-  std::cout << "Tips: WASD to move, cursor to turret, and SPACE/Left click to fire.\n";
   Game().Run();
 }

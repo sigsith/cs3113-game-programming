@@ -24,6 +24,18 @@ void Menu::Render(ShaderProgram *shader, int life) const {
                       shader,
                       0.4,
                       glm::vec3(-4.0, 2, 0));
+  utility::RenderText("WASD to move",
+                      shader,
+                      0.2,
+                      glm::vec3(-4.0, 1.0, 0));
+  utility::RenderText("Cursor to turret",
+                      shader,
+                      0.2,
+                      glm::vec3(-4.0, 0.5, 0));
+  utility::RenderText("SPACE/LeftClick to fire",
+                      shader,
+                      0.2,
+                      glm::vec3(-4.0, 0.0, 0));
 }
 Menu::Menu() : background_(Background(std::string("menu_background.png"))) {
 

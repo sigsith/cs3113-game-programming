@@ -77,7 +77,7 @@ Map Level::BuildMap() {
   const auto index_mapping = LoadTerrain("terrain_mapping.txt");
   const auto tile_set_id = utility::LoadTexture(std::string("terrain.png"));
   const auto tile_set = SpriteSheetMapping(10, 4, tile_set_id);
-  const auto top_left = glm::vec3(-1.0 * 49.0 / 2.0, 1.0 * 40.0 / 2.0, 0);
+  const auto top_left = glm::vec3(-1.0 * 49.0 / 2.0, 1.0 * 49.0 / 2.0, 0);
   auto map = Map(index_mapping, tile_set, 1.0, top_left);
   return map;
 }
@@ -85,7 +85,8 @@ std::vector<Mob> Level::BuildMobs() {
   static const auto common_waypoint1 =
       WaypointLooper(std::vector<glm::vec3>{
           glm::vec3(-7.0, 7.0, 0.0),
-          glm::vec3(0.0, 7.0, 0.0)}
+          glm::vec3(0.0, 7.0, 0.0),
+          glm::vec3(7.0, 7.0, 0.0)}
       );
   return std::vector<Mob>{
       Mob(glm::vec3(-4, 4, 0),

@@ -58,5 +58,5 @@ bool Projectile::HasExploded() {
   return state_ == ProjState::Exploded;
 }
 bool Projectile::IsSafetyOn() const {
-  return utility::Length(position() - origin_) < 1.0;
+  return utility::Length(position() - origin_) < 0.8;
 }

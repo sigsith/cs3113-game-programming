@@ -8,6 +8,7 @@
 * Academic Misconduct.
 **/
 #include "Map.h"
+#include <unordered_map>
 
 Map::Map(LevelMapping level_mapping,
          SpriteSheetMapping sprite_sheet_mapping,
@@ -128,3 +129,66 @@ SpriteSheetMapping::SpriteSheetMapping(uint width,
                                        uint height,
                                        GLuint texture_id)
     : width_(width), height_(height), texture_id_(texture_id) {}
+
+LevelMapping LoadTerrain(const std::string &config_file) {
+  std::unordered_map<std::string, std::vector<std::vector<uint>>> sectors;
+  std::ifstream file(config_file);
+  if (!file.is_open()) {
+    throw std::runtime_error("Failed to open file: " + config_file);
+  }
+  std::string line;
+  while (std::getline(file, line)) {
+    if (line == "FINAL") {
+      return {49, 49, BuildFinalMap(file, sectors)};
+    } else if (!line.empty()) {
+      FillMapping(file, line, sectors);
+    }
+  }
+  throw std::runtime_error("Failed to build map");
+}
+void FillMapping(std::ifstream &file,
+                 std::string &line,
+                 std::unordered_map<std::string,
+                                    std::vector<std::vector<uint>>> &sectors) {
+  std::string title = line;
+  std::vector<std::vector<uint>> tiles;
+  for (int i = 0; i < 7; i++) {
+    std::getline(file, line);
+    std::stringstream ss(line);
+    std::vector<uint> row;
+    uint val;
+    while (ss >> val) {
+      row.push_back(val);
+    }
+    tiles.push_back(row);
+  }
+  sectors[title] = tiles;
+}
+std::vector<uint> BuildFinalMap(std::ifstream &file,
+                                const std::unordered_map<std::string,
+                                                         std::vector<std::vector<
+                                                             uint>>> &sectors) {
+  std::string line;
+  std::vector<std::vector<uint>> final_map_2d;
+  while (std::getline(file, line)) {
+    std::stringstream ss(line);
+    std::string sectorName;
+    std::vector<std::vector<uint>> rowTiles;
+    while (ss >> sectorName) {
+      auto& sectorTiles = sectors.at(sectorName);
+      if (rowTiles.empty()) {
+        rowTiles = sectorTiles;
+      } else {
+        for (int i = 0; i < 7; i++) {
+          rowTiles[i].insert(rowTiles[i].end(), sectorTiles[i].begin(), sectorTiles[i].end());
+        }
+      }
+    }
+    final_map_2d.insert(final_map_2d.end(), rowTiles.begin(), rowTiles.end());
+  }
+  std::vector<uint> finalMap;
+  for (const auto& row : final_map_2d) {
+    finalMap.insert(finalMap.end(), row.begin(), row.end());
+  }
+  return finalMap;
+}

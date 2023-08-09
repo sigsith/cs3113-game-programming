@@ -38,6 +38,17 @@ struct LevelMapping {
                std::vector<uint> index_mapping_);
 };
 
+LevelMapping LoadTerrain(const std::string &config_file);
+
+void FillMapping(std::ifstream &file,
+                                                               std::string &line, std::unordered_map<std::string,
+                                                                                                     std::vector<std::vector<uint>>>&);
+
+std::vector<uint> BuildFinalMap(std::ifstream &file,
+                                const std::unordered_map<std::string,
+                                                         std::vector<std::vector<
+                                                             uint>>> &mapping);
+
 struct SpriteSheetMapping {
   uint width_;
   uint height_;

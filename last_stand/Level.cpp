@@ -74,20 +74,7 @@ Level::Level() : Level(BuildMap(),
                        BuildMobs(),
                        Player()) {}
 Map Level::BuildMap() {
-  const auto mapping =
-      std::vector<uint>{0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0,
-                        0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0,
-                        0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0,
-                        0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0,
-                        0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0,
-                        0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0,
-                        2, 2, 2, 2, 2, 12, 2, 2, 2, 2, 2, 2,
-                        0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0,
-                        0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0,
-                        0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0,
-                        0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0,
-                        0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0};
-  const auto index_mapping = LevelMapping(12, 12, mapping);
+  const auto index_mapping = LoadTerrain("terrain_mapping.txt");
   const auto tile_set_id = utility::LoadTexture(std::string("terrain.png"));
   const auto tile_set = SpriteSheetMapping(10, 4, tile_set_id);
   const auto top_left = glm::vec3(-7, 8, 0);

@@ -11,7 +11,9 @@
 #include "Level.h"
 #include <sstream>
 
-Feedback Level::Update(float delta_time) {
+#include "Game.h"
+
+Feedback Level::Update(float delta_time, const EventFrame &event_frame) {
   const auto
       player_feedback = player_.Update(delta_time, map_, mobs_, short_lived_);
   for (auto &&mob : mobs_) {

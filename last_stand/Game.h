@@ -31,12 +31,18 @@
 #include "Mob.h"
 #include "Scene.h"
 
-struct EventFrame {
-  const bool left_mouse_down;
-  const bool space_key_down;
-  const bool enter_key_down;
-  const bool any_quit;
-  static EventFrame FromPolling();
+class EventFrame {
+  bool left_mouse_down_{};
+  bool space_key_down_{};
+  bool enter_key_down_{};
+  bool any_quit_{};
+ public:
+  void Poll();
+  void Reset();
+  bool left_mouse_down() const;
+  bool space_key_down() const;
+  bool enter_key_down() const;
+  bool any_quit() const;
 };
 
 class Game {
@@ -52,6 +58,7 @@ class Game {
   glm::mat4 view_matrix_;
   glm::mat4 projection_matrix_;
   bool gg = false;
+  EventFrame event_frame_{};
  public:
   Game();
   void Run();

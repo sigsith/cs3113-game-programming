@@ -15,6 +15,8 @@
 #include "Mob.h"
 #include "Player.h"
 #include "Projectile.h"
+struct EventFrame;
+
 class Level : public Scene {
  private:
   Level(Map map, std::vector<Mob> mobs, Player player);
@@ -24,7 +26,7 @@ class Level : public Scene {
   std::vector<std::unique_ptr<Projectile>> short_lived_;
  public:
   Level();
-  Feedback Update(float delta_time) override;
+  Feedback Update(float delta_time, const EventFrame& event_frame) override;
   void Render(ShaderProgram *shader, int life) const override;
   void RenderLife(ShaderProgram *shader, int life) const;
   glm::vec3 GetPlayerPosition() const override;

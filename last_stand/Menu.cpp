@@ -8,10 +8,9 @@
 * Academic Misconduct.
 **/
 #include "Menu.h"
-Feedback Menu::Update(float delta_time) {
-  const auto keyboard_state = SDL_GetKeyboardState(nullptr);
-  if (keyboard_state[SDL_SCANCODE_RETURN]
-      || keyboard_state[SDL_SCANCODE_KP_ENTER]) {
+#include "Game.h"
+Feedback Menu::Update(float delta_time, const EventFrame &event_frame) {
+  if (event_frame.enter_key_down()) {
     go_next_ = true;
   }
   if (go_next_) {

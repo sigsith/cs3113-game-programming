@@ -58,8 +58,8 @@ Game::Game()
   curr_scene_ = std::make_unique<Menu>();
 }
 void Game::Update() {
-  const auto frame = EventFrame::FromPolling();
-  if (frame.any_quit) {
+  this->event_frame_.Poll();
+  if (event_frame_.any_quit()) {
     is_game_running_ = false;
   }
   const auto ticks = static_cast<float>(SDL_GetTicks()) / 1000.0f;
@@ -69,7 +69,7 @@ void Game::Update() {
   for (time_accumulator_ += delta_time; time_accumulator_ >= FIXED_TIMESTEP;
        time_accumulator_ -= FIXED_TIMESTEP) {
     if (life_ != 0 && !gg) {
-      const auto feedback = curr_scene_->Update(FIXED_TIMESTEP);
+      const auto feedback = curr_scene_->Update(FIXED_TIMESTEP, event_frame_);
       switch (feedback) {
         case Feedback::NextStage: {
           GoNextLevel();
@@ -130,44 +130,57 @@ void Game::GoNextLevel() {
     }
   }
 }
-EventFrame EventFrame::FromPolling() {
+void EventFrame::Poll() {
   SDL_Event event;
-  bool left_mouse_down{};
-  bool space_key_down{};
-  bool enter_key_down{};
-  bool any_quit{};
   while (SDL_PollEvent(&event)) {
     switch (event.type) {
       case SDL_QUIT:
       case SDL_WINDOWEVENT_CLOSE: {
-        any_quit = true;
+        any_quit_ = true;
         break;
       }
       case SDL_KEYDOWN:
         switch (event.key.keysym.sym) {
           case SDLK_q: {
-            any_quit = true;
+            any_quit_ = true;
             break;
           }
           case SDLK_RETURN:
           case SDLK_KP_ENTER: {
-            enter_key_down = true;
+            enter_key_down_ = true;
             break;
           }
           case SDLK_SPACE: {
-            space_key_down = true;
+            space_key_down_ = true;
             break;
           }
           default:break;
         }
       case SDL_MOUSEBUTTONDOWN: {
         if (event.button.button == SDL_BUTTON_LEFT) {
-          left_mouse_down = true;
+          left_mouse_down_ = true;
         }
         break;
       }
       default:break;
     }
   }
-  return EventFrame{left_mouse_down, space_key_down, enter_key_down, any_quit};
+}
+void EventFrame::Reset() {
+  left_mouse_down_ = false;
+  space_key_down_ = false;
+  enter_key_down_ = false;
+  any_quit_ = false;
+}
+bool EventFrame::left_mouse_down() const {
+  return left_mouse_down_;
+}
+bool EventFrame::space_key_down() const {
+  return space_key_down_;
+}
+bool EventFrame::enter_key_down() const {
+  return enter_key_down_;
+}
+bool EventFrame::any_quit() const {
+  return any_quit_;
 }

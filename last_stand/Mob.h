@@ -39,8 +39,7 @@ class Mob : public Tank {
               const Map &map,
               const Player &player,
               std::vector<std::unique_ptr<Projectile>> &);
-  Mob(glm::vec3 startpos, float start_orient, const std::string &chassis_name,
-      const std::string &turret_name, const std::string &bullet_name,
+  Mob(glm::vec3 startpos, float start_orient, Specs specs, Paint paint,
       WaypointLooper looper);
   void Die();
   bool IsAlive() const;

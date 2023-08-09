@@ -61,15 +61,12 @@ void Mob::Update(float delta_t,
 }
 Mob::Mob(glm::vec3 startpos,
          float start_orient,
-         const std::string &chassis_name,
-         const std::string &turret_name,
-         const std::string &bullet_name,
+         Specs specs, Paint paint,
          WaypointLooper looper) : looper_(looper),
                                   Tank(startpos,
                                        start_orient,
-                                       chassis_name,
-                                       turret_name,
-                                       bullet_name
+                                       specs,
+                                       paint
                                   ) {
   SetGear(Mode::Forward, Steering::None
   );

@@ -134,7 +134,8 @@ void Tank::SetTurretTarget(float target_orientation) {
 std::unique_ptr<Projectile> Tank::TryFire() {
   if (SDL_GetTicks() > fire_time_out) {
     std::cout << "Fire!\n";
-    fire_time_out = SDL_GetTicks() + 2000;
+    fire_time_out =
+        SDL_GetTicks() + static_cast<uint>(2000.0 / specs_.fire_rate);
     static const auto thump = Mix_LoadWAV("tank_fire.wav");
     Mix_VolumeChunk(thump, MIX_MAX_VOLUME / 4);
     Mix_PlayChannel(-1, thump, 0);

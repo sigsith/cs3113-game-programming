@@ -15,7 +15,7 @@ Projectile::Projectile(TextureObject shell,
       origin_(origin),
       curr_pos_(origin),
       velocity_(utility::VectorByAngle(speed, orientation)),
-      prefly_timeout(SDL_GetTicks() + 500), speed_(speed) {
+      prefly_timeout(SDL_GetTicks() + 100), speed_(speed) {
 }
 void Projectile::Render(ShaderProgram *program) const {
   switch (state_) {

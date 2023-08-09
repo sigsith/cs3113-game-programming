@@ -122,6 +122,11 @@ std::vector<Mob> Level::BuildMobs() {
       "tankGreen_barrel2",
       "bulletGreen3"
   };
+  static const auto abrams = Paint{
+      "tankBody_sand",
+      "tankSand_barrel3",
+      "bulletSand2"
+  };
   static const auto chungus = Paint{
       "tankBody_huge",
       "specialBarrel1",
@@ -166,7 +171,7 @@ std::vector<Mob> Level::BuildMobs() {
       Mob(glm::vec3(-7.0, 0.0, 0),
           0.0,
           STANDARD_MOB_SPECS,
-          chungus,
+          abrams,
           common_waypoint1),
   };
 }

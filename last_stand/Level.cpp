@@ -84,9 +84,23 @@ Map Level::BuildMap() {
 std::vector<Mob> Level::BuildMobs() {
   static const auto common_waypoint1 =
       WaypointLooper(std::vector<glm::vec3>{
-          glm::vec3(-7.0, 7.0, 0.0),
-          glm::vec3(0.0, 7.0, 0.0),
-          glm::vec3(7.0, 7.0, 0.0)}
+                         glm::vec3(-7.0, 7.0, 0.0),
+                         glm::vec3(-3.5, 7.0, 0.0),
+                         glm::vec3(0.0, 7.0, 0.0),
+                         glm::vec3(3.5, 7.0, 0.0),
+                         glm::vec3(7.0, 7.0, 0.0),
+                         glm::vec3(7.0, 3.5, 0.0),
+                         glm::vec3(7.0, 0.0, 0.0),
+                         glm::vec3(7.0, -3.5, 0.0),
+                         glm::vec3(7.0, -7.0, 0.0),
+                         glm::vec3(3.5, -7.0, 0.0),
+                         glm::vec3(0.0, -7.0, 0.0),
+                         glm::vec3(-3.5, -7.0, 0.0),
+                         glm::vec3(-7.0, -7.0, 0.0),
+                         glm::vec3(-7.0, -3.5, 0.0),
+                         glm::vec3(-7.0, 0.0, 0.0),
+                         glm::vec3(-7.0, 3.5, 0.0),
+                     }
       );
   return std::vector<Mob>{
       Mob(glm::vec3(-4, 4, 0),

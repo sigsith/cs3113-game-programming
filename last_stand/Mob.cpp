@@ -25,7 +25,7 @@ void Mob::Update(float delta_t,
 //      }
       const auto
           waypoint_distance = utility::Length(looper_.current() - position());
-      if (waypoint_distance < 1.0) {
+      if (waypoint_distance < 2.0) {
         looper_.Proceed();
       }
       MoveTowards(looper_.current());

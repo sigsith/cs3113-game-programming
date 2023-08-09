@@ -7,6 +7,62 @@ Grass
 10 0 10 0 10 0 10
 0 10 0 10 0 10 0
 
+Grass1
+0 10 0 10 0 10 0
+10 0 10 0 10 0 10
+0 10 0 10 0 10 0
+10 0 10 13 2 2 2
+0 10 0 1 0 10 0
+10 0 10 1 10 0 10
+0 10 0 1 0 10 0
+
+Grass2
+0 10 0 10 0 10 0
+10 0 10 0 10 0 10
+0 10 0 10 0 10 0
+2 2 2 14 10 0 10
+0 10 0 1 0 10 0
+10 0 10 1 10 0 10
+0 10 0 1 0 10 0
+
+
+Grass3
+0 10 0 1 0 10 0
+10 0 10 1 10 0 10
+0 10 0 1 0 10 0
+10 0 10 15 2 2 2
+0 10 0 10 0 10 0
+10 0 10 0 10 0 10
+0 10 0 10 0 10 0
+
+
+Grass4
+0 10 0 1 0 10 0
+10 0 10 1 10 0 10
+0 10 0 1 0 10 0
+2 2 2 16 10 0 10
+0 10 0 10 0 10 0
+10 0 10 0 10 0 10
+0 10 0 10 0 10 0
+
+GrassH
+0 10 0 10 0 10 0
+10 0 10 0 10 0 10
+0 10 0 10 0 10 0
+2 2 2 2 2 2 2
+0 10 0 10 0 10 0
+10 0 10 0 10 0 10
+0 10 0 10 0 10 0
+
+GrassV
+0 10 0 1 0 10 0
+10 0 10 1 10 0 10
+0 10 0 1 0 10 0
+10 0 10 1 10 0 10
+0 10 0 1 0 10 0
+10 0 10 1 10 0 10
+0 10 0 1 0 10 0
+
 Sand
 20 30 20 30 20 30 20
 30 20 30 20 30 20 30
@@ -73,8 +129,8 @@ SRV
 FINAL
 Sand Sand Sand Sand Sand Sand Sand
 Sand SR1  SRH  SRH  SRH  SR2  Sand
-Sand SRV Grass Grass Grass SRV Sand
-Sand SRV Grass Grass Grass SRV Sand
-Sand SRV Grass Grass Grass SRV Sand
+Sand SRV Grass1 GrassH Grass2 SRV Sand
+Sand SRV GrassV Grass GrassV SRV Sand
+Sand SRV Grass3 GrassH Grass4 SRV Sand
 Sand SR3  SRH  SRH  SRH  SR4  Sand
 Sand Sand Sand Sand Sand Sand Sand

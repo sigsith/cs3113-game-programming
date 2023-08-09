@@ -8,6 +8,8 @@
 * Academic Misconduct.
 **/
 #include "Game.h"
+#include <iostream>
 int main() {
+  std::cout << "Tips: WASD to move, cursor to turret, and SPACE to fire.\n";
   Game().Run();
 }

@@ -57,6 +57,7 @@ Mob::Mob(glm::vec3 startpos,
          chassis_name,
          turret_name,
          bullet_name) {
+  velocity_ = utility::VectorByAngle(0.5, orientation_);
 }
 bool Mob::IsAlive() const {
   return is_alive_;

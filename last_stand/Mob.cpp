@@ -25,7 +25,7 @@ void Mob::Update(float delta_t,
 //      }
       const auto
           waypoint_distance = utility::Length(looper_.current() - position());
-      if (waypoint_distance < 2.0) {
+      if (waypoint_distance < 1.5) {
         looper_.Proceed();
       }
       MoveTowards(looper_.current());
@@ -96,6 +96,11 @@ void Mob::MoveTowards(glm::vec3 target) {
     steer = Steering::Left;
   } else {
     steer = Steering::Right;
+  }
+  if (abs(diff - glm::pi<float>()) > glm::pi<float>() / 4.0) {
+    SetSpeedCap(0.5);
+  } else {
+    SetSpeedCap(1.0);
   }
   // 2. Move
   SetGear(Mode::Forward, steer);

@@ -29,8 +29,9 @@ void Tank::Update(float delta_t, const Map &map) {
     case Mode::Forward: {
       const auto real_acceleration =
           specs_.base_acceleration_forward_
-              * std::min((specs_.top_speed_forward - speed_parallel)
-                             / specs_.top_speed_forward, 1.2f);
+              * std::min(
+                  (specs_.top_speed_forward * speed_cap_ - speed_parallel)
+                      / specs_.top_speed_forward * speed_cap_, 1.2f);
       acceleration_ = direction_vec * real_acceleration
           - specs_.lateral_friction * velocity_perpendicular;
       break;
@@ -38,8 +39,9 @@ void Tank::Update(float delta_t, const Map &map) {
     case Mode::Reverse: {
       const auto real_acceleration =
           specs_.base_acceleration_reverse_
-              * std::min((specs_.top_speed_backward + speed_parallel)
-                             / specs_.top_speed_backward, 1.2f);
+              * std::min(
+                  (specs_.top_speed_backward * speed_cap_ + speed_parallel)
+                      / specs_.top_speed_backward * speed_cap_, 1.2f);
       acceleration_ = -direction_vec * real_acceleration
           - specs_.lateral_friction * velocity_perpendicular;
       break;
@@ -158,4 +160,7 @@ float Tank::turret_orientation() const {
 }
 float Tank::chassis_orientation() const {
   return orientation_;
+}
+void Tank::SetSpeedCap(float cap) {
+  speed_cap_ = cap;
 }

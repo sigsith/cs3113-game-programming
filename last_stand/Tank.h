@@ -27,8 +27,6 @@
 #include "Map.h"
 #include "Projectile.h"
 
-
-
 struct Specs {
   const float top_speed_forward = 2.0;
   const float base_acceleration_forward_ = 1.5;
@@ -69,6 +67,7 @@ class Tank : public Boxed {
   glm::vec3 acceleration_{};
   glm::vec3 position_;
   float orientation_ = 0.0;
+  float speed_cap_ = 1.0;
   float angular_velocity_{};
   float angular_acceleration_{};
   float turret_orientation_{};
@@ -95,6 +94,7 @@ class Tank : public Boxed {
   void Render(ShaderProgram *shader) const override;
   void SetTurretTarget(float target_orientation);
   void SetGear(Mode mode, Steering steering);
+  void SetSpeedCap(float cap);
   std::unique_ptr<Projectile> TryFire();
   glm::vec3 position() const;
   float turret_orientation() const;

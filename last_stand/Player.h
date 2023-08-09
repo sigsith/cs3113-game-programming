@@ -19,9 +19,11 @@ enum class PlayerFeedback {
   TakeDamage
 };
 
+class EventFrame;
+
 class Player : public Tank {
  public:
-  PlayerFeedback Update(float delta_t,
+  PlayerFeedback Update(float delta_t, const EventFrame &event_frame,
                         const Map &map,
                         std::vector<Mob> &mobs,
                         std::vector<std::unique_ptr<Projectile>> &);

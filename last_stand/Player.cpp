@@ -18,8 +18,9 @@
 #include "Mob.h"
 #include "Utility.h"
 #include "Projectile.h"
+#include "Game.h"
 
-PlayerFeedback Player::Update(float delta_t,
+PlayerFeedback Player::Update(float delta_t, const EventFrame &event_frame,
                               const Map &map,
                               std::vector<Mob> &mobs,
                               std::vector<std::unique_ptr<Projectile>> &projectiles) {
@@ -35,7 +36,7 @@ PlayerFeedback Player::Update(float delta_t,
   const auto speed = forward_speed - backward_speed;
   velocity_ = utility::VectorByAngle(speed, orientation_);
 
-  if (keyboard_state[SDL_SCANCODE_SPACE]) {
+  if (event_frame.space_key_down() || event_frame.left_mouse_down()) {
     this->Fire(projectiles);
   }
 

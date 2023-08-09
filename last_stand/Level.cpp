@@ -15,7 +15,8 @@
 
 Feedback Level::Update(float delta_time, const EventFrame &event_frame) {
   const auto
-      player_feedback = player_.Update(delta_time, map_, mobs_, short_lived_);
+      player_feedback =
+      player_.Update(delta_time, event_frame, map_, mobs_, short_lived_);
   for (auto &&mob : mobs_) {
     if (mob.IsAlive()) {
       mob.Update(delta_time, map_, player_, short_lived_);

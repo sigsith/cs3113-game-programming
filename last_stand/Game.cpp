@@ -70,6 +70,7 @@ void Game::Update() {
        time_accumulator_ -= FIXED_TIMESTEP) {
     if (life_ != 0 && !gg) {
       const auto feedback = curr_scene_->Update(FIXED_TIMESTEP, event_frame_);
+      event_frame_.Reset();
       switch (feedback) {
         case Feedback::NextStage: {
           GoNextLevel();

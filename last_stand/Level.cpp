@@ -118,10 +118,21 @@ std::vector<Mob> Level::BuildMobs() {
           0.0,
           "tank_huge",
           "specialBarrel1",
-          "bulletRed3", common_waypoint1)};
+          "bulletRed3", common_waypoint1),
+      Mob(glm::vec3(7, 7, 0),
+          glm::pi<float>(),
+          "tankBody_dark",
+          "tankDark_barrel3",
+          "bulletSand1", common_waypoint1),
+  };
 }
 bool Level::ShouldGoNext() const {
-  return mobs_.empty();
+  for (const auto &mob : mobs_) {
+    if (mob.IsAlive()) {
+      return false;
+    }
+  }
+  return true;
 }
 int Level::Id() const {
   return 1;

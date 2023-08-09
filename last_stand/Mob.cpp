@@ -73,6 +73,7 @@ Mob::Mob(glm::vec3 startpos,
                                   ) {
   SetGear(Mode::Forward, Steering::None
   );
+  looper_.SwitchToClosest(position());
 }
 bool Mob::IsAlive() const {
   return is_alive_;
@@ -126,5 +127,6 @@ void WaypointLooper::SwitchToClosest(glm::vec3 reference) {
       min_dis = utility::Length(reference - waypoints_[i]);
     }
   }
+  std::cout << "closest: " << closest << "\n";
   current_waypoint_ = closest;
 }

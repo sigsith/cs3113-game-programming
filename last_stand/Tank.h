@@ -33,7 +33,9 @@ struct Specs {
   const float base_acceleration_reverse_ = 1.0;
   const float top_speed_backward = 1.0;
   const float cruising_friction = 1.0;
-  const float steering_rate = 1.0;
+  const float rotation_friction = 1.0;
+  const float base_angular_acceleration = 1.0;
+  const float top_rotation_speed = 1.0;
   const float turret_turn_rate = 1.0;
   const float projectile_speed = 1.0;
   const float projectile_range = 1.0;

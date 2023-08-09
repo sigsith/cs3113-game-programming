@@ -17,6 +17,7 @@ void Tank::Update(float delta_t, const Map &map) {
   position_ += velocity_ * delta_t;
   velocity_ += acceleration_ * delta_t;
   orientation_ += angular_velocity_ * delta_t;
+  angular_velocity_ += angular_acceleration_ * delta_t;
   turret_orientation_ += turret_angular_velocity_ * delta_t;
   // Update control
   // Update gear
@@ -41,6 +42,24 @@ void Tank::Update(float delta_t, const Map &map) {
     }
     case Mode::Halt: {
       acceleration_ = -specs_.cruising_friction * velocity_;
+      break;
+    }
+  }
+  switch (steering_) {
+    case Steering::None: {
+      angular_acceleration_ = -angular_velocity_ * specs_.rotation_friction;
+      break;
+    }
+    case Steering::Left: {
+      angular_acceleration_ = specs_.base_angular_acceleration * std::min(
+          (specs_.top_rotation_speed - angular_velocity_)
+              / specs_.top_rotation_speed, 1.2f);
+      break;
+    }
+    case Steering::Right: {
+      angular_acceleration_ = -specs_.base_angular_acceleration * std::min(
+          (specs_.top_rotation_speed + angular_velocity_)
+              / specs_.top_rotation_speed, 1.2f);
       break;
     }
   }

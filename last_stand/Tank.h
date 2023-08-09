@@ -106,7 +106,6 @@ class Tank : public Boxed {
         0.5, 0.5
     };
   }
-//  void Fire(std::vector<std::unique_ptr<Projectile>> &);
 };
 
 #endif //CS3113_GAME_PROGRAMMING_PLATFORMER_DYNAMIC_H_

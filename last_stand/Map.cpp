@@ -89,35 +89,6 @@ void Map::Render(ShaderProgram *shader) const {
   glDisableVertexAttribArray(shader->positionAttribute);
   glDisableVertexAttribArray(shader->texCoordAttribute);
 }
-std::pair<bool, float> Map::IsSolid(const Box &box) const {
-  if ((box.XMax() < min_x_ || box.XMin() > max_x_) || box.YMax() < min_y_
-      || box.YMin() > max_y_) {
-    return {false, 0};
-  }
-  auto x_start =
-      static_cast<int>(std::floor((box.XMin() - min_x_) / tile_size_));
-  auto y_start =
-      static_cast<int>(std::floor((max_y_ - box.YMax()) / tile_size_));
-  auto
-      x_end = static_cast<int>(std::ceil((box.XMax() - min_x_) / tile_size_));
-  auto
-      y_end = static_cast<int>(std::ceil((max_y_ - box.YMin()) / tile_size_));
-  x_start = std::max(0, x_start);
-  y_start = std::max(0, y_start);
-  x_end = std::min(x_end, static_cast<int>(levels_.width_));
-  y_end = std::min(y_end, static_cast<int>(levels_.height_));
-  for (int y = y_start; y < y_end; ++y) {
-    for (int x = x_start; x < x_end; ++x) {
-      if (levels_.index_mapping_[y * levels_.width_ + x] != NONE) {
-        if (box.position.y < max_y_ - y * tile_size_ + 0.5 * box.half_height) {
-          return {false, 0};
-        }
-        return {true, box.half_height + max_y_ - y * tile_size_};
-      }
-    }
-  }
-  return {false, 0};
-}
 LevelMapping::LevelMapping(uint width,
                            uint height,
                            std::vector<uint> index_mapping) :

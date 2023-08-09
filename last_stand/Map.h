@@ -41,8 +41,9 @@ struct LevelMapping {
 LevelMapping LoadTerrain(const std::string &config_file);
 
 void FillMapping(std::ifstream &file,
-                                                               std::string &line, std::unordered_map<std::string,
-                                                                                                     std::vector<std::vector<uint>>>&);
+                 std::string &line, std::unordered_map<std::string,
+                                                       std::vector<std::vector<
+                                                           uint>>> &);
 
 std::vector<uint> BuildFinalMap(std::ifstream &file,
                                 const std::unordered_map<std::string,
@@ -74,7 +75,6 @@ class Map : public Entity {
       SpriteSheetMapping sprite_sheet_mapping,
       float m_tile_size, glm::vec3 top_left
   );
-  std::pair<bool, float> IsSolid(const Box &box) const;
   void Render(ShaderProgram *shader) const override;
 };
 

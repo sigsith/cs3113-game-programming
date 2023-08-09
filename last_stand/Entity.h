@@ -47,12 +47,8 @@ struct Box {
   glm::vec3 position;
   float half_width;
   float half_height;
-  float XMax() const;
-  float XMin() const;
-  float YMax() const;
-  float YMin() const;
-  bool IsCollisionWith(const Box &rhs) const;
-  bool IsOnTopOf(const Box &rhs) const;
+  float orientation;
+  bool IsCollisionWith(glm::vec3 point_pos) const;
 };
 
 class Boxed : public Entity {

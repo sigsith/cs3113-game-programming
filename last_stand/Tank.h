@@ -26,6 +26,17 @@
 #include "TextureObject.h"
 #include "Map.h"
 #include "Projectile.h"
+
+struct TankSpec {
+  const float forward_speed = 1.0;
+  const float reverse_speed = 1.0;
+  const float steering_rate = 1.0;
+  const float turret_turn_rate = 1.0;
+  const float projectile_speed = 1.0;
+  const float projectile_range = 1.0;
+  const float fire_rate = 1.0;
+};
+
 class Tank : public Boxed {
  private:
  protected:

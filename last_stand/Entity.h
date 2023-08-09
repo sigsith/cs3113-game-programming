@@ -49,6 +49,7 @@ struct Box {
   float half_height;
   float orientation;
   bool IsPointCollisionWith(glm::vec3 point_pos) const;
+  bool IsCollisionWith(const Box &rhs) const;
 };
 
 class Boxed : public Entity {

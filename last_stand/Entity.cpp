@@ -62,3 +62,9 @@ bool Box::IsPointCollisionWith(glm::vec3 point_pos) const {
       localPoint.y >= -half_height && localPoint.y <= half_height;
 
 }
+bool Box::IsCollisionWith(const Box &rhs) const {
+  const auto distance = utility::Length(position - rhs.position);
+  const auto sum_half_thickness =
+      (half_height + half_width + rhs.half_width + rhs.half_height) / 2;
+  return distance < sum_half_thickness;
+}

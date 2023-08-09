@@ -17,6 +17,7 @@ class Projectile : public Ephemeral {
   TextureObject shell_;
   TextureObject explosion_;
   glm::vec3 velocity_;
+  float speed_;
   glm::vec3 curr_pos_;
   float orientation_;
   glm::vec3 origin_;
@@ -27,7 +28,8 @@ class Projectile : public Ephemeral {
   Projectile(TextureObject shell,
              TextureObject explosion,
              float orientation,
-             glm::vec3 origin);
+             glm::vec3 origin,
+             float speed);
   void Render(ShaderProgram *program) const override;
   bool Update(float delta_t) override;
   void Explode();

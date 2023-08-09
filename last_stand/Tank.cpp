@@ -50,22 +50,34 @@ void Tank::Update(float delta_t, const Map &map) {
       break;
     }
   }
-  switch (steering_) {
-    case Steering::None: {
+  int rotation_direction = 0;
+  if ((steering_ == Steering::Left && mode_ != Mode::Reverse)
+      || (steering_ == Steering::Right) && mode_ == Mode::Reverse) {
+    rotation_direction = 1;
+  }
+  if ((steering_ == Steering::Right && mode_ != Mode::Reverse)
+      || (steering_ == Steering::Left) && mode_ == Mode::Reverse) {
+    rotation_direction = -1;
+  }
+  switch (rotation_direction) {
+    case 0: {
       angular_acceleration_ = -angular_velocity_ * specs_.rotation_friction;
       break;
     }
-    case Steering::Left: {
+    case 1: {
       angular_acceleration_ = specs_.base_angular_acceleration * std::min(
           (specs_.top_rotation_speed - angular_velocity_)
               / specs_.top_rotation_speed, 1.2f);
       break;
     }
-    case Steering::Right: {
+    case -1: {
       angular_acceleration_ = -specs_.base_angular_acceleration * std::min(
           (specs_.top_rotation_speed + angular_velocity_)
               / specs_.top_rotation_speed, 1.2f);
       break;
+    }
+    default: {
+      throw std::runtime_error("Nonexistant rotation");
     }
   }
   // Update turret
@@ -76,9 +88,9 @@ void Tank::Update(float delta_t, const Map &map) {
     diff += glm::pi<float>() * 2;
   }
   if (diff < glm::pi<float>()) {
-    turret_angular_velocity_ = 1.5;
+    turret_angular_velocity_ = specs_.turret_turn_rate;
   } else {
-    turret_angular_velocity_ = -1.5;
+    turret_angular_velocity_ = -specs_.turret_turn_rate;
   }
   Box box = this->box();
 }
@@ -123,7 +135,8 @@ std::unique_ptr<Projectile> Tank::TryFire() {
     return std::make_unique<Projectile>(shell_,
                                         TextureObject("explosion2"),
                                         turret_orientation_,
-                                        position_);
+                                        position_,
+                                        specs_.projectile_speed);
   }
   return nullptr;//use optional in C++17+
 }

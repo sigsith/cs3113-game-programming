@@ -7,14 +7,15 @@
 Projectile::Projectile(TextureObject shell,
                        TextureObject explosion,
                        float orientation,
-                       glm::vec3 origin)
+                       glm::vec3 origin,
+                       float speed)
     : shell_(shell),
       explosion_(explosion),
       orientation_(orientation),
       origin_(origin),
       curr_pos_(origin),
-      velocity_(utility::VectorByAngle(2.0, orientation)),
-      prefly_timeout(SDL_GetTicks() + 500) {
+      velocity_(utility::VectorByAngle(speed, orientation)),
+      prefly_timeout(SDL_GetTicks() + 500), speed_(speed) {
 }
 void Projectile::Render(ShaderProgram *program) const {
   switch (state_) {
@@ -33,7 +34,7 @@ bool Projectile::Update(float delta_t) {
     case ProjState::Flying: {
       curr_pos_ += velocity_ * delta_t;
       const auto distance = utility::Length(curr_pos_ - origin_);
-      if (distance > 4.0) {
+      if (distance > speed_ * 1.0) {
         Explode();
       }
       return true;

@@ -112,6 +112,16 @@ std::vector<Mob> Level::BuildMobs() {
       "tankRed_barrel1",
       "bulletRed1"
   };
+  static const auto small_dark = Paint{
+      "tankBody_dark",
+      "tankDark_barrel1",
+      "bulletDark1"
+  };
+  static const auto small_green = Paint{
+      "tankBody_green",
+      "tankGreen_barrel2",
+      "bulletGreen3"
+  };
   static const auto chungus = Paint{
       "tankBody_huge",
       "specialBarrel1",
@@ -126,7 +136,7 @@ std::vector<Mob> Level::BuildMobs() {
       Mob(glm::vec3(0.0, 7.0, 0),
           0.0,
           STANDARD_MOB_SPECS,
-          small_red,
+          small_dark,
           common_waypoint1),
       Mob(glm::vec3(7.0, 7.0, 0),
           0.0,
@@ -141,7 +151,7 @@ std::vector<Mob> Level::BuildMobs() {
       Mob(glm::vec3(7.0, -7.0, 0),
           0.0,
           STANDARD_MOB_SPECS,
-          small_red,
+          small_dark,
           common_waypoint1),
       Mob(glm::vec3(0.0, -7.0, 0),
           0.0,
@@ -151,7 +161,7 @@ std::vector<Mob> Level::BuildMobs() {
       Mob(glm::vec3(-7.0, -7.0, 0),
           0.0,
           STANDARD_MOB_SPECS,
-          small_red,
+          small_green,
           common_waypoint1),
       Mob(glm::vec3(-7.0, 0.0, 0),
           0.0,

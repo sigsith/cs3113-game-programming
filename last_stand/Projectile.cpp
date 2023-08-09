@@ -15,7 +15,7 @@ Projectile::Projectile(TextureObject shell,
       origin_(origin),
       curr_pos_(origin),
       velocity_(utility::VectorByAngle(speed, orientation)),
-      prefly_timeout(SDL_GetTicks() + 100), speed_(speed) {
+      speed_(speed) {
 }
 void Projectile::Render(ShaderProgram *program) const {
   switch (state_) {
@@ -58,5 +58,5 @@ bool Projectile::HasExploded() {
   return state_ == ProjState::Exploded;
 }
 bool Projectile::IsSafetyOn() const {
-  return SDL_GetTicks() < prefly_timeout;
+  return utility::Length(position() - origin_) < 1.0;
 }

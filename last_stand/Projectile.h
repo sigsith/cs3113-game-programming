@@ -23,7 +23,6 @@ class Projectile : public Ephemeral {
   glm::vec3 origin_;
   ProjState state_ = ProjState::Flying;
   uint explosion_timeout_ = 0;
-  uint prefly_timeout;
  public:
   Projectile(TextureObject shell,
              TextureObject explosion,

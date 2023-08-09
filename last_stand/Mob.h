@@ -18,19 +18,30 @@ enum class MobState {
   Aggro,
 };
 
+class WaypointLooper {
+  std::vector<glm::vec3> waypoints_;
+  size_t current_waypoint_;
+ public:
+  WaypointLooper() = delete;
+  explicit WaypointLooper(std::vector<glm::vec3> waypoints_);
+  glm::vec3 current() const;
+  void Proceed();
+  void SwitchToClosest(glm::vec3 reference);
+};
+
 class Mob : public Tank {
  private:
   MobState state_ = MobState::Roaming;
   bool is_alive_ = true;
-  std::vector<glm::vec3> waypoints_;
-  size_t current_waypoint_;
+  WaypointLooper looper_;
  public:
   void Update(float delta_t,
               const Map &map,
               const Player &player,
               std::vector<std::unique_ptr<Projectile>> &);
   Mob(glm::vec3 startpos, float start_orient, const std::string &chassis_name,
-      const std::string &turret_name, const std::string &bullet_name);
+      const std::string &turret_name, const std::string &bullet_name,
+      WaypointLooper looper);
   void Die();
   bool IsAlive() const;
   void MoveTowards(glm::vec3 target);

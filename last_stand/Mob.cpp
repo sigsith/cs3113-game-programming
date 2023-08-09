@@ -19,14 +19,22 @@ void Mob::Update(float delta_t,
   const auto distance = utility::Length(direction);
   switch (state_) {
     case MobState::Roaming: {
-      if (distance < 6.0) {
-        state_ = MobState::Aggro;
+//      if (distance < 6.0) {
+//        state_ = MobState::Aggro;
+//        break;
+//      }
+      const auto
+          waypoint_distance = utility::Length(looper_.current() - position());
+      if (waypoint_distance < 1.0) {
+        looper_.Proceed();
       }
+      MoveTowards(looper_.current());
       break;
     }
     case MobState::Aggro: {
       if (distance > 7.0) {
         state_ = MobState::Roaming;
+        looper_.SwitchToClosest(position());
         break;
       }
       MoveTowards(player.position());
@@ -55,13 +63,16 @@ Mob::Mob(glm::vec3 startpos,
          float start_orient,
          const std::string &chassis_name,
          const std::string &turret_name,
-         const std::string &bullet_name) :
-    Tank(startpos,
-         start_orient,
-         chassis_name,
-         turret_name,
-         bullet_name) {
-  SetGear(Mode::Forward, Steering::None);
+         const std::string &bullet_name,
+         WaypointLooper looper) : looper_(looper),
+                                  Tank(startpos,
+                                       start_orient,
+                                       chassis_name,
+                                       turret_name,
+                                       bullet_name
+                                  ) {
+  SetGear(Mode::Forward, Steering::None
+  );
 }
 bool Mob::IsAlive() const {
   return is_alive_;
@@ -88,4 +99,30 @@ void Mob::MoveTowards(glm::vec3 target) {
   }
   // 2. Move
   SetGear(Mode::Forward, steer);
+}
+WaypointLooper::WaypointLooper(std::vector<glm::vec3> waypoints) : waypoints_(
+    std::move(waypoints)), current_waypoint_(0) {
+  if (waypoints_.empty()) {
+    throw std::runtime_error("Waypoints cannot be empty!");
+  }
+}
+glm::vec3 WaypointLooper::current() const {
+  return waypoints_[current_waypoint_];
+}
+void WaypointLooper::Proceed() {
+  current_waypoint_ += 1;
+  if (current_waypoint_ >= waypoints_.size()) {
+    current_waypoint_ = 0;
+  }
+}
+void WaypointLooper::SwitchToClosest(glm::vec3 reference) {
+  float min_dis = utility::Length(reference - waypoints_[0]);
+  size_t closest = 0;
+  for (size_t i = 1; i < waypoints_.size(); ++i) {
+    if (utility::Length(reference - waypoints_[i]) < min_dis) {
+      closest = i;
+      min_dis = utility::Length(reference - waypoints_[i]);
+    }
+  }
+  current_waypoint_ = closest;
 }

@@ -82,22 +82,28 @@ Map Level::BuildMap() {
   return map;
 }
 std::vector<Mob> Level::BuildMobs() {
+  static const auto common_waypoint1 =
+      WaypointLooper(std::vector<glm::vec3>{
+          glm::vec3(-7.0, 7.0, 0.0),
+          glm::vec3(0.0, 7.0, 0.0)}
+      );
   return std::vector<Mob>{
       Mob(glm::vec3(-4, 4, 0),
           0.0,
           "tankBody_red",
           "tankRed_barrel2",
-          "bulletRed1"),
+          "bulletRed1",
+          common_waypoint1),
       Mob(glm::vec3(4, 5, 0),
           glm::pi<float>(),
           "tankBody_dark",
           "tankDark_barrel3",
-          "bulletSand1"),
+          "bulletSand1", common_waypoint1),
       Mob(glm::vec3(-6, 1, 0),
           0.0,
           "tank_huge",
           "specialBarrel1",
-          "bulletRed3")};
+          "bulletRed3", common_waypoint1)};
 }
 bool Level::ShouldGoNext() const {
   return mobs_.empty();

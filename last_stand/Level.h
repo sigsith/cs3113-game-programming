@@ -15,6 +15,7 @@
 #include "Mob.h"
 #include "Player.h"
 #include "Projectile.h"
+#include "StaticEntity.h"
 struct EventFrame;
 
 class Level : public Scene {
@@ -22,6 +23,7 @@ class Level : public Scene {
   Level(Map map, std::vector<Mob> mobs, Player player);
   Map map_;
   std::vector<Mob> mobs_;
+  std::vector<StaticEntity> static_entities_;
   Player player_;
   std::vector<std::unique_ptr<Projectile>> short_lived_;
  public:

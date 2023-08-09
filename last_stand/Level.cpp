@@ -42,6 +42,9 @@ void Level::Render(ShaderProgram *shader) const {
   const auto view = glm::translate(glm::mat4(1.0f), -player_.position());
   shader->SetViewMatrix(view);
   map_.Render(shader);
+  for (auto &&static_entity : static_entities_) {
+    static_entity.Render(shader);
+  }
   for (auto &&mob : mobs_) {
     if (mob.IsAlive()) {
       mob.Render(shader);
@@ -72,7 +75,13 @@ glm::vec3 Level::GetPlayerPosition() const {
 }
 Level::Level() : Level(BuildMap(),
                        BuildMobs(),
-                       Player()) {}
+                       Player()) {
+
+  // Add some trees
+  static_entities_.emplace_back(TextureObject("treeBrown_large"),
+                                glm::vec3(-6, 6, 0));
+
+}
 Map Level::BuildMap() {
   const auto index_mapping = LoadTerrain("terrain_mapping.txt");
   const auto tile_set_id = utility::LoadTexture(std::string("terrain.png"));

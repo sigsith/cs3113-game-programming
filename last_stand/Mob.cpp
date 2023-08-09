@@ -19,10 +19,10 @@ void Mob::Update(float delta_t,
   const auto distance = utility::Length(direction);
   switch (state_) {
     case MobState::Roaming: {
-//      if (distance < 6.0) {
-//        state_ = MobState::Aggro;
-//        break;
-//      }
+      if (distance < 6.0) {
+        state_ = MobState::Aggro;
+        break;
+      }
       const auto
           waypoint_distance = utility::Length(looper_.current() - position());
       if (waypoint_distance < 1.5) {
@@ -97,11 +97,8 @@ void Mob::MoveTowards(glm::vec3 target) {
   } else {
     steer = Steering::Right;
   }
-  if (abs(diff - glm::pi<float>()) > glm::pi<float>() / 4.0) {
-    SetSpeedCap(0.5);
-  } else {
-    SetSpeedCap(1.0);
-  }
+  SetSpeedCap(
+      glm::pi<float>() / (abs(diff - glm::pi<float>()) / 2 + glm::pi<float>()));
   // 2. Move
   SetGear(Mode::Forward, steer);
 }

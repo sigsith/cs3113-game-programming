@@ -89,7 +89,7 @@ std::vector<Mob> Level::BuildMobs() {
           "tankRed_barrel2",
           "bulletRed1"),
       Mob(glm::vec3(4, 5, 0),
-          0.0,
+          glm::pi<float>(),
           "tankBody_dark",
           "tankDark_barrel3",
           "bulletSand1"),
@@ -100,7 +100,7 @@ std::vector<Mob> Level::BuildMobs() {
           "bulletRed3")};
 }
 bool Level::ShouldGoNext() const {
-  return player_.position().y < -4;
+  return mobs_.empty();
 }
 int Level::Id() const {
   return 1;

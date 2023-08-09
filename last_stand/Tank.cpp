@@ -76,9 +76,9 @@ void Tank::Update(float delta_t, const Map &map) {
     diff += glm::pi<float>() * 2;
   }
   if (diff < glm::pi<float>()) {
-    turret_angular_velocity_ = 1.0;
+    turret_angular_velocity_ = 1.5;
   } else {
-    turret_angular_velocity_ = -1.0;
+    turret_angular_velocity_ = -1.5;
   }
   Box box = this->box();
 }

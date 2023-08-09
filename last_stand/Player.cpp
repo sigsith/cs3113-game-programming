@@ -82,8 +82,7 @@ PlayerFeedback Player::Update(float delta_t, const EventFrame &event_frame,
   return PlayerFeedback::NoOp;
 }
 
-constexpr Specs PLAYER_SPECS = {
-    3.0, 1.0, 1.0, 1.0, 1.0, 1.0,};
+constexpr Specs PLAYER_SPECS = {};
 Player::Player() : Tank(glm::vec3(0, 0, 0),
                         glm::pi<float>() / 2,
                         PLAYER_SPECS,

@@ -61,6 +61,7 @@ void Game::Update() {
   this->event_frame_.Poll();
   if (event_frame_.any_quit()) {
     is_game_running_ = false;
+    return;
   }
   const auto ticks = static_cast<float>(SDL_GetTicks()) / 1000.0f;
   const auto delta_time = static_cast<float>(ticks - previous_ticks_);
@@ -68,40 +69,35 @@ void Game::Update() {
   constexpr auto FIXED_TIMESTEP = 1.0f / 60.0f;
   for (time_accumulator_ += delta_time; time_accumulator_ >= FIXED_TIMESTEP;
        time_accumulator_ -= FIXED_TIMESTEP) {
-    if (life_ != 0 && !gg) {
-      const auto feedback = curr_scene_->Update(FIXED_TIMESTEP, event_frame_);
-      event_frame_.Reset();
-      switch (feedback) {
-        case Feedback::NextStage: {
-          GoNextLevel();
-          break;
-        }
-        case Feedback::NoOp: {
-          break;
-        }
-        case Feedback::TakeDamage: {
-          const auto curr_ticks = SDL_GetTicks();
-          if (curr_ticks > immune_time_out) {
-            life_ -= 1;
-            std::cout << "Take damage!\n";
-            immune_time_out = SDL_GetTicks() + 500;
-          }
-        }
+    if (curr_stage <= 1) {
+      const auto old = curr_stage;
+      curr_stage = curr_scene_->Update(FIXED_TIMESTEP, event_frame_);
+      if (curr_stage != old && curr_stage == 1) {
+        curr_scene_ = std::make_unique<Level>();
       }
+    } else if (curr_stage == 3 && event_frame_.enter_key_down()) {
+      curr_stage = 1;
+      curr_scene_ = std::make_unique<Level>();
     }
+    event_frame_.Reset();
   }
 }
 void Game::Render() {
   glClear(GL_COLOR_BUFFER_BIT);
-  curr_scene_->Render(&shader_, life_);
-  if (life_ == 0) {
+  curr_scene_->Render(&shader_);
+  if (curr_stage == 3) {
     utility::RenderText("You LOST!",
                         &shader_,
                         1.0,
                         glm::vec3(-4.0, 2, 0)
                             + curr_scene_->GetPlayerPosition());
+    utility::RenderText("Press enter to respawn",
+                        &shader_,
+                        0.3,
+                        glm::vec3(-4.0, -1.0, 0)
+                            + curr_scene_->GetPlayerPosition());
   }
-  if (gg) {
+  if (curr_stage == 2) {
     utility::RenderText("You WON!",
                         &shader_,
                         1.0,
@@ -114,21 +110,6 @@ void Game::Run() {
   while (is_game_running_) {
     Update();
     Render();
-  }
-}
-void Game::GoNextLevel() {
-  switch (curr_scene_->Id()) {
-    case 0: {
-      curr_scene_ = std::make_unique<Level>();
-      break;
-    }
-    case 1: {
-      gg = true;
-      break;
-    }
-    default: {
-      throw std::runtime_error("Invalid scene id");
-    }
   }
 }
 void EventFrame::Poll() {

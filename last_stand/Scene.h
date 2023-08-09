@@ -25,8 +25,8 @@ enum class Feedback {
 class Scene {
  public:
   virtual ~Scene() = default;
-  virtual Feedback Update(float delta_time, const EventFrame& frame) = 0;
-  virtual void Render(ShaderProgram *shader, int life) const = 0;
+  virtual uint Update(float delta_time, const EventFrame &frame) = 0;
+  virtual void Render(ShaderProgram *shader) const = 0;
   virtual int Id() const = 0;
   virtual glm::vec3 GetPlayerPosition() const = 0;
 };

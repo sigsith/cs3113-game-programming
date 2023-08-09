@@ -20,10 +20,10 @@
 #include "Projectile.h"
 #include "Game.h"
 
-PlayerFeedback Player::Update(float delta_t, const EventFrame &event_frame,
-                              const Map &map,
-                              std::vector<Mob> &mobs,
-                              std::vector<std::unique_ptr<Projectile>> &projectiles) {
+uint Player::Update(float delta_t, const EventFrame &event_frame,
+                    const Map &map,
+                    std::vector<Mob> &mobs,
+                    std::vector<std::unique_ptr<Projectile>> &projectiles) {
   const auto keyboard_state = SDL_GetKeyboardState(nullptr);
   Steering steering = Steering::None;
   if (keyboard_state[SDL_SCANCODE_A] && !keyboard_state[SDL_SCANCODE_D]) {
@@ -76,10 +76,11 @@ PlayerFeedback Player::Update(float delta_t, const EventFrame &event_frame,
     if (!proj->HasExploded() && !proj->IsSafetyOn()
         && box().IsCollisionWith(proj->position())) {
       proj->Explode();
-      return PlayerFeedback::TakeDamage;
+      life_ -= 1;
+      break;
     }
   }
-  return PlayerFeedback::NoOp;
+  return life_;
 }
 //const float top_speed_forward = 2.0;
 //const float base_acceleration_forward_ = 1.5;
@@ -105,4 +106,7 @@ Player::Player() : Tank(glm::vec3(0, 0, 0),
                         Paint{"tankBody_blue",
                               "tankBlue_barrel1", "bulletBlue1"}) {
 
+}
+uint8_t Player::life() const {
+  return life_;
 }

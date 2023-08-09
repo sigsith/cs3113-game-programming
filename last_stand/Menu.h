@@ -20,8 +20,8 @@ class Menu : public Scene {
   bool go_next_ = false;
  public:
   Menu();
-  Feedback Update(float delta_time, const EventFrame &event_frame) override;
-  void Render(ShaderProgram *program, int life) const override;
+  uint Update(float delta_time, const EventFrame &event_frame) override;
+  void Render(ShaderProgram *program) const override;
   int Id() const override;
   glm::vec3 GetPlayerPosition() const override;
 };

@@ -51,13 +51,11 @@ class Game {
   bool is_game_running_ = true;
   ShaderProgram shader_;
   float previous_ticks_ = 0.0f;
+  uint curr_stage = 0;
   float time_accumulator_ = 0.0;
   std::unique_ptr<Scene> curr_scene_;
-  uint immune_time_out = 0;
-  uint8_t life_ = 3;
   glm::mat4 view_matrix_;
   glm::mat4 projection_matrix_;
-  bool gg = false;
   EventFrame event_frame_{};
  public:
   Game();

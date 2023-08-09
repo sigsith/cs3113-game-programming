@@ -26,15 +26,14 @@ class Level : public Scene {
   std::vector<std::unique_ptr<Projectile>> short_lived_;
  public:
   Level();
-  Feedback Update(float delta_time, const EventFrame &event_frame) override;
-  void Render(ShaderProgram *shader, int life) const override;
+  uint Update(float delta_time, const EventFrame &event_frame) override;
+  void Render(ShaderProgram *shader) const override;
   void RenderLife(ShaderProgram *shader, int life) const;
   glm::vec3 GetPlayerPosition() const override;
   static Map BuildMap();
   static std::vector<Mob> BuildMobs();
-  bool ShouldGoNext() const;
+  bool HasKilledAll() const;
   int Id() const override;
 };
-
 
 #endif //CS3113_GAME_PROGRAMMING_PLATFORMER_LEVEL_H_

@@ -9,16 +9,16 @@
 **/
 #include "Menu.h"
 #include "Game.h"
-Feedback Menu::Update(float delta_time, const EventFrame &event_frame) {
+uint Menu::Update(float delta_time, const EventFrame &event_frame) {
   if (event_frame.enter_key_down()) {
     go_next_ = true;
   }
   if (go_next_) {
-    return Feedback::NextStage;
+    return 1;
   }
-  return Feedback::NoOp;
+  return 0;
 }
-void Menu::Render(ShaderProgram *shader, int life) const {
+void Menu::Render(ShaderProgram *shader) const {
   background_.Render(shader);
   utility::RenderText("Press enter to start",
                       shader,

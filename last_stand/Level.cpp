@@ -13,9 +13,9 @@
 
 #include "Game.h"
 
-Feedback Level::Update(float delta_time, const EventFrame &event_frame) {
+uint Level::Update(float delta_time, const EventFrame &event_frame) {
   const auto
-      player_feedback =
+      life_left =
       player_.Update(delta_time, event_frame, map_, mobs_, short_lived_);
   for (auto &&mob : mobs_) {
     if (mob.IsAlive()) {
@@ -30,15 +30,15 @@ Feedback Level::Update(float delta_time, const EventFrame &event_frame) {
       ++i;
     }
   }
-  if (player_feedback == PlayerFeedback::TakeDamage) {
-    return Feedback::TakeDamage;
+  if (HasKilledAll()) {
+    return 2;
   }
-  if (ShouldGoNext()) {
-    return Feedback::NextStage;
+  if (life_left == 0) {
+    return 3;
   }
-  return Feedback::NoOp;
+  return 1;
 }
-void Level::Render(ShaderProgram *shader, int life) const {
+void Level::Render(ShaderProgram *shader) const {
   const auto view = glm::translate(glm::mat4(1.0f), -player_.position());
   shader->SetViewMatrix(view);
   map_.Render(shader);
@@ -51,7 +51,7 @@ void Level::Render(ShaderProgram *shader, int life) const {
   for (auto &&item : short_lived_) {
     item->Render(shader);
   }
-  RenderLife(shader, life);
+  RenderLife(shader, player_.life());
 }
 Level::Level(Map map,
              std::vector<Mob> mobs,
@@ -175,7 +175,7 @@ std::vector<Mob> Level::BuildMobs() {
           common_waypoint1),
   };
 }
-bool Level::ShouldGoNext() const {
+bool Level::HasKilledAll() const {
   for (const auto &mob : mobs_) {
     if (mob.IsAlive()) {
       return false;

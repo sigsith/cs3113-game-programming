@@ -22,12 +22,16 @@ enum class PlayerFeedback {
 class EventFrame;
 
 class Player : public Tank {
+ private:
+  uint immune_time_out = 0;
+  uint8_t life_ = 3;
  public:
-  PlayerFeedback Update(float delta_t, const EventFrame &event_frame,
-                        const Map &map,
-                        std::vector<Mob> &mobs,
-                        std::vector<std::unique_ptr<Projectile>> &);
+  uint Update(float delta_t, const EventFrame &event_frame,
+              const Map &map,
+              std::vector<Mob> &mobs,
+              std::vector<std::unique_ptr<Projectile>> &);
   Player();
+  uint8_t life() const;
 };
 
 #endif //CS3113_GAME_PROGRAMMING_PLATFORMER_PLAYER_H_

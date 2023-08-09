@@ -53,7 +53,7 @@ void Mob::Update(float delta_t,
   }
   for (auto &proj : projectiles) {
     if (!proj->HasExploded() && !proj->IsSafetyOn()
-        && box().IsCollisionWith(proj->position())) {
+        && box().IsPointCollisionWith(proj->position())) {
       proj->Explode();
       Die();
       return;

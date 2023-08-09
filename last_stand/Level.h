@@ -25,7 +25,7 @@ class Level : public Scene {
   std::vector<Mob> mobs_;
   std::vector<StaticEntity> static_entities_;
   Player player_;
-  std::vector<std::unique_ptr<Projectile>> short_lived_;
+  std::vector<std::unique_ptr<Projectile>> projectiles_;
  public:
   Level();
   uint Update(float delta_time, const EventFrame &event_frame) override;

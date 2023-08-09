@@ -16,16 +16,26 @@
 uint Level::Update(float delta_time, const EventFrame &event_frame) {
   const auto
       life_left =
-      player_.Update(delta_time, event_frame, map_, mobs_, short_lived_);
+      player_.Update(delta_time, event_frame, map_, mobs_, projectiles_);
   for (auto &&mob : mobs_) {
     if (mob.IsAlive()) {
-      mob.Update(delta_time, map_, player_, short_lived_);
+      mob.Update(delta_time, map_, player_, projectiles_);
     }
   }
-  for (size_t i = 0; i < short_lived_.size();) {
-    if (!short_lived_[i]->Update(delta_time)) {
-      std::swap(short_lived_[i], short_lived_.back());
-      short_lived_.pop_back();
+  for (auto &&proj : projectiles_) {
+    if (!proj->HasExploded()) {
+      for (auto &&static_entity : static_entities_) {
+        if (static_entity.box().IsPointCollisionWith(proj->position())) {
+          proj->Explode();
+          break;
+        }
+      }
+    }
+  }
+  for (size_t i = 0; i < projectiles_.size();) {
+    if (!projectiles_[i]->Update(delta_time)) {
+      std::swap(projectiles_[i], projectiles_.back());
+      projectiles_.pop_back();
     } else {
       ++i;
     }
@@ -51,7 +61,7 @@ void Level::Render(ShaderProgram *shader) const {
     }
   }
   player_.Render(shader);
-  for (auto &&item : short_lived_) {
+  for (auto &&item : projectiles_) {
     item->Render(shader);
   }
   RenderLife(shader, player_.life());

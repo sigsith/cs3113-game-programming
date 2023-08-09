@@ -19,6 +19,7 @@ void StaticEntity::Render(ShaderProgram *program) const {
 Box StaticEntity::box() const {
   return Box{
       position_,
-      texture_object_.width() / 2, texture_object_.height() / 2, orientation_
+      texture_object_.width() / 200.0f, texture_object_.height() / 200.0f,
+      orientation_
   };
 }

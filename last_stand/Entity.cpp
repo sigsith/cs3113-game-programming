@@ -50,7 +50,7 @@ Background::Background(const std::string &texture_path,
                        float scale_y) : scale_x_(scale_x), scale_y_(scale_y) {
   texture_id_ = utility::LoadTexture((texture_path));
 }
-bool Box::IsCollisionWith(glm::vec3 point_pos) const {
+bool Box::IsPointCollisionWith(glm::vec3 point_pos) const {
   point_pos -= position;
   glm::mat3 rotationMatrix = glm::mat3(glm::rotate(glm::mat4(1.0f),
                                                    -orientation,

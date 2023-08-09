@@ -74,7 +74,7 @@ uint Player::Update(float delta_t, const EventFrame &event_frame,
 //  }
   for (auto &proj : projectiles) {
     if (!proj->HasExploded() && !proj->IsSafetyOn()
-        && box().IsCollisionWith(proj->position())) {
+        && box().IsPointCollisionWith(proj->position())) {
       proj->Explode();
       life_ -= 1;
       break;

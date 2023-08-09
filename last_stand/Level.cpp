@@ -47,11 +47,11 @@ void Level::Render(ShaderProgram *shader, int life) const {
       mob.Render(shader);
     }
   }
-  RenderLife(shader, life);
   player_.Render(shader);
   for (auto &&item : short_lived_) {
     item->Render(shader);
   }
+  RenderLife(shader, life);
 }
 Level::Level(Map map,
              std::vector<Mob> mobs,

@@ -155,3 +155,9 @@ float Tank::chassis_orientation() const {
 void Tank::SetSpeedCap(float cap) {
   speed_cap_ = cap;
 }
+glm::vec3 Tank::velocity() const {
+  return velocity_;
+}
+void Tank::UpdateVelocity(glm::vec3 new_val) {
+  velocity_ = new_val;
+}

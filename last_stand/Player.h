@@ -13,6 +13,7 @@
 #include "Tank.h"
 #include "Mob.h"
 #include "Projectile.h"
+#include "StaticEntity.h"
 
 enum class PlayerFeedback {
   NoOp,
@@ -29,7 +30,8 @@ class Player : public Tank {
   uint Update(float delta_t, const EventFrame &event_frame,
               const Map &map,
               std::vector<Mob> &mobs,
-              std::vector<std::unique_ptr<Projectile>> &);
+              std::vector<std::unique_ptr<Projectile>> &,
+              const std::vector<StaticEntity> &);
   Player();
   uint8_t life() const;
 };

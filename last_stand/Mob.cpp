@@ -20,7 +20,7 @@ void Mob::Update(float delta_t,
   switch (state_) {
     case MobState::Roaming: {
       if (distance < 6.0) {
-        state_ = MobState::Aggro;
+//        state_ = MobState::Aggro;
         break;
       }
       const auto

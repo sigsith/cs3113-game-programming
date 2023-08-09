@@ -96,6 +96,8 @@ class Tank : public Boxed {
   glm::vec3 position() const;
   float turret_orientation() const;
   float chassis_orientation() const;
+  glm::vec3 velocity() const;
+  void UpdateVelocity(glm::vec3 new_val);
 
   Box box() const override {
     return Box{

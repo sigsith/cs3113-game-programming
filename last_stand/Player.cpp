@@ -23,7 +23,8 @@
 uint Player::Update(float delta_t, const EventFrame &event_frame,
                     const Map &map,
                     std::vector<Mob> &mobs,
-                    std::vector<std::unique_ptr<Projectile>> &projectiles) {
+                    std::vector<std::unique_ptr<Projectile>> &projectiles,
+                    const std::vector<StaticEntity> &static_entities) {
   const auto keyboard_state = SDL_GetKeyboardState(nullptr);
   Steering steering = Steering::None;
   if (keyboard_state[SDL_SCANCODE_A] && !keyboard_state[SDL_SCANCODE_D]) {
@@ -78,6 +79,24 @@ uint Player::Update(float delta_t, const EventFrame &event_frame,
       proj->Explode();
       life_ -= 1;
       break;
+    }
+  }
+  for (auto &static_entity : static_entities) {
+    if (box().IsCollisionWith(static_entity.box())) {
+      glm::vec3
+          direction = glm::normalize(position() - static_entity.box().position);
+
+      // Move the boxes apart by half of the overlapping distance
+//      float overlap = (box1.half_width + box2.half_width)
+//          - glm::length(box1.position - box2.position);
+//      box1.position += direction * (overlap / 2.0f);
+//      box2.position -= direction * (overlap / 2.0f);
+
+      // Adjust velocities (pseudo-code again since velocity isn't part of your Box struct):
+      // Nullify the velocity components along the collision direction
+      auto current_v = this->velocity();
+      current_v -= glm::dot(current_v, direction) * direction;
+      UpdateVelocity(current_v);
     }
   }
   return life_;

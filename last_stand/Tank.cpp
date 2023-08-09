@@ -128,17 +128,23 @@ Tank::Tank(glm::vec3 start_position,
 void Tank::SetTurretTarget(float target_orientation) {
   target_angle = target_orientation;
 }
+
+
 std::unique_ptr<Projectile> Tank::TryFire() {
   if (SDL_GetTicks() > fire_time_out) {
     std::cout << "Fire!\n";
     fire_time_out = SDL_GetTicks() + 2000;
+    static const auto thump = Mix_LoadWAV("tank_fire.wav");
+    Mix_VolumeChunk(thump, MIX_MAX_VOLUME / 4);
+    Mix_PlayChannel(-1, thump, 0);
     return std::make_unique<Projectile>(shell_,
                                         TextureObject("explosion2"),
                                         turret_orientation_,
                                         position_,
                                         specs_.projectile_speed);
+
   }
-  return nullptr;//use optional in C++17+
+  return nullptr;
 }
 void Tank::SetGear(Mode mode, Steering steering) {
   mode_ = mode;

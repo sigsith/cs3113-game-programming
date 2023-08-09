@@ -21,6 +21,7 @@
 #include <SDL.h>
 #include <SDL_opengl.h>
 #include <SDL_mixer.h>
+#include <deque>
 #include "glm/mat4x4.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 #include "ShaderProgram.h"
@@ -29,6 +30,14 @@
 #include "Player.h"
 #include "Mob.h"
 #include "Scene.h"
+
+struct EventFrame {
+  const bool left_mouse_down;
+  const bool space_key_down;
+  const bool enter_key_down;
+  const bool any_quit;
+  static EventFrame FromPolling();
+};
 
 class Game {
  private:

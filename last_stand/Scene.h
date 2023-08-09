@@ -22,7 +22,6 @@ enum class Feedback {
 class Scene {
  public:
   virtual ~Scene() = default;
-//  virtual void UpdateInput(const Uint8 *keyboard_state) = 0;
   virtual Feedback Update(float delta_time) = 0;
   virtual void Render(ShaderProgram *shader, int life) const = 0;
   virtual int Id() const = 0;

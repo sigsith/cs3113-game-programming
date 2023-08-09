@@ -58,20 +58,9 @@ Game::Game()
   curr_scene_ = std::make_unique<Menu>();
 }
 void Game::Update() {
-  SDL_Event event;
-  while (SDL_PollEvent(&event)) {
-    switch (event.type) {
-      case SDL_QUIT:
-      case SDL_WINDOWEVENT_CLOSE:is_game_running_ = false;
-        return;
-      case SDL_KEYDOWN:
-        switch (event.key.keysym.sym) {
-          case SDLK_q:is_game_running_ = false;
-            return;
-          default:break;
-        }
-      default:break;
-    }
+  const auto frame = EventFrame::FromPolling();
+  if (frame.any_quit) {
+    is_game_running_ = false;
   }
   const auto ticks = static_cast<float>(SDL_GetTicks()) / 1000.0f;
   const auto delta_time = static_cast<float>(ticks - previous_ticks_);
@@ -140,4 +129,45 @@ void Game::GoNextLevel() {
       throw std::runtime_error("Invalid scene id");
     }
   }
+}
+EventFrame EventFrame::FromPolling() {
+  SDL_Event event;
+  bool left_mouse_down{};
+  bool space_key_down{};
+  bool enter_key_down{};
+  bool any_quit{};
+  while (SDL_PollEvent(&event)) {
+    switch (event.type) {
+      case SDL_QUIT:
+      case SDL_WINDOWEVENT_CLOSE: {
+        any_quit = true;
+        break;
+      }
+      case SDL_KEYDOWN:
+        switch (event.key.keysym.sym) {
+          case SDLK_q: {
+            any_quit = true;
+            break;
+          }
+          case SDLK_RETURN:
+          case SDLK_KP_ENTER: {
+            enter_key_down = true;
+            break;
+          }
+          case SDLK_SPACE: {
+            space_key_down = true;
+            break;
+          }
+          default:break;
+        }
+      case SDL_MOUSEBUTTONDOWN: {
+        if (event.button.button == SDL_BUTTON_LEFT) {
+          left_mouse_down = true;
+        }
+        break;
+      }
+      default:break;
+    }
+  }
+  return EventFrame{left_mouse_down, space_key_down, enter_key_down, any_quit};
 }

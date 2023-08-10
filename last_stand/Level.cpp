@@ -149,7 +149,7 @@ std::vector<Mob> Level::BuildMobs() {
       Specs{2.0, 1.5,
             1.0, 1.0, 2.0,
             3.0, 2.5, 1.5,
-            1.0, 1.5, 5.5, 0.85};
+            1.0, 9.0, 9.5, 5.5, 0.85};
   static const auto small_red = Paint{
       "tankBody_red",
       "tankRed_barrel1",

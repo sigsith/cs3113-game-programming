@@ -100,7 +100,7 @@ constexpr Specs
     {2.5, 1.875, 1.0,
      1.0, 2.0, 3.0,
      2.5, 2.25, 1.5,
-     2.5, 6.0, 1.0};
+     12.0, 10.0, 6.0, 1.0};
 Player::Player() : Tank(glm::vec3(0, 0, 0),
                         glm::pi<float>() / 2,
                         PLAYER_SPECS,

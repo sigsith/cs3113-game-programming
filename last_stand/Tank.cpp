@@ -19,6 +19,7 @@ void Tank::Update(float delta_t, const Map &map) {
   orientation_ += angular_velocity_ * delta_t;
   angular_velocity_ += angular_acceleration_ * delta_t;
   turret_orientation_ += turret_angular_velocity_ * delta_t;
+  turret_angular_velocity_ += turret_angular_acceleration_ * delta_t;
   // Update control
   // Update gear
   const auto direction_vec = utility::VectorByAngle(1.0, orientation_);
@@ -89,10 +90,16 @@ void Tank::Update(float delta_t, const Map &map) {
   if (diff < 0) {
     diff += glm::pi<float>() * 2;
   }
+  float targetAngularVelocity;
   if (diff < glm::pi<float>()) {
-    turret_angular_velocity_ = specs_.turret_turn_rate;
+    targetAngularVelocity = specs_.top_turn_speed * (diff / glm::pi<float>());
+    turret_angular_acceleration_ = specs_.base_turn_acceleration
+        * (targetAngularVelocity - turret_angular_velocity_);
   } else {
-    turret_angular_velocity_ = -specs_.turret_turn_rate;
+    diff = glm::pi<float>() * 2 - diff;  // Convert the difference to a positive value between 0 and pi
+    targetAngularVelocity = -specs_.top_turn_speed * (diff / glm::pi<float>());
+    turret_angular_acceleration_ = specs_.base_turn_acceleration
+        * (targetAngularVelocity - turret_angular_velocity_);
   }
   Box box = this->box();
 }

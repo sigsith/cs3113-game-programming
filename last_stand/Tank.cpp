@@ -11,6 +11,7 @@
 #include "Utility.h"
 #include "Projectile.h"
 #include <cmath>
+#include "SDL_mixer.h"
 
 void Tank::Update(float delta_t, const Map &map) {
   // Apply inertia

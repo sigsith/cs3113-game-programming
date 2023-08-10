@@ -13,7 +13,8 @@
 void Mob::Update(float delta_t,
                  const Map &map,
                  const Player &player,
-                 std::vector<std::unique_ptr<Projectile>> &projectiles) {
+                 std::vector<std::unique_ptr<Projectile>> &projectiles,
+                 const std::vector<StaticEntity> &static_entities) {
   Tank::Update(delta_t, map);
   glm::vec3 direction = player.position() - position();
   const auto distance = utility::Length(direction);
@@ -57,6 +58,19 @@ void Mob::Update(float delta_t,
       proj->Explode();
       Die();
       return;
+    }
+  }
+  for (auto &static_entity : static_entities) {
+    if (box().IsCollisionWith(static_entity.box())) {
+      glm::vec3
+          collision_direction =
+          glm::normalize(static_entity.box().position - position());
+      auto current_v = this->velocity();
+      const auto dot = glm::dot(current_v, collision_direction);
+      if (dot > 0) {
+        current_v -= dot * collision_direction;
+      }
+      UpdateVelocity(current_v);
     }
   }
 }

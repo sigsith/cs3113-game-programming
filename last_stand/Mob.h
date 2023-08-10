@@ -11,6 +11,7 @@
 #define CS3113_GAME_PROGRAMMING_PLATFORMER_MOB_H_
 
 #include "Tank.h"
+#include "StaticEntity.h"
 class Player;
 
 enum class MobState {
@@ -38,7 +39,8 @@ class Mob : public Tank {
   void Update(float delta_t,
               const Map &map,
               const Player &player,
-              std::vector<std::unique_ptr<Projectile>> &);
+              std::vector<std::unique_ptr<Projectile>> &,
+              const std::vector<StaticEntity> &);
   Mob(glm::vec3 startpos, float start_orient, Specs specs, Paint paint,
       WaypointLooper looper);
   void Die();

@@ -24,7 +24,7 @@ uint Level::Update(float delta_time, const EventFrame &event_frame) {
                      static_entities_);
   for (auto &&mob : mobs_) {
     if (mob.IsAlive()) {
-      mob.Update(delta_time, map_, player_, projectiles_);
+      mob.Update(delta_time, map_, player_, projectiles_, static_entities_);
     }
   }
   for (auto &&proj : projectiles_) {

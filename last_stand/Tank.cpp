@@ -105,7 +105,7 @@ void Tank::Render(ShaderProgram *shader) const {
                  1.0,
                  shader);
   if (SDL_GetTicks() < flash_time_out) {
-    fire_smoke_.Render(position_ + 3.0f * offset,
+    fire_smoke_.Render(position_ + 3.1f * offset,
                        utility::FlipAngle(turret_orientation_),
                        1.0,
                        shader);
@@ -133,7 +133,7 @@ std::unique_ptr<Projectile> Tank::TryFire() {
     std::cout << "Fire!\n";
     fire_time_out =
         SDL_GetTicks() + static_cast<uint>(2000.0 / specs_.fire_rate);
-    flash_time_out = SDL_GetTicks() + 100;
+    flash_time_out = SDL_GetTicks() + 50;
     static const auto thump = Mix_LoadWAV("tank_fire.wav");
     Mix_VolumeChunk(thump, MIX_MAX_VOLUME / 4);
     Mix_PlayChannel(-1, thump, 0);

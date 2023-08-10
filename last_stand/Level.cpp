@@ -153,27 +153,32 @@ std::vector<Mob> Level::BuildMobs() {
   static const auto small_red = Paint{
       "tankBody_red",
       "tankRed_barrel1",
-      "bulletRed1"
+      "bulletRed1",
+      "shotRed",
   };
   static const auto small_dark = Paint{
       "tankBody_dark",
       "tankDark_barrel1",
-      "bulletDark1"
+      "bulletDark1",
+      "shotLarge"
   };
   static const auto small_green = Paint{
       "tankBody_green",
       "tankGreen_barrel2",
-      "bulletGreen3"
+      "bulletGreen3",
+      "shotRed"
   };
   static const auto abrams = Paint{
       "tankBody_sand",
       "tankSand_barrel3",
-      "bulletSand2"
+      "bulletSand2",
+      "shotThin"
   };
   static const auto chungus = Paint{
       "tankBody_huge",
       "specialBarrel1",
-      "bulletRed2"
+      "bulletRed2",
+      "shotLarge"
   };
   return std::vector<Mob>{
       Mob(glm::vec3(-7.0, 7.0, 0),

@@ -84,18 +84,12 @@ uint Player::Update(float delta_t, const EventFrame &event_frame,
   for (auto &static_entity : static_entities) {
     if (box().IsCollisionWith(static_entity.box())) {
       glm::vec3
-          direction = glm::normalize(position() - static_entity.box().position);
-
-      // Move the boxes apart by half of the overlapping distance
-//      float overlap = (box1.half_width + box2.half_width)
-//          - glm::length(box1.position - box2.position);
-//      box1.position += direction * (overlap / 2.0f);
-//      box2.position -= direction * (overlap / 2.0f);
-
-      // Adjust velocities (pseudo-code again since velocity isn't part of your Box struct):
-      // Nullify the velocity components along the collision direction
+          direction = glm::normalize( static_entity.box().position - position());
       auto current_v = this->velocity();
-      current_v -= glm::dot(current_v, direction) * direction;
+      const auto dot = glm::dot(current_v, direction);
+      if (dot > 0) {
+        current_v -= dot * direction;
+      }
       UpdateVelocity(current_v);
     }
   }

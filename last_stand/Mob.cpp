@@ -62,15 +62,7 @@ void Mob::Update(float delta_t,
   }
   for (auto &static_entity : static_entities) {
     if (box().IsCollisionWith(static_entity.box())) {
-      glm::vec3
-          collision_direction =
-          glm::normalize(static_entity.box().position - position());
-      auto current_v = this->velocity();
-      const auto dot = glm::dot(current_v, collision_direction);
-      if (dot > 0) {
-        current_v -= dot * collision_direction;
-      }
-      UpdateVelocity(current_v);
+      HardCollisionUpdate(static_entity.box());
     }
   }
 }

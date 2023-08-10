@@ -102,6 +102,7 @@ class Tank : public Boxed {
   float chassis_orientation() const;
   glm::vec3 velocity() const;
   void UpdateVelocity(glm::vec3 new_val);
+  void HardCollisionUpdate(const Box &colliding_box);
 
   Box box() const override {
     return Box{

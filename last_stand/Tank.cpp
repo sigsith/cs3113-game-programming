@@ -96,7 +96,8 @@ void Tank::Update(float delta_t, const Map &map) {
     turret_angular_acceleration_ = specs_.base_turn_acceleration
         * (targetAngularVelocity - turret_angular_velocity_);
   } else {
-    diff = glm::pi<float>() * 2 - diff;  // Convert the difference to a positive value between 0 and pi
+    diff = glm::pi<float>() * 2
+        - diff;  // Convert the difference to a positive value between 0 and pi
     targetAngularVelocity = -specs_.top_turn_speed * (diff / glm::pi<float>());
     turret_angular_acceleration_ = specs_.base_turn_acceleration
         * (targetAngularVelocity - turret_angular_velocity_);
@@ -175,4 +176,15 @@ glm::vec3 Tank::velocity() const {
 }
 void Tank::UpdateVelocity(glm::vec3 new_val) {
   velocity_ = new_val;
+}
+void Tank::HardCollisionUpdate(const Box &colliding_box) {
+  glm::vec3
+      collision_direction =
+      glm::normalize(colliding_box.position - position());
+  auto current_v = this->velocity();
+  const auto dot = glm::dot(current_v, collision_direction);
+  if (dot > 0) {
+    current_v -= dot * collision_direction;
+  }
+  UpdateVelocity(current_v);
 }

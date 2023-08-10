@@ -83,14 +83,16 @@ uint Player::Update(float delta_t, const EventFrame &event_frame,
   }
   for (auto &static_entity : static_entities) {
     if (box().IsCollisionWith(static_entity.box())) {
-      glm::vec3
-          direction = glm::normalize(static_entity.box().position - position());
-      auto current_v = this->velocity();
-      const auto dot = glm::dot(current_v, direction);
-      if (dot > 0) {
-        current_v -= dot * direction;
-      }
-      UpdateVelocity(current_v);
+      HardCollisionUpdate(static_entity.box());
+    }
+  }
+  for (auto &mob : mobs) {
+    if (!mob.IsAlive()) {
+      continue;
+    }
+    if (box().IsCollisionWith(mob.box())) {
+      HardCollisionUpdate(mob.box());
+      mob.HardCollisionUpdate(box());
     }
   }
   return life_;

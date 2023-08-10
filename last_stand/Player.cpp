@@ -59,20 +59,6 @@ uint Player::Update(float delta_t, const EventFrame &event_frame,
 
   Tank::Update(delta_t, map);
   const auto player_box = this->box();
-//  for (auto &mob : mobs) {
-//    if (!mob.IsAlive()) {
-//      continue;
-//    }
-//    const auto mob_box = mob.box();
-//    if (player_box.IsCollisionWith(mob_box)) {
-//      if (player_box.IsOnTopOf(mob_box)) {
-//        mob.Die();
-//      } else {
-//        return PlayerFeedback::TakeDamage;
-//      }
-//      std::cout << "Box hit!\n";
-//    }
-//  }
   for (auto &proj : projectiles) {
     if (!proj->HasExploded() && !proj->IsSafetyOn()
         && box().IsPointCollisionWith(proj->position())) {

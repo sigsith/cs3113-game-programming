@@ -23,8 +23,17 @@ uint Level::Update(float delta_time, const EventFrame &event_frame) {
                      projectiles_,
                      static_entities_);
   for (auto &&mob : mobs_) {
-    if (mob.IsAlive()) {
-      mob.Update(delta_time, map_, player_, projectiles_, static_entities_);
+    if (!mob.IsAlive()) {
+      continue;
+    }
+    mob.Update(delta_time, map_, player_, projectiles_, static_entities_);
+    for (auto &mob2 : mobs_) {
+      if (!mob2.IsAlive() || &mob == &mob2) {
+        continue;
+      }
+      if (mob.box().IsCollisionWith(mob2.box())) {
+        mob.HardCollisionUpdate(mob2.box());
+      }
     }
   }
   for (auto &&proj : projectiles_) {

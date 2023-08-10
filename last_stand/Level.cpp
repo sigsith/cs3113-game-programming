@@ -103,6 +103,17 @@ Level::Level() : Level(BuildMap(),
     static_entities_.emplace_back(TextureObject("treeGreen_small"),
                                   glm::vec3(i, -6, 0));
   }
+  // Czech hedgehogs
+  for (int i = -1; i <= 1; i += 1) {
+    static_entities_.emplace_back(TextureObject("barricadeMetal"),
+                                  glm::vec3(i, 3, 0));
+    static_entities_.emplace_back(TextureObject("barricadeMetal"),
+                                  glm::vec3(-3, i, 0));
+    static_entities_.emplace_back(TextureObject("barricadeMetal"),
+                                  glm::vec3(i, -3, 0));
+    static_entities_.emplace_back(TextureObject("barricadeMetal"),
+                                  glm::vec3(3, i, 0));
+  }
 
 }
 Map Level::BuildMap() {

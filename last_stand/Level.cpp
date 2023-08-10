@@ -94,13 +94,13 @@ Level::Level() : Level(BuildMap(),
 
   // Add some trees
   for (int i = -6; i <= 6; i += 2) {
-    static_entities_.emplace_back(TextureObject("treeGreen_large"),
+    static_entities_.emplace_back(TextureObject("treeGreen_small"),
                                   glm::vec3(-6, i, 0));
-    static_entities_.emplace_back(TextureObject("treeGreen_large"),
+    static_entities_.emplace_back(TextureObject("treeGreen_small"),
                                   glm::vec3(6, i, 0));
-    static_entities_.emplace_back(TextureObject("treeGreen_large"),
+    static_entities_.emplace_back(TextureObject("treeGreen_small"),
                                   glm::vec3(i, 6, 0));
-    static_entities_.emplace_back(TextureObject("treeGreen_large"),
+    static_entities_.emplace_back(TextureObject("treeGreen_small"),
                                   glm::vec3(i, -6, 0));
   }
 

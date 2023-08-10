@@ -104,6 +104,12 @@ void Tank::Render(ShaderProgram *shader) const {
                  utility::FlipAngle(turret_orientation_),
                  1.0,
                  shader);
+  if (SDL_GetTicks() < flash_time_out) {
+    fire_smoke_.Render(position_ + 3.0f * offset,
+                       utility::FlipAngle(turret_orientation_),
+                       1.0,
+                       shader);
+  }
 }
 Tank::Tank(glm::vec3 start_position,
            float start_orientation,
@@ -113,7 +119,8 @@ Tank::Tank(glm::vec3 start_position,
                                  specs_(specs),
                                  chassis_(paint.chassis_name),
                                  turret_(paint.turret_name),
-                                 shell_(paint.shell_name) {
+                                 shell_(paint.shell_name),
+                                 fire_smoke_(paint.smoke_name) {
   half_width = chassis_.width() / 100.0f / 2.0;
   half_height = chassis_.height() / 100.0f / 2.0;
 }
@@ -126,6 +133,7 @@ std::unique_ptr<Projectile> Tank::TryFire() {
     std::cout << "Fire!\n";
     fire_time_out =
         SDL_GetTicks() + static_cast<uint>(2000.0 / specs_.fire_rate);
+    flash_time_out = SDL_GetTicks() + 100;
     static const auto thump = Mix_LoadWAV("tank_fire.wav");
     Mix_VolumeChunk(thump, MIX_MAX_VOLUME / 4);
     Mix_PlayChannel(-1, thump, 0);

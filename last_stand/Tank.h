@@ -46,6 +46,7 @@ struct Paint {
   const std::string chassis_name;
   const std::string turret_name;
   const std::string shell_name;
+  const std::string smoke_name;
 };
 
 enum class Mode {
@@ -63,6 +64,7 @@ enum class Steering {
 class Tank : public Boxed {
  private:
   uint fire_time_out = 0;
+  uint flash_time_out = 0;
   glm::vec3 velocity_{};
   glm::vec3 acceleration_{};
   glm::vec3 position_;
@@ -82,6 +84,7 @@ class Tank : public Boxed {
   TextureObject chassis_;
   TextureObject turret_;
   TextureObject shell_;
+  TextureObject fire_smoke_;
  public:
   Tank(glm::vec3 start_position,
        float start_orientation,

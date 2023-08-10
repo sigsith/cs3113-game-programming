@@ -84,7 +84,7 @@ uint Player::Update(float delta_t, const EventFrame &event_frame,
   for (auto &static_entity : static_entities) {
     if (box().IsCollisionWith(static_entity.box())) {
       glm::vec3
-          direction = glm::normalize( static_entity.box().position - position());
+          direction = glm::normalize(static_entity.box().position - position());
       auto current_v = this->velocity();
       const auto dot = glm::dot(current_v, direction);
       if (dot > 0) {
@@ -105,7 +105,8 @@ Player::Player() : Tank(glm::vec3(0, 0, 0),
                         glm::pi<float>() / 2,
                         PLAYER_SPECS,
                         Paint{"tankBody_blue",
-                              "tankBlue_barrel1", "bulletBlue1"}) {
+                              "tankBlue_barrel1", "bulletBlue1",
+                              "shotThin"}) {
 
 }
 uint8_t Player::life() const {

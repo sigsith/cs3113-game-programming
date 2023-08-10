@@ -1,0 +1,8 @@
+[requires]
+sdl/2.26.5
+sdl_image/2.0.5
+sdl_mixer/2.0.4
+opengl/system
+
+[generators]
+cmake
